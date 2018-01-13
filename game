@@ -1,4 +1,4 @@
-<div></div> 5
+    <script src='path/to/break_infinity.js'></script>
 
 
 <button id='1' onclick='function()'>Tier 1</button>

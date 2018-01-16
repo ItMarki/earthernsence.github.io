@@ -24,7 +24,8 @@ function buyGen(tier) {
   if (player.errors - player[level + "Cost"] >= 0) {
     player[level + "Amount"] ++;
     player.errors -= player[level + "Cost"];
-  }
+    return true;
+  } else return false;
 }
 
 function createStoryElement(message) {
@@ -37,25 +38,41 @@ function createStoryElement(message) {
 }
 
 document.getElementById('cop1').onclick = function() {
-  buyGen(0);
-  if (player.firstClicked == false) {
-    createStoryElement("You open up a browser to play games, but errors start entering the console.");
+  if (player.firstClicked == false && buyGen(0) == true) {
+    createStoryElement("Pancakes is ready!");
     player.firstClicked = true;
   }
 }
 
 document.getElementById('cop2').onclick = function() {
-  buyGen(1);
-  if (player.secondClicked == false) {
-    createStoryElement("Pancakes is ready!");
+  if (player.secondClicked == false && buyGen(1) == true) {
+    createStoryElement("But NOPE! No pancakes for you. Too many console errors.");
     player.secondClicked = true;
   }
 }
 
 document.getElementById('cop3').onclick = function() {
-  buyGen(2);
+  if (player.thirdClicked == false &&   buyGen(2) == true) {
+    createStoryElement("Nice! A Tier III Computer. Well deserved.");
+    player.thirdClicked = true;
+  }
 }
 
 document.getElementById('cop4').onclick = function() {
   buyGen(3);
+}
+
+function getEPS() {
+  player.eps = (player.firstAmount * 1) + (player.secondAmount * 10) + (player.thirdAmount * 100); // can change base amounts of how much they produce, or change it to just be firsts cuz AD elements
+}
+
+function display() {
+   getEPS();
+  
+  document.getElementById("money").innerHTML = player.errors; //this is the base, except in the parentheses add the HTML tag of the thing you're changing
+  document.getElementById("mps").innerHTML = player.eps;
+  document.getElementById("cop1").innerHTML = "Buy a tier I computer. Cost: " + player.firstCost + "(" + player.firstAmount + ")";
+  document.getElementById("cop2").innerHTML = "Buy a tier II computer. Cost: " + player.secondCost + "(" + player.secondAmount + ")";
+  document.getElementById("cop3").innerHTML = "Buy a tier III computer. Cost: " + player.thirdCost + "(" + player.thirdAmount + ")";
+  document.getElementById("cop4").innerHTML = "Buy a tier IV computer. Cost: " + player.fourthCost + "(" + player.fourthAmount + ")";
 }

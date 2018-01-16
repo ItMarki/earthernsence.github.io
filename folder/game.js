@@ -32,8 +32,8 @@ function createStoryElement(message) {
   var second = JSON.stringify(TIER_NAMES[1] + "Message");
   var first = JSON.stringify(TIER_NAMES[0] + "Message");
   
-  document.getElementById("firstMessage").innerHTML = message;
-  document.getElementById("secondMessage").innerHTML = JSON.parse(first);
+  document.getElementById("firstStorybox").innerHTML = message;
+  document.getElementById("secondStorybox").innerHTML = JSON.parse(first);
   // YOU HAVE TO MANUALLY ADD MORE THINGS HERE IF YOU HAVE MORE MAX MESSAGES SHOWING AT ONCE
 }
 

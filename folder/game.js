@@ -34,7 +34,9 @@ function createStoryElement(message) {
 document.getElementById('gen1').onclick = function() {
   buyGen(0);
   if (player.firstClicked == false) {
-    createStoryElement("You open up a browser to play games, but errors start entering the console.")
+    createStoryElement("You open up a browser to play games, but errors start entering the console.");
+    player.firstClicked = true;
+  }
 }
 
 document.getElementById('gen2').onclick = function() {

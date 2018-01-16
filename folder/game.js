@@ -1,8 +1,8 @@
 //Calling it this because it will be main game JS thing?
 
 var player = {
-  money: 10, //current errors
-  mps: 0, //errors per second
+  errors: 10, //current errors
+  eps: 0, //errors per second
   firstCost: 10,
   secondCost: 100,
   thirdCost: 1000,
@@ -47,7 +47,7 @@ document.getElementById('cop1').onclick = function() {
 document.getElementById('cop2').onclick = function() {
   buyGen(1);
   if (player.secondClicked == false) {
-    createStoryElement("second thing");
+    createStoryElement("Pancakes is ready!");
     player.secondClicked = true;
   }
 }

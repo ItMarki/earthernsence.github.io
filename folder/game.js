@@ -29,11 +29,9 @@ function buyGen(tier) {
 }
 
 function createStoryElement(message) {
-  var second = JSON.stringify(TIER_NAMES[1] + "Message");
-  var first = JSON.stringify(TIER_NAMES[0] + "Message");
   
-  document.getElementById("firstStorybox").innerHTML = message;
-  document.getElementById("secondStorybox").innerHTML = JSON.parse(first);
+  document.getElementById("secondStory").innerHTML = document.getElementById("firstStory").innerHTML
+  document.getElementById("firstStory").innerHTML = message
   // YOU HAVE TO MANUALLY ADD MORE THINGS HERE IF YOU HAVE MORE MAX MESSAGES SHOWING AT ONCE
 }
 
@@ -69,10 +67,11 @@ function getEPS() {
 function display() {
    getEPS();
   
-  document.getElementById("money").innerHTML = player.errors; //this is the base, except in the parentheses add the HTML tag of the thing you're changing
-  document.getElementById("mps").innerHTML = player.eps;
-  document.getElementById("cop1").innerHTML = "Buy a tier I computer. Cost: " + player.firstCost + "(" + player.firstAmount + ")";
-  document.getElementById("cop2").innerHTML = "Buy a tier II computer. Cost: " + player.secondCost + "(" + player.secondAmount + ")";
-  document.getElementById("cop3").innerHTML = "Buy a tier III computer. Cost: " + player.thirdCost + "(" + player.thirdAmount + ")";
-  document.getElementById("cop4").innerHTML = "Buy a tier IV computer. Cost: " + player.fourthCost + "(" + player.fourthAmount + ")";
+  document.getElementById("errors").innerHTML = player.errors; //this is the base, except in the parentheses add the HTML tag of the thing you're changing
+  document.getElementById("eps").innerHTML = player.eps;
+  document.getElementById("cop1").innerHTML = "Buy a tier I computer. Cost: " + player.firstCost + " (" + player.firstAmount + ")";
+  document.getElementById("cop2").innerHTML = "Buy a tier II computer. Cost: " + player.secondCost + " (" + player.secondAmount + ")";
+  document.getElementById("cop3").innerHTML = "Buy a tier III computer. Cost: " + player.thirdCost + " (" + player.thirdAmount + ")";
+  document.getElementById("cop4").innerHTML = "Buy a tier IV computer. Cost: " + player.fourthCost + " (" + player.fourthAmount + ")";
 }
+

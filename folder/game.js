@@ -6,14 +6,17 @@ var player = {
   firstCost: 10,
   secondCost: 100,
   thirdCost: 1000,
+  fourthCost: 10000, //prices adjustable
   firstAmount: 0,
   secondAmount: 0,
   thirdAmount: 0,
+  fourthAmount: 0,
   firstClicked: false,
   secondClicked: false,
   thirdClicked: false,
+  fourthClicked: false,
 }
-const TIER_NAMES = ['first','second','third']; // can add more if more gens/story elements, cuz that uses this too
+const TIER_NAMES = ['first','second','third', 'fourth']; // can add more if more gens/story elements, cuz that uses this too
 
 
 function buyGen(tier) {
@@ -33,7 +36,7 @@ function createStoryElement(message) {
   // YOU HAVE TO MANUALLY ADD MORE THINGS HERE IF YOU HAVE MORE MAX MESSAGES SHOWING AT ONCE
 }
 
-document.getElementById('gen1').onclick = function() {
+document.getElementById('cop1').onclick = function() {
   buyGen(0);
   if (player.firstClicked == false) {
     createStoryElement("You open up a browser to play games, but errors start entering the console.");
@@ -41,7 +44,7 @@ document.getElementById('gen1').onclick = function() {
   }
 }
 
-document.getElementById('gen2').onclick = function() {
+document.getElementById('cop2').onclick = function() {
   buyGen(1);
   if (player.secondClicked == false) {
     createStoryElement("second thing");
@@ -49,6 +52,10 @@ document.getElementById('gen2').onclick = function() {
   }
 }
 
-document.getElementById('gen3').onclick = function() {
+document.getElementById('cop3').onclick = function() {
   buyGen(2);
+}
+
+document.getElementById('cop4').onclick = function() {
+  buyGen(3);
 }

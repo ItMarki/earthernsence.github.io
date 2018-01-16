@@ -10,6 +10,8 @@ var player = {
   secondAmount: 0,
   thirdAmount: 0,
   firstClicked: false,
+  secondClicked: false,
+  thirdClicked: false,
 }
 const TIER_NAMES = ['first','second','third']; // can add more if more gens/story elements, cuz that uses this too
 
@@ -41,6 +43,10 @@ document.getElementById('gen1').onclick = function() {
 
 document.getElementById('gen2').onclick = function() {
   buyGen(1);
+  if (player.secondClicked == false) {
+    createStoryElement("second thing");
+    player.secondClicked = true;
+  }
 }
 
 document.getElementById('gen3').onclick = function() {

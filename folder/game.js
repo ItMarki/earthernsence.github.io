@@ -21,9 +21,9 @@ const TIER_NAMES = ['first','second','third', 'fourth']; // can add more if more
 
 function buyGen(tier) {
   var level = TIER_NAMES[tier];
-  if (player.money - player[level + "Cost"] >= 0) {
+  if (player.errors - player[level + "Cost"] >= 0) {
     player[level + "Amount"] ++;
-    player.money -= player[level + "Cost"];
+    player.errors -= player[level + "Cost"];
   }
 }
 
@@ -32,7 +32,7 @@ function createStoryElement(message) {
   var first = JSON.stringify(TIER_NAMES[0] + "Message");
   
   document.getElementById("firstMessage").innerHTML = message;
-  document.getElementById("secondMessage").innerHTML = first;
+  document.getElementById("secondMessage").innerHTML = JSON.parse(first);
   // YOU HAVE TO MANUALLY ADD MORE THINGS HERE IF YOU HAVE MORE MAX MESSAGES SHOWING AT ONCE
 }
 

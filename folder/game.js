@@ -49,7 +49,7 @@ function createStoryElement(message) {
 }
 
 function getEPS() {
-  player.eps = (player.firstAmount * 1)+(player.secondAmount * 10)+(player.thirdAmount * 100)+(player.fourthAmount*1000)+(player.fifthAmount*10000); // can change base amounts of how much they produce, or change it to just be firsts cuz AD elements
+  player.eps = (player.firstAmount * 1)+(player.secondAmount * 10)+(player.thirdAmount * 100)+(player.fourthAmount*1000); // can change base amounts of how much they produce, or change it to just be firsts cuz AD elements
 }
 
 function display() {

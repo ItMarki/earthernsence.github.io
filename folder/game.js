@@ -12,6 +12,7 @@ player = {
   version: 0,
   build: 2
 }
+tab='computers'
 const story = ['','','','','']
 const TIER_NAMES = ['first','second','third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 'ninth']; // can add more if more gens/story elements, cuz that uses this too
 const ROMAN_NUMERALS=[]
@@ -28,6 +29,12 @@ function showElement(elementID,style) {
 	
 function hideElement(elementID) {
 	document.getElementById(elementID).style.display='none'
+}
+
+function switchTab(tabid) {
+	hideElement(tab+'Tab')
+	showElement(tabid+'Tab','block')
+	tab=tabid
 }
 
 function changeMults() {
@@ -84,9 +91,16 @@ function prestige(tier) {
   switch(tier) { //don't allow prestiging until you match reqs
     case 1: if (player.compAmount[player.prestige1] < 10) return; break;
     case 2: if (player.compAmount[player.prestige2+3] < 20) return; break;
+    case Infinity: if (!confirm('Are you really sure to reset? You will lose everything you have!')) return; break;
   }
-  //Tier 2 - I.P. change
-  player.prestige2+=1
+  if (tier==Infinity) {
+	//Highest tier - Hard reset
+	localStorage.clear('errorSave')
+  }
+  if (tier==2) {
+	//Tier 2 - I.P. change
+	player.prestige2=(tier==2)?player.prestige2+1:0
+  }
   
   //Tier 1 - Update computers
   player.prestige1=(tier==1)?player.prestige1+1:0
@@ -94,6 +108,7 @@ function prestige(tier) {
   player.compCost = [new Decimal(10),new Decimal(100),new Decimal(1000),new Decimal(10000),new Decimal(1e6),new Decimal(1e8),new Decimal(1e10),new Decimal(1e13),new Decimal(1e16)];
   player.compAmount=[0,0,0,0,0,0,0,0,0]
   player.compPow=[1,10,100,1000,1e4,1e5,1e6,1e7,1e8]
+  player.time = new Date().getTime()
   display()
   
   switch (tier) {
@@ -137,9 +152,9 @@ function getEPS() {
 }
 
 function display() {
-  document.getElementById("errors").innerHTML = player.errors //this is the base, except in the parentheses add the HTML tag of the thing you're changing
+  document.getElementById("errors").innerHTML = player.errors.toFixed(0) //this is the base, except in the parentheses add the HTML tag of the thing you're changing
   document.getElementById("eps").innerHTML = getEPS()
-  for (let i=0;i<Math.min(player.prestige2+4,9);i++) document.getElementById("cop"+(i+1)).innerHTML = "Cost: " + player.compCost[i] + " (" + player.compAmount[i] + ")"
+  for (let i=0;i<Math.min(player.prestige2+4,9);i++) document.getElementById("cop"+(i+1)).innerHTML = "Cost: " + player.compCost[i].toFixed(0) + " (" + player.compAmount[i] + ")"
   for (i=0;i<5;i++) {
   	  if (player.prestige2>i) {
 		showElement(TIER_NAMES[i+4]+'Comp','block')
@@ -177,10 +192,9 @@ function save() {
 	localStorage.setItem('errorSave',btoa(JSON.stringify(player)))
 }
 
-function load() {
+function load(savefile) {
   try {
-	  savefile=JSON.parse(atob(localStorage.getItem('errorSave')))
-	  player = savefile;
+	  player=JSON.parse(atob(savefile));
 
 	  //when adding a new player variable, PLEASE ADD A NEW LINE!!
 	  if (player.version == undefined) player.version = 0;
@@ -202,9 +216,27 @@ function load() {
 	  for (let i=0;i<9;i++) {
 		player.compCost[i] = new Decimal(player.compCost[i])
 	  }
+	  
+	  increaseErrors()
+	  console.log('Game loaded!')
   } catch (e) {
 	  console.log('Your save failed to load:\n'+e)
   }
+}
+
+function exportSave() {
+	var savefile=btoa(JSON.stringify(player))
+	showElement('exportSave','block')
+	document.getElementById("exportText").value=btoa(JSON.stringify(player))
+}
+
+function importSave() {
+	var input=prompt('Copy and paste in your exported file and press enter.')
+	if (load(input)) {
+		if (input!=null) {
+			alert('Your save was invalid or caused a game-breaking bug. :(')
+		}
+	}
 }
 
 function setupRoman() {
@@ -232,6 +264,6 @@ function drawStorybox() {
 //drawStorybox();
 
 setupRoman()
-load()
+load(localStorage.getItem('errorSave'))
 setInterval(increaseErrors,1000);
 setInterval(save,10000);

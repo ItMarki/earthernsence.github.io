@@ -1,6 +1,6 @@
 //Calling it this because it will be main game JS thing?
 
-var player = {
+player = {
   errors: 10, //current errors
   compCost: [10,100,1000,10000,1e6,1e8,1e10,1e13,1e16],
   compAmount: [0,0,0,0,0,0,0,0,0],
@@ -10,7 +10,8 @@ var player = {
   story: 0
 }
 const TIER_NAMES = ['first','second','third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 'ninth']; // can add more if more gens/story elements, cuz that uses this too
-const costMult=[2,3,5,8,13,21,34,55,89]
+const ROMAN_NUMERALS=[]
+const costMult=[2,2.5,3,4,6,9,14,22,35]
 
 function changeMults() {
   if (player.buyMult == 1) {
@@ -29,9 +30,9 @@ function changeMults() {
   document.getElementById('buyMult').innerHTML=player.buyMult+'x'
 }
 
-function buyGen(tier) {
+function buyGen(tier,bulk=1) {
   if (player.errors>=player.compCost[tier]) {
-	  player.compAmount[tier]++
+	player.compAmount[tier]++
     player.errors-=player.compCost[tier]
     player.compCost[tier]*=costMult[tier]
 
@@ -48,6 +49,14 @@ function buyGen(tier) {
         createStoryElement("Nice! A Tier III Computer. Well deserved.")
         player.story++
       } break;
+      case 3: if (player.story==3) {
+        createStoryElement("A Tier IV Computer was powerful, does it?")
+        player.story++
+      } break;
+      case 4: if (player.story==7) {
+        createStoryElement("Your new computer still generates errors. Oh come on!")
+        player.story++
+      } break;
     }
 
     display()
@@ -57,22 +66,63 @@ function buyGen(tier) {
 function prestige(tier) {
   switch(tier) { //don't allow prestiging until you match reqs
     case 1: if (player.compAmount[player.prestige1] < 10) return; break;
+    case 2: if (player.compAmount[player.prestige2+3] < 20) return; break;
   }
   player.errors = 10;
   player.compCost = [10,100,1000,10000,1e6,1e8,1e10,1e13,1e16];
   player.compAmount = [0,0,0,0,0,0,0,0,0];
   player.compPow = [1,10,100,1000,1e4,1e5,1e6,1e7,1e8];
   if (tier==1) {
-    player.prestige1++;
+    player.prestige1+=1
     for (let i=0;i<9;i++) player.compPow[i] *= Math.pow(1.5,player.prestige1);
-    document.getElementById("prestige1Gen").innerHTML = ROMAN_NUMERALS[player.prestige1]
+	if (player.prestige1==Math.min(player.prestige2+4,9)) {
+		document.getElementById("abletoprestige").style.display = 'none'
+		document.getElementById("maxout").style.display = 'inline'
+    } else {
+		document.getElementById("prestige1Gen").innerHTML = ROMAN_NUMERALS[player.prestige1+1]
+	}
+	display()
   } else {
     player.prestige1 = 0;
     document.getElementById("prestige1Gen").innerHTML = 'I'
+    document.getElementById("abletoprestige").style.display = 'inline'
+    document.getElementById("maxout").style.display = 'none'
     if (tier==2) {
-      player.prestige2++;
-      document.getElementById("prestige2Gen").innerHTML = ROMAN_NUMERALS[player.prestige2+3]
+      player.prestige2+=1
+	  if (player.prestige2==5) {
+	      document.getElementById("abletoprestige2").style.display = 'none'
+		  document.getElementById("maxout2").style.display = 'inline'
+	  } else {
+		  document.getElementById("prestige2Gen").innerHTML = ROMAN_NUMERALS[player.prestige2+4]
+		  document.getElementById("afterPrestige2Gen").innerHTML = ROMAN_NUMERALS[player.prestige2+5]
+	  }
+      document.getElementById(TIER_NAMES[player.prestige2+3]+"Comp").style.display='block'
     }
+	display()
+  }
+
+  switch (tier) {
+	  case 1: if (player.story==4&&player.prestige1==1) {
+		createStoryElement("Wonderful, you have upgraded your computers.")
+        player.story++
+	  }
+	  if (player.story==5&&player.prestige1==4) {
+		createStoryElement("You max out your computers but it still giving you errors. Why not do something else?")
+        player.story++
+	  } break
+	  
+	  case 2: if (player.story==6&&player.prestige2==1) {
+		createStoryElement("You bought your new computer. What it does do now?")
+        player.story++
+	  } 
+	  if (player.story==8&&player.prestige2==2) {
+		createStoryElement("You keep buying your new computers, but it doesn\'t work for all.")
+        player.story++
+	  } 
+	  if (player.story==9&&player.prestige2==5) {
+		createStoryElement("You ran out of computers. We need to setup a network.")
+        player.story++
+	  } break
   }
 }
 function createStoryElement(message) {
@@ -93,7 +143,7 @@ function getEPS() {
 function display() {
   document.getElementById("errors").innerHTML = player.errors //this is the base, except in the parentheses add the HTML tag of the thing you're changing
   document.getElementById("eps").innerHTML = getEPS()
-  for (let i=0;i<4;i++) document.getElementById("cop"+(i+1)).innerHTML = "Cost: " + player.compCost[i] + " (" + player.compAmount[i] + ")"
+  for (let i=0;i<Math.min(player.prestige2+4,9);i++) document.getElementById("cop"+(i+1)).innerHTML = "Cost: " + player.compCost[i] + " (" + player.compAmount[i] + ")"
 }
 
 function increaseErrors() {
@@ -105,6 +155,23 @@ function increaseErrors() {
 
 }*/
 
+function setupRoman() {
+	var thousands = ['','M','MM','MMM']
+	var hundreds = ['','C','CC','CCC','CD','D','DC','DCC','DCCC','CM']
+	var tens = ['','X','XX','XXX','XL','L','LX','LXX','LXXX','XC']
+	var ones = ['','I','II','III','IV','V','VI','VII','VIII','IX']
+	
+	for (i=0;i<4;i++) {
+		for (j=0;j<10;j++) {
+			for (k=0;k<10;k++) {
+				for (l=0;l<10;l++) {
+					ROMAN_NUMERALS.push(thousands[i]+hundreds[j]+tens[k]+ones[l])
+				}
+			}
+		}
+	}
+}
+
 setupRoman()
 setInterval(function(){
   increaseErrors();
@@ -114,4 +181,4 @@ function drawStorybox() {
   rect(50, 50, 150, 250);
   line(50, 75, 150, 75); 
 }
-drawStorybox();
+//drawStorybox();

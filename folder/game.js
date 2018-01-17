@@ -54,6 +54,7 @@ function buyGen(tier) {
 		player.story+=1
 	}
   }
+  display();
 }
 
 function createStoryElement(message) {

@@ -138,7 +138,7 @@ function createStoryElement(message) {
 
 function getEPS() {
   let ret = new Decimal(0);
-  for (let i=0;i<9;i++) ret = ret.add(player.compAmount[i].mul(player.compPow[i]))
+  for (let i=0;i<9;i++) ret = ret.add(player.compAmount[i]*player.compPow[i])
   return ret;
 }
 
@@ -158,24 +158,29 @@ function save() {
 }
 
 function load() {
-  save=JSON.parse(atob('errorSave'))
-  if (save === null) return;
-  player = save;
+  try {
+	  save=JSON.parse(atob(localStorage.getItem('errorSave')))
+	  player = save;
 
-  //when adding a new player variable, PLEASE ADD A NEW LINE!!
-  if (player.version == undefined) player.version = 0;
-  if (player.build == undefined) player.build = 0;
-  if (player.build < 1) {
-	for (let i=0;i<9;i++) {
-		player.compCost[i] = parseint(player.compCost[i])
-		player.compPow[i] = parseint(player.compPow[i])
-	}
-  }
-  
-  //if the value is a Decimal, set it to be a Decimal here.
-  player.errors = new Decimal(player.errors)
-  for (let i=0;i<9;i++) {
-    player.compAmount[i] = new Decimal(player.compAmount[i])
+	  //when adding a new player variable, PLEASE ADD A NEW LINE!!
+	  if (player.version == undefined) player.version = 0;
+	  if (player.build == undefined) player.build = 0;
+	  if (player.build < 1) {
+		for (let i=0;i<9;i++) {
+			player.compCost[i] = parseint(player.compCost[i])
+			player.compPow[i] = parseint(player.compPow[i])
+		}
+	  }
+	  player.version = 0
+	  player.build = 1
+	  
+	  //if the value is a Decimal, set it to be a Decimal here.
+	  player.errors = new Decimal(player.errors)
+	  for (let i=0;i<9;i++) {
+		player.compCost[i] = new Decimal(player.compCost[i])
+	  }
+  } catch (e) {
+	  console.log('Your save failed to load:\n'+e)
   }
 }
 
@@ -196,10 +201,6 @@ function setupRoman() {
 	}
 }
 
-setupRoman()
-setInterval(function(){
-  increaseErrors();
-},1000);
 
 function drawStorybox() {
   rect(50, 50, 150, 250);
@@ -207,6 +208,7 @@ function drawStorybox() {
 }
 //drawStorybox();
 
+setupRoman()
 load()
 setInterval(increaseErrors,1000);
 setInterval(save,10000);

@@ -34,7 +34,7 @@ function changeMults() {
 
 function buyGen(tier,bulk=1) {
   if (player.errors.gte(player.compCost[tier])) {
-	player.compAmount[tier]=+1
+	player.compAmount[tier]+=1
     player.errors = player.errors.sub(player.compCost[tier])
     player.compCost[tier] = player.compCost[tier].mul(costMult[tier])
 

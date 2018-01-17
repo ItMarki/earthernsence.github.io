@@ -13,6 +13,22 @@ const TIER_NAMES = ['first','second','third', 'fourth', 'fifth', 'sixth', 'seven
 const ROMAN_NUMERALS = ['I','II','III','IV','V','VI','VII','VIII','IX']
 const costMult=[2,3,5,8,13,21,34,55,89]
 
+function changeMults() {
+  if (player.buyMult == 1) {
+	  player.buyMult = 5;
+  } else if (player.buyMult == 5) {
+    player.buyMult = 10;
+  } else if (player.buyMult == 10) {
+    player.buyMult = 25;
+  } else if (player.buyMult == 25) {
+    player.buyMult = 50;
+  } else if (player.buyMult == 50) {
+    player.buyMult = 100;
+  } else if (player.buyMult == 100) {
+    player.buyMult = 1;
+  }
+}
+
 function buyGen(tier) {
   if (player.errors>=player.compCost[tier]) {
 	  player.compAmount[tier]++
@@ -78,6 +94,7 @@ function display() {
   document.getElementById("errors").innerHTML = player.errors; //this is the base, except in the parentheses add the HTML tag of the thing you're changing
   document.getElementById("eps").innerHTML = getEPS();
   for (let i=0;i<4;i++) document.getElementById("cop"+(i+1)).innerHTML = "Buy a tier "+ROMAN_NUMERALS[i]+" computer. Cost: " + player.compCost[i] + " (" + player.compAmount[i] + ")";
+  //document.getElementById("buyMult").innerHTML = player.buyMult + "x";
 }
 
 function increaseErrors() {

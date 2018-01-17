@@ -1,13 +1,15 @@
 //Calling it this because it will be main game JS thing?
 
 player = {
-  errors: 10, //current errors
-  compCost: [10,100,1000,10000,1e6,1e8,1e10,1e13,1e16],
+  errors: new Decimal(10), //current errors
+  compCost: [new Decimal(10),new Decimal(100),new Decimal(1000),new Decimal(10000),new Decimal(1e6),new Decimal(1e8),new Decimal(1e10),new Decimal(1e13),new Decimal(1e16)],
   compAmount: [0,0,0,0,0,0,0,0,0],
   compPow: [1,10,100,1000,1e4,1e5,1e6,1e7,1e8],
   prestige1: 0,
   prestige2: 0,
-  story: 0
+  story: 0,
+  version: 0,
+  build: 1
 }
 const TIER_NAMES = ['first','second','third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 'ninth']; // can add more if more gens/story elements, cuz that uses this too
 const ROMAN_NUMERALS=[]
@@ -31,10 +33,10 @@ function changeMults() {
 }
 
 function buyGen(tier,bulk=1) {
-  if (player.errors>=player.compCost[tier]) {
-	player.compAmount[tier]++
-    player.errors-=player.compCost[tier]
-    player.compCost[tier]*=costMult[tier]
+  if (player.errors.gte(player.compCost[tier])) {
+	player.compAmount[tier]=+1
+    player.errors = player.errors.sub(player.compCost[tier])
+    player.compCost[tier] = player.compCost[tier].mul(costMult[tier])
 
     switch (tier) {
       case 0: if (player.story==0) {
@@ -68,13 +70,13 @@ function prestige(tier) {
     case 1: if (player.compAmount[player.prestige1] < 10) return; break;
     case 2: if (player.compAmount[player.prestige2+3] < 20) return; break;
   }
-  player.errors = 10;
-  player.compCost = [10,100,1000,10000,1e6,1e8,1e10,1e13,1e16];
-  player.compAmount = [0,0,0,0,0,0,0,0,0];
-  player.compPow = [1,10,100,1000,1e4,1e5,1e6,1e7,1e8];
+  player.errors = new Decimal(10); //current errors
+  player.compCost = [new Decimal(10),new Decimal(100),new Decimal(1000),new Decimal(10000),new Decimal(1e6),new Decimal(1e8),new Decimal(1e10),new Decimal(1e13),new Decimal(1e16)];
+  player.compAmount=[0,0,0,0,0,0,0,0,0]
+  player.compPow=[1,10,100,1000,1e4,1e5,1e6,1e7,1e8]
   if (tier==1) {
     player.prestige1+=1
-    for (let i=0;i<9;i++) player.compPow[i] *= Math.pow(1.5,player.prestige1);
+    for (let i=0;i<9;i++) player.compPow[i]=player.compPow[i].times(Math.pow(1.5,player.prestige1))
 	if (player.prestige1==Math.min(player.prestige2+4,9)) {
 		document.getElementById("abletoprestige").style.display = 'none'
 		document.getElementById("maxout").style.display = 'inline'
@@ -135,8 +137,8 @@ function createStoryElement(message) {
 }
 
 function getEPS() {
-  let ret = 0;
-  for (let i=0;i<9;i++) ret += player.compAmount[i]*player.compPow[i]
+  let ret = new Decimal(0);
+  for (let i=0;i<9;i++) ret = ret.add(player.compAmount[i].mul(player.compPow[i]))
   return ret;
 }
 
@@ -147,13 +149,35 @@ function display() {
 }
 
 function increaseErrors() {
-  player.errors+=getEPS();
+  player.errors = player.errors.add(getEPS());
   display()
 }
 
-/*function save() {
+function save() {
+	localStorage.setItem('errorSave',btoa(JSON.stringify(player)))
+}
 
-}*/
+function load() {
+  save=JSON.parse(atob('errorSave'))
+  if (save === null) return;
+  player = save;
+
+  //when adding a new player variable, PLEASE ADD A NEW LINE!!
+  if (player.version == undefined) player.version = 0;
+  if (player.build == undefined) player.build = 0;
+  if (player.build < 1) {
+	for (let i=0;i<9;i++) {
+		player.compCost[i] = parseint(player.compCost[i])
+		player.compPow[i] = parseint(player.compPow[i])
+	}
+  }
+  
+  //if the value is a Decimal, set it to be a Decimal here.
+  player.errors = new Decimal(player.errors)
+  for (let i=0;i<9;i++) {
+    player.compAmount[i] = new Decimal(player.compAmount[i])
+  }
+}
 
 function setupRoman() {
 	var thousands = ['','M','MM','MMM']
@@ -182,3 +206,7 @@ function drawStorybox() {
   line(50, 75, 150, 75); 
 }
 //drawStorybox();
+
+load()
+setInterval(increaseErrors,1000);
+setInterval(save,10000);

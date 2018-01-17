@@ -11,57 +11,45 @@ var player = {
   secondAmount: 0,
   thirdAmount: 0,
   fourthAmount: 0,
-  firstClicked: false,
-  secondClicked: false,
-  thirdClicked: false,
-  fourthClicked: false,
+  story: 0
 }
 const TIER_NAMES = ['first','second','third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 'ninth']; // can add more if more gens/story elements, cuz that uses this too
+var costMult=[2,3,5,8,13,21,34,55,89]
 
 
 function buyGen(tier) {
   var level = TIER_NAMES[tier];
-  if (player.errors - player[level + "Cost"] >= 0) {
-    player[level + "Amount"] ++;
-    player.errors -= player[level + "Cost"];
-    return true;
-  } else return false;
+  if (player.errors>=player[level+"Cost"]) {
+	player[level+"Amount"]+=1
+    player.errors-=player[level+"Cost"]
+	player[level+"Cost"]*=costMult[tier]
+	if (tier==0&&player.story==0) {
+		createStoryElement("Pancakes is ready!")
+		player.story+=1
+	}
+	if (tier==1&&player.story==1) {
+		createStoryElement("But NOPE! No pancakes for you. Too many console errors.")
+		player.story+=1
+	}
+	if (tier==2&&player.story==2) {
+		createStoryElement("Nice! A Tier III Computer. Well deserved.")
+		player.story+=1
+	}
+  }
 }
 
 function createStoryElement(message) {
   
+  document.getElementById("fifthStory").innerHTML = document.getElementById("fourthStory").innerHTML;
+  document.getElementById("fourthStory").innerHTML = document.getElementById("thirdStory").innerHTML;
+  document.getElementById("thirdStory").innerHTML = document.getElementById("secondStory").innerHTML;
   document.getElementById("secondStory").innerHTML = document.getElementById("firstStory").innerHTML;
   document.getElementById("firstStory").innerHTML = message
   // YOU HAVE TO MANUALLY ADD MORE THINGS HERE IF YOU HAVE MORE MAX MESSAGES SHOWING AT ONCE
 }
 
-document.getElementById('cop1').onclick = function() {
-  if (player.firstClicked == false && buyGen(0) == true) {
-    createStoryElement("Pancakes is ready!");
-    player.firstClicked = true;
-  }
-}
-
-document.getElementById('cop2').onclick = function() {
-  if (player.secondClicked == false && buyGen(1) == true) {
-    createStoryElement("But NOPE! No pancakes for you. Too many console errors.");
-    player.secondClicked = true;
-  }
-}
-
-document.getElementById('cop3').onclick = function() {
-  if (player.thirdClicked == false &&   buyGen(2) == true) {
-    createStoryElement("Nice! A Tier III Computer. Well deserved.");
-    player.thirdClicked = true;
-  }
-}
-
-document.getElementById('cop4').onclick = function() {
-  buyGen(3);
-}
-
 function getEPS() {
-  player.eps = (player.firstAmount * 1) + (player.secondAmount * 10) + (player.thirdAmount * 100); // can change base amounts of how much they produce, or change it to just be firsts cuz AD elements
+  player.eps = (player.firstAmount * 1)+(player.secondAmount * 10)+(player.thirdAmount * 100)+(player.fourthAmount*1000)+(player.fifthAmount*10000); // can change base amounts of how much they produce, or change it to just be firsts cuz AD elements
 }
 
 function display() {
@@ -76,11 +64,11 @@ function display() {
 }
 
 function increaseErrors() {
-  getEPS();
-  player.errors += player.eps;
-  display();
+  getEPS()
+  player.errors+=player.eps;
+  display()
 }
 
 setInterval(function(){
   increaseErrors();
-}, 1000);
+},1000);

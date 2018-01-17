@@ -12,17 +12,20 @@
   <div> You have <span id="errors">x</span> errors.</div>
   <div> You are making <span id="eps">x</span> errors per second.</div>
   
-  <button id="cop1">Buy a Tier I Computer. (<span id="firstAmt">x</span>)</button> <br>
-  <button id="cop2">Buy a Tier II Computer. (<span id="secondAmt">x</span>)</button> <br>
-  <button id="cop3">Buy a Tier III Computer. (<span id="thirdAmt">x</span>)</button> <br>
-  <button id="cop4">Buy a Tier IV Computer. (<span id="forthAmt">x</span>)</button> <br>
+  <button id="cop1" onClick='buyGen(1)'>Buy a Tier I Computer. (<span id="firstAmt">x</span>)</button> <br>
+  <button id="cop2" onClick='buyGen(2)'>Buy a Tier II Computer. (<span id="secondAmt">x</span>)</button> <br>
+  <button id="cop3" onClick='buyGen(3)'>Buy a Tier III Computer. (<span id="thirdAmt">x</span>)</button> <br>
+  <button id="cop4" onClick='buyGen(4)'>Buy a Tier IV Computer. (<span id="forthAmt">x</span>)</button> <br>
     
   <div> Upgrade Computers: Requires 10 Tier IV Computers <button id=upgradeComputers"><div> Reset back to beginning of run, but gain a small boost.</button><div>
   <div> I.P. Change: Requires 20 Tier IV Computers <button id="ipChange"><div> Gain Tier V Computer, but resets everything.</button></div>
   <div> Network: Requires 100 Tier IX Computers             <button id="network"><div> Reset everything, but gain a Generation Time upgrade. </button></div>
     
-  <div id="storybox" style='position:absolute;width:100%;bottom:0;text-align:center'><div id='firstStory'></div>
-  <div id='secondStory'></div></div>
+  <div id="storybox" style='position:absolute;width:100%;bottom:0;text-align:center'><div id='fifthStory'></div>
+  <div id='fourthStory'></div>
+  <div id='thirdStory'></div>
+  <div id='secondStory'></div>
+  <div id='firstStory'></div></div>
   
 </body>
 

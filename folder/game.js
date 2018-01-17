@@ -3,6 +3,7 @@
 var player = {
   errors: 10, //current errors
   eps: 0, //errors per second
+  buyMult: 1,
   firstCost: 10,
   secondCost: 100,
   thirdCost: 1000,
@@ -16,13 +17,29 @@ var player = {
 const TIER_NAMES = ['first','second','third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 'ninth']; // can add more if more gens/story elements, cuz that uses this too
 var costMult=[2,3,5,8,13,21,34,55,89]
 
+function changeMults() {
+  if (player.buyMult == 1) {
+	  player.buyMult = 5;
+  } else if (player.buyMult == 5) {
+    player.buyMult = 10;
+  } else if (player.buyMult == 10) {
+    player.buyMult = 25;
+  } else if (player.buyMult == 25) {
+    player.buyMult = 50;
+  } else if (player.buyMult == 50) {
+    player.buyMult = 100;
+  } else if (player.buyMult == 100) {
+    player.buyMult = 1;
+  }
+}
 
 function buyGen(tier) {
   var level = TIER_NAMES[tier];
-  if (player.errors>=player[level+"Cost"]) {
-	player[level+"Amount"]+=1
-    player.errors-=player[level+"Cost"]
-	player[level+"Cost"]*=costMult[tier]
+  var buyAmt = player.buyMult - (player[level+"Amount"] % player.buyMult);
+  if (player.errors>=(player[level+"Cost"])*buyAmt) {
+	player[level+"Amount"]+=buyAmt;
+    player.errors-=(player[level+"Cost"])*buyAmt;
+	player[level+"Cost"]*=costMult[tier];
 	if (tier==0&&player.story==0) {
 		createStoryElement("Pancakes is ready!")
 		player.story+=1

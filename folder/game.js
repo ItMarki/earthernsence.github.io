@@ -5,6 +5,8 @@ var player = {
   compCost: [10,100,1000,10000,1e6,1e8,1e10,1e13,1e16],
   compAmount: [0,0,0,0,0,0,0,0,0],
   compPow: [1,10,100,1000,1e4,1e5,1e6,1e7,1e8],
+  prestige1: 0,
+  prestige2: 0,
   story: 0
 }
 const TIER_NAMES = ['first','second','third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 'ninth']; // can add more if more gens/story elements, cuz that uses this too
@@ -32,11 +34,32 @@ function buyGen(tier) {
       } break;
     }
 
+    display()
   }
 }
 
+function prestige(tier) {
+  switch(tier) { //don't allow prestiging until you match reqs
+    case 1: if (player.compAmount[player.prestige1] < 10) return; break;
+  }
+  player.errors = 10;
+  player.compCost = [10,100,1000,10000,1e6,1e8,1e10,1e13,1e16];
+  player.compAmount = [0,0,0,0,0,0,0,0,0];
+  player.compPow = [1,10,100,1000,1e4,1e5,1e6,1e7,1e8];
+  if (tier==1) {
+    player.prestige1++;
+    for (let i=0;i<9;i++) player.compPow[i] *= Math.pow(1.5,player.prestige1);
+    document.getElementById("prestige1Gen").innerHTML = ROMAN_NUMERALS[player.prestige1]
+  } else {
+    player.prestige1 = 0;
+    document.getElementById("prestige1Gen").innerHTML = 'I'
+    if (tier==2) {
+      player.prestige2++;
+      document.getElementById("prestige2Gen").innerHTML = ROMAN_NUMERALS[player.prestige2+3]
+    }
+  }
+}
 function createStoryElement(message) {
-  
   document.getElementById("fifthStory").innerHTML = document.getElementById("fourthStory").innerHTML;
   document.getElementById("fourthStory").innerHTML = document.getElementById("thirdStory").innerHTML;
   document.getElementById("thirdStory").innerHTML = document.getElementById("secondStory").innerHTML;
@@ -62,6 +85,8 @@ function increaseErrors() {
   display()
 }
 
-setInterval(function(){
-  increaseErrors();
-},1000);
+/*function save() {
+
+}*/
+
+setInterval(increaseErrors,1000);

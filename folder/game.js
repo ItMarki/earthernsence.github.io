@@ -78,6 +78,7 @@ function display() {
   document.getElementById("cop2").innerHTML = "Buy a tier II computer. Cost: " + player.secondCost + " (" + player.secondAmount + ")";
   document.getElementById("cop3").innerHTML = "Buy a tier III computer. Cost: " + player.thirdCost + " (" + player.thirdAmount + ")";
   document.getElementById("cop4").innerHTML = "Buy a tier IV computer. Cost: " + player.fourthCost + " (" + player.fourthAmount + ")";
+  document.getElementById("buyMult").innerHTML = player.buyMult + "x";
 }
 
 function increaseErrors() {

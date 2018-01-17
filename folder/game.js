@@ -30,7 +30,7 @@ function buyGen(tier) {
 
 function createStoryElement(message) {
   
-  document.getElementById("secondStory").innerHTML = document.getElementById("firstStory").innerHTML
+  document.getElementById("secondStory").innerHTML = document.getElementById("firstStory").innerHTML;
   document.getElementById("firstStory").innerHTML = message
   // YOU HAVE TO MANUALLY ADD MORE THINGS HERE IF YOU HAVE MORE MAX MESSAGES SHOWING AT ONCE
 }
@@ -75,3 +75,12 @@ function display() {
   document.getElementById("cop4").innerHTML = "Buy a tier IV computer. Cost: " + player.fourthCost + " (" + player.fourthAmount + ")";
 }
 
+function increaseErrors() {
+  getEPS();
+  player.errors += player.eps;
+  display();
+}
+
+setInterval(function(){
+  increaseErrors();
+}, 1000);

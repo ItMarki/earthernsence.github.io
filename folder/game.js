@@ -8,6 +8,7 @@ player = {
   prestige1: 0,
   prestige2: 0,
   story: 0,
+  time:new Date().getTime(),
   version: 0,
   build: 1
 }
@@ -58,8 +59,8 @@ function buyGen(tier,bulk=1) {
         player.story+=1
       } break;
       case 1: if (player.story==1) {
-        createStoryElement("But NOPE! No pancakes for you. Too many console errors.")
-        player.story+=1
+        createStoryElement("Wakey wakey! Aw, c'mon, you still got the rest of the day to sleep. Get up baby, get up!")
+        player.story++
       } break;
       case 2: if (player.story==2) {
         createStoryElement("Nice! A Tier III Computer. Well deserved.")
@@ -166,7 +167,9 @@ function display() {
 }
 
 function increaseErrors() {
-  player.errors = player.errors.add(getEPS());
+  var s = (new Date().getTime()-game.time)/1000 // number of seconds since last tick
+	game.time = new Date().getTime()
+  player.errors = player.errors.add(getEPS().mul(s));
   display()
 }
 

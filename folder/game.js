@@ -106,4 +106,12 @@ function increaseErrors() {
 }*/
 
 setupRoman()
-setInterval(increaseErrors,1000);
+setInterval(function(){
+  increaseErrors();
+},1000);
+
+function drawStorybox() {
+  rect(50, 50, 150, 250);
+  line(50, 75, 150, 75); 
+}
+drawStorybox();

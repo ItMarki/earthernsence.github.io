@@ -10,7 +10,6 @@ var player = {
   story: 0
 }
 const TIER_NAMES = ['first','second','third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 'ninth']; // can add more if more gens/story elements, cuz that uses this too
-const ROMAN_NUMERALS = ['I','II','III','IV','V','VI','VII','VIII','IX']
 const costMult=[2,3,5,8,13,21,34,55,89]
 
 function changeMults() {
@@ -92,10 +91,9 @@ function getEPS() {
 }
 
 function display() {
-  document.getElementById("errors").innerHTML = player.errors; //this is the base, except in the parentheses add the HTML tag of the thing you're changing
-  document.getElementById("eps").innerHTML = getEPS();
-  for (let i=0;i<4;i++) document.getElementById("cop"+(i+1)).innerHTML = "Buy a tier "+ROMAN_NUMERALS[i]+" computer. Cost: " + player.compCost[i] + " (" + player.compAmount[i] + ")";
-  //document.getElementById("buyMult").innerHTML = player.buyMult + "x";
+  document.getElementById("errors").innerHTML = player.errors //this is the base, except in the parentheses add the HTML tag of the thing you're changing
+  document.getElementById("eps").innerHTML = getEPS()
+  for (let i=0;i<4;i++) document.getElementById("cop"+(i+1)).innerHTML = "Cost: " + player.compCost[i] + " (" + player.compAmount[i] + ")"
 }
 
 function increaseErrors() {
@@ -107,4 +105,5 @@ function increaseErrors() {
 
 }*/
 
+setupRoman()
 setInterval(increaseErrors,1000);

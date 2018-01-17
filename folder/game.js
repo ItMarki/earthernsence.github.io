@@ -44,7 +44,7 @@ function buyGen(tier,bulk=1) {
         player.story++
       } break;
       case 1: if (player.story==1) {
-        createStoryElement("But NOPE! No pancakes for you. Too many console errors.")
+        createStoryElement("Wakey wakey! Aw, c'mon, you still got the rest of the day to sleep. Get up baby, get up!")
         player.story++
       } break;
       case 2: if (player.story==2) {

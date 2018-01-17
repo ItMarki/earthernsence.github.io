@@ -31,6 +31,7 @@ function changeMults() {
   } else if (player.buyMult == 100) {
     player.buyMult = 1;
   }
+  display();
 }
 
 function buyGen(tier) {

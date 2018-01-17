@@ -10,7 +10,7 @@ player = {
   story: 0,
   time:new Date().getTime(),
   version: 0,
-  build: 1
+  build: 2
 }
 const story = ['','','','','']
 const TIER_NAMES = ['first','second','third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 'ninth']; // can add more if more gens/story elements, cuz that uses this too
@@ -167,8 +167,8 @@ function display() {
 }
 
 function increaseErrors() {
-  var s = (new Date().getTime()-game.time)/1000 // number of seconds since last tick
-	game.time = new Date().getTime()
+  var s = (new Date().getTime()-player.time)/1000 // number of seconds since last tick
+  player.time = new Date().getTime()
   player.errors = player.errors.add(getEPS().mul(s));
   display()
 }
@@ -191,8 +191,11 @@ function load() {
 			player.compPow[i] = parseint(player.compPow[i])
 		}
 	  }
+	  if (player.build < 2) {
+		player.time=new Date().getTime()
+	  }
 	  player.version = 0
-	  player.build = 1
+	  player.build = 2
 	  
 	  //if the value is a Decimal, set it to be a Decimal here.
 	  player.errors = new Decimal(player.errors)

@@ -16,7 +16,7 @@ var player = {
   thirdClicked: false,
   fourthClicked: false,
 }
-const TIER_NAMES = ['first','second','third', 'fourth']; // can add more if more gens/story elements, cuz that uses this too
+const TIER_NAMES = ['first','second','third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 'ninth']; // can add more if more gens/story elements, cuz that uses this too
 
 
 function buyGen(tier) {

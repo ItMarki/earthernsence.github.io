@@ -11,9 +11,23 @@ player = {
   version: 0,
   build: 1
 }
+const story = ['','','','','']
 const TIER_NAMES = ['first','second','third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 'ninth']; // can add more if more gens/story elements, cuz that uses this too
 const ROMAN_NUMERALS=[]
 const costMult=[2,2.5,3,4,6,9,14,22,35]
+
+	
+function updateElement(elementID,value) {
+	document.getElementById(elementID).innerHTML=value
+}
+	
+function showElement(elementID,style) {
+	document.getElementById(elementID).style.display=style
+}
+	
+function hideElement(elementID) {
+	document.getElementById(elementID).style.display='none'
+}
 
 function changeMults() {
   if (player.buyMult == 1) {
@@ -41,23 +55,23 @@ function buyGen(tier,bulk=1) {
     switch (tier) {
       case 0: if (player.story==0) {
         createStoryElement("Pancakes is ready!")
-        player.story++
+        player.story+=1
       } break;
       case 1: if (player.story==1) {
         createStoryElement("But NOPE! No pancakes for you. Too many console errors.")
-        player.story++
+        player.story+=1
       } break;
       case 2: if (player.story==2) {
         createStoryElement("Nice! A Tier III Computer. Well deserved.")
-        player.story++
+        player.story+=1
       } break;
       case 3: if (player.story==3) {
         createStoryElement("A Tier IV Computer was powerful, does it?")
-        player.story++
+        player.story+=1
       } break;
       case 4: if (player.story==7) {
         createStoryElement("Your new computer still generates errors. Oh come on!")
-        player.story++
+        player.story+=1
       } break;
     }
 
@@ -70,70 +84,49 @@ function prestige(tier) {
     case 1: if (player.compAmount[player.prestige1] < 10) return; break;
     case 2: if (player.compAmount[player.prestige2+3] < 20) return; break;
   }
+  //Tier 2 - I.P. change
+  player.prestige2+=1
+  
+  //Tier 1 - Update computers
+  player.prestige1=(tier==1)?player.prestige1+1:0
   player.errors = new Decimal(10); //current errors
   player.compCost = [new Decimal(10),new Decimal(100),new Decimal(1000),new Decimal(10000),new Decimal(1e6),new Decimal(1e8),new Decimal(1e10),new Decimal(1e13),new Decimal(1e16)];
   player.compAmount=[0,0,0,0,0,0,0,0,0]
   player.compPow=[1,10,100,1000,1e4,1e5,1e6,1e7,1e8]
-  if (tier==1) {
-    player.prestige1+=1
-    for (let i=0;i<9;i++) player.compPow[i]=player.compPow[i].times(Math.pow(1.5,player.prestige1))
-	if (player.prestige1==Math.min(player.prestige2+4,9)) {
-		document.getElementById("abletoprestige").style.display = 'none'
-		document.getElementById("maxout").style.display = 'inline'
-    } else {
-		document.getElementById("prestige1Gen").innerHTML = ROMAN_NUMERALS[player.prestige1+1]
-	}
-	display()
-  } else {
-    player.prestige1 = 0;
-    document.getElementById("prestige1Gen").innerHTML = 'I'
-    document.getElementById("abletoprestige").style.display = 'inline'
-    document.getElementById("maxout").style.display = 'none'
-    if (tier==2) {
-      player.prestige2+=1
-	  if (player.prestige2==5) {
-	      document.getElementById("abletoprestige2").style.display = 'none'
-		  document.getElementById("maxout2").style.display = 'inline'
-	  } else {
-		  document.getElementById("prestige2Gen").innerHTML = ROMAN_NUMERALS[player.prestige2+4]
-		  document.getElementById("afterPrestige2Gen").innerHTML = ROMAN_NUMERALS[player.prestige2+5]
-	  }
-      document.getElementById(TIER_NAMES[player.prestige2+3]+"Comp").style.display='block'
-    }
-	display()
-  }
-
+  display()
+  
   switch (tier) {
 	  case 1: if (player.story==4&&player.prestige1==1) {
 		createStoryElement("Wonderful, you have upgraded your computers.")
-        player.story++
+        player.story+=1
 	  }
 	  if (player.story==5&&player.prestige1==4) {
 		createStoryElement("You max out your computers but it still giving you errors. Why not do something else?")
-        player.story++
+        player.story+=1
 	  } break
 	  
 	  case 2: if (player.story==6&&player.prestige2==1) {
 		createStoryElement("You bought your new computer. What it does do now?")
-        player.story++
+        player.story+=1
 	  } 
 	  if (player.story==8&&player.prestige2==2) {
 		createStoryElement("You keep buying your new computers, but it doesn\'t work for all.")
-        player.story++
+        player.story+=1
 	  } 
 	  if (player.story==9&&player.prestige2==5) {
 		createStoryElement("You ran out of computers. We need to setup a network.")
-        player.story++
+        player.story+=1
 	  } break
   }
 }
+
 function createStoryElement(message) {
-  document.getElementById("fifthStory").innerHTML = document.getElementById("fourthStory").innerHTML;
-  document.getElementById("fourthStory").innerHTML = document.getElementById("thirdStory").innerHTML;
-  document.getElementById("thirdStory").innerHTML = document.getElementById("secondStory").innerHTML;
-  document.getElementById("secondStory").innerHTML = document.getElementById("firstStory").innerHTML;
-  document.getElementById("firstStory").innerHTML = message
-  // YOU HAVE TO MANUALLY ADD MORE THINGS HERE IF YOU HAVE MORE MAX MESSAGES SHOWING AT ONCE
+	for (j=4;j>0;j--) {
+		story[j]=story[j-1]
+		updateElement(TIER_NAMES[j]+'Story',story[j])
+	}
+	story[0]=message
+	updateElement('firstStory',story[0])
 }
 
 function getEPS() {
@@ -146,6 +139,30 @@ function display() {
   document.getElementById("errors").innerHTML = player.errors //this is the base, except in the parentheses add the HTML tag of the thing you're changing
   document.getElementById("eps").innerHTML = getEPS()
   for (let i=0;i<Math.min(player.prestige2+4,9);i++) document.getElementById("cop"+(i+1)).innerHTML = "Cost: " + player.compCost[i] + " (" + player.compAmount[i] + ")"
+  for (i=0;i<5;i++) {
+  	  if (player.prestige2>i) {
+		showElement(TIER_NAMES[i+4]+'Comp','block')
+	  } else {
+		hideElement(TIER_NAMES[i+4]+'Comp')
+	  }
+  }
+  if (player.prestige2<5) {
+	  updateElement('prestige2Gen',ROMAN_NUMERALS[player.prestige2+4])
+	  updateElement('afterPrestige2Gen',ROMAN_NUMERALS[player.prestige2+5])
+	  hideElement('maxout2')
+	  showElement('abletoprestige2','inline')
+  } else {
+	  hideElement('abletoprestige2')
+	  showElement('maxout2','inline')
+  }
+  if (player.prestige1<player.prestige2+4) {
+	  updateElement('prestige1Gen',ROMAN_NUMERALS[player.prestige1+1])
+	  hideElement('maxout')
+	  showElement('abletoprestige','inline')
+  } else {
+	  hideElement('abletoprestige')
+	  showElement('maxout','inline')
+  }
 }
 
 function increaseErrors() {
@@ -159,8 +176,8 @@ function save() {
 
 function load() {
   try {
-	  save=JSON.parse(atob(localStorage.getItem('errorSave')))
-	  player = save;
+	  savefile=JSON.parse(atob(localStorage.getItem('errorSave')))
+	  player = savefile;
 
 	  //when adding a new player variable, PLEASE ADD A NEW LINE!!
 	  if (player.version == undefined) player.version = 0;

@@ -22,7 +22,7 @@
   Generation interval: <text id='genTime'>1s</text></div><br>
   <div>You have <text id="errors">x</text> errors.</div>
   <div>You are making <text id="eps">x</text> errors per second.</div><br>
-  <div><button onclick='switchTab("computers")'>Computers</button><button onclick='switchTab("options")'>Options</button></div><br>
+  <div><button onclick='switchTab("computers")'>Computers</button><button onclick='switchTab("options")'>Options</button><button onclick='switchTab("stats")'>Stats</button></div> <br>
   <!--<button id="buyMult" onclick="changeMults();">1x</button><br>-->
   <div id='computersTab'>
 	  <div>Tier I Computer:<button id="cop1" onClick='buyGen(0)'> (<text id="firstAmt">x</text>)</button></div>
@@ -46,6 +46,10 @@
 	  <button class='optionButton' onClick='prestige(Infinity)'>Reset</button>
 	  <div id='exportSave' style='display:none'> Here is your export save. The dev reccomends putting it in a safe spot. <input id='exportText' style='width: 480px'></input></div>
   </div>
+	<div id='statsTab' style='display:none'>
+		<!--<div id='statsTotal'> You have gained a total of X errors.</div>
+		<div id='statsPlaytime'> You have played for X.</div>
+		<div id='statsUpgradeComputers'> You have upgraded for computers X times.</div>-->
   <div id="storybox" style='position:absolute;width:100%;bottom:0;text-align:center'>
   <div id='firstStory'></div>
   <div id='secondStory'></div>

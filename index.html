@@ -14,12 +14,12 @@
 	<script type="text/javascript" src="break_infinity.min.js"> </script>
 	<script type="text/javascript" src="folder/game.js"> </script>
 </head>
-<body style="text-align:center" onload='display()'>
+<body style="text-align:center" onload='gameInit()'>
  <div id="game">
   <h1 id="logo">The Console Error Game</h1>
-  <!--<div>Reduce generation time by 10%.<br>
-  <button id="genReduction">Cost: 1k</button><button id="buyMax">Buy Max</button><br>
-  Generation interval: <text id='genTime'>1s</text></div><br>-->
+  <div id='prestige3Feature'>Reduce generation time by <text id='timeReduction'>10</text>%.<br>
+  <button id="genReduction">Cost: 1000</button><button id="buyMax">Buy Max</button><br>
+  Generation interval: <text id='genTime'>1s</text></div><br>
   <div>You have <text id="errors">x</text> errors.</div>
   <div>You are making <text id="eps">x</text> errors per second.</div><br>
   <div><button onclick='switchTab("computers")'>Computers</button><button onclick='switchTab("options")'>Options</button></div><br>
@@ -37,7 +37,7 @@
 	  <br>
 	  <div> Upgrade Computers: <text id='abletoprestige'>Requires 10 Tier <text id='prestige1Gen'>I</text> Computers <button id="upgradeComputers" onClick='prestige(1)'>Reset back to beginning of run, but gain a small boost.</button></text><text id='maxout' style='display:none'>Max out!</text></div>
 	  <div> I.P. Change: <text id='abletoprestige2'>Requires 20 Tier <text id='prestige2Gen'>IV</text> Computers <button id="ipChange" onClick='prestige(2)'>Gain Tier <text id='afterPrestige2Gen'>V</text> Computer, but resets everything.</button></text><text id='maxout2' style='display:none'>Max out!</text></div>
-	  <!--<div> Network: Requires 100 Tier IX Computers <button id="network"><div> Reset everything, but gain a Generation Time upgrade.</button></div>-->
+	  <div> Network: Requires <text id='prestige3Req'>60</text> Tier IX Computers <button id="network">Reset everything, but gain a Generation Time upgrade.</button></div>
   </div>
   <div id='optionsTab' style='display:none'>
 	  <button class='optionButton' onClick='save()'>Save</button>

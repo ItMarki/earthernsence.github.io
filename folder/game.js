@@ -6,13 +6,13 @@ player = {
   compCost: [new Decimal(10),new Decimal(100),new Decimal(1000),new Decimal(10000),new Decimal(1e6),new Decimal(1e8),new Decimal(1e10),new Decimal(1e13),new Decimal(1e16)],
   compAmount: [0,0,0,0,0,0,0,0,0],
   compPow: [1,10,100,1000,1e4,1e5,1e6,1e7,1e8],
+  boost: new Decimal(1),
   prestiges: [0,0,0],
-  timeUpgrades: 0,
   story: 0,
   playtime: 0,
   time: new Date().getTime(),
   version: 0,
-  build: 4
+  build: 5
 }
 tab='computers'
 const story = ['','','','','']
@@ -164,6 +164,7 @@ function prestige(tier) {
   player.compCost = [new Decimal(10),new Decimal(100),new Decimal(1000),new Decimal(10000),new Decimal(1e6),new Decimal(1e8),new Decimal(1e10),new Decimal(1e13),new Decimal(1e16)];
   player.compAmount=[0,0,0,0,0,0,0,0,0]
   player.compPow=[1,10,100,1000,1e4,1e5,1e6,1e7,1e8]
+  player.boost=new Decimal(1)
   player.time = new Date().getTime()
   display()
   
@@ -203,7 +204,7 @@ function createStoryElement(message) {
 
 function getEPS() {
   let ret = new Decimal(0);
-  for (let i=0;i<9;i++) ret = ret.add(player.compAmount[i]*player.compPow[i])
+  for (let i=0;i<9;i++) ret = ret.add(player.compAmount[i]*player.compPow[i].times(Decimal.pow(1.1,player.compAmount[i]-1)).times(player.boost))
   return ret;
 }
 
@@ -218,6 +219,11 @@ function display() {
 		  } else {
 			hideElement(TIER_NAMES[i+4]+'Comp')
 		  }
+	  }
+	  if (player.compAmount[2]>0) {
+		  showElement('genUpgrade','block')
+	  } else {
+		  hideElement('genUpgrade')
 	  }
 	  if (player.prestiges[1]<5) {
 		  updateElement('prestige2Gen',ROMAN_NUMERALS[player.prestiges[1]+4])
@@ -237,12 +243,6 @@ function display() {
 		  showElement('maxout','inline')
 	  }
 	  updateElement('prestige3Req',60+40*player.prestiges[2])
-	  if (player.prestiges[2]==0) {
-		  hideElement('prestige3Feature')
-	  } else {
-		  showElement('prestige3Feature','block')
-		  updateElement('timeReduction',8+2*player.prestiges[2])
-	  }
   }
   if (tab=='stats') {
 	  updateElement('statsTotal','You have gained a total of '+format(player.totalErrors)+' errors.')
@@ -307,8 +307,12 @@ function load(savefile) {
 		player.playtime=0
 		player.totalErrors=0
 	  }
+	  if (player.build < 5) {
+		player.boost=1
+		delete player.timeUpgrades
+	  }
 	  player.version = 0
-	  player.build = 4
+	  player.build = 5
 	  
 	  //if the value is a Decimal, set it to be a Decimal here.
 	  player.errors = new Decimal(player.errors)
@@ -316,6 +320,7 @@ function load(savefile) {
 	  for (let i=0;i<9;i++) {
 		player.compCost[i] = new Decimal(player.compCost[i])
 	  }
+	  player.boost=new Decimal(player.boost)
 	  
 	  increaseErrors()
 	  console.log('Game loaded!')

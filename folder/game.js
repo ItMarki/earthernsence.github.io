@@ -2,15 +2,17 @@
 
 player = {
   errors: new Decimal(10), //current errors
+  totalErrors: new Decimal(0),
   compCost: [new Decimal(10),new Decimal(100),new Decimal(1000),new Decimal(10000),new Decimal(1e6),new Decimal(1e8),new Decimal(1e10),new Decimal(1e13),new Decimal(1e16)],
   compAmount: [0,0,0,0,0,0,0,0,0],
   compPow: [1,10,100,1000,1e4,1e5,1e6,1e7,1e8],
   prestiges: [0,0,0],
   timeUpgrades: 0,
   story: 0,
-  time:new Date().getTime(),
+  playtime: 0,
+  time: new Date().getTime(),
   version: 0,
-  build: 3
+  build: 4
 }
 tab='computers'
 const story = ['','','','','']
@@ -58,6 +60,26 @@ function letter(label) {
 		label=Math.floor((label-1)/26)
 	} while (label>0)
 	return result
+}
+
+function formatTime(s) {
+	if (s < 1) {
+		return Math.floor(s*1000)+' milliseconds'
+	} else if (s < 60) {
+		return Math.floor(s*100)/100+' seconds'
+	} else if (s < 3600) {
+		return Math.floor(s/60)+' minutes and '+Math.floor(s%60)+' seconds'
+	} else if (s < 86400) {
+		return Math.floor(s/3600)+' hours, '+Math.floor(s/60%60)+' minutes, and '+Math.floor(s%60)+' seconds'
+	} else if (s < 2629746) {
+		return Math.floor(s/86400)+' days, '+Math.floor(s/3600%24)+' hours, '+Math.floor(s/60%60)+' minutes, and '+Math.floor(s%60)+' seconds'
+	} else if (s < 31556952) {
+		return Math.floor(s/2629746)+' months, '+Math.floor(s%2629746/86400)+' days, '+Math.floor(s%2629746/3600%24)+' hours, '+Math.floor(s%2629746/60%60)+' minutes, and '+Math.floor(s%2629746%60)+' seconds'
+	} else if (s < Infinity) {
+		return format(Math.floor(s/31556952))+' years, '+Math.floor(s/2629746%12)+' months, '+Math.floor(s%2629746/86400)+' days, '+Math.floor(s%2629746/3600%24)+' hours, '+Math.floor(s%2629746/60%60)+' minutes, and '+Math.floor(s%2629746%60)+' seconds'
+	} else {
+		return 'Infinite'
+	}
 }
 
 function switchTab(tabid) {
@@ -188,37 +210,61 @@ function getEPS() {
 function display() {
   document.getElementById("errors").innerHTML = format(player.errors) //this is the base, except in the parentheses add the HTML tag of the thing you're changing
   document.getElementById("eps").innerHTML = getEPS()
-  for (let i=0;i<Math.min(player.prestiges[1]+4,9);i++) document.getElementById("cop"+(i+1)).innerHTML = "Cost: " + format(player.compCost[i]) + " (" + player.compAmount[i] + ")"
-  for (i=0;i<5;i++) {
-  	  if (player.prestiges[1]>i) {
-		showElement(TIER_NAMES[i+4]+'Comp','block')
+  if (tab=='computers') {
+	  for (let i=0;i<Math.min(player.prestiges[1]+4,9);i++) document.getElementById("cop"+(i+1)).innerHTML = "Cost: " + format(player.compCost[i]) + " (" + player.compAmount[i] + ")"
+	  for (i=0;i<5;i++) {
+		  if (player.prestiges[1]>i) {
+			showElement(TIER_NAMES[i+4]+'Comp','block')
+		  } else {
+			hideElement(TIER_NAMES[i+4]+'Comp')
+		  }
+	  }
+	  if (player.prestiges[1]<5) {
+		  updateElement('prestige2Gen',ROMAN_NUMERALS[player.prestiges[1]+4])
+		  updateElement('afterPrestige2Gen',ROMAN_NUMERALS[player.prestiges[1]+5])
+		  hideElement('maxout2')
+		  showElement('abletoprestige2','inline')
 	  } else {
-		hideElement(TIER_NAMES[i+4]+'Comp')
+		  hideElement('abletoprestige2')
+		  showElement('maxout2','inline')
+	  }
+	  if (player.prestiges[0]<player.prestiges[1]+4) {
+		  updateElement('prestige1Gen',ROMAN_NUMERALS[player.prestiges[0]+1])
+		  hideElement('maxout')
+		  showElement('abletoprestige','inline')
+	  } else {
+		  hideElement('abletoprestige')
+		  showElement('maxout','inline')
+	  }
+	  updateElement('prestige3Req',60+40*player.prestiges[2])
+	  if (player.prestiges[2]==0) {
+		  hideElement('prestige3Feature')
+	  } else {
+		  showElement('prestige3Feature','block')
+		  updateElement('timeReduction',8+2*player.prestiges[2])
 	  }
   }
-  if (player.prestiges[1]<5) {
-	  updateElement('prestige2Gen',ROMAN_NUMERALS[player.prestiges[1]+4])
-	  updateElement('afterPrestige2Gen',ROMAN_NUMERALS[player.prestiges[1]+5])
-	  hideElement('maxout2')
-	  showElement('abletoprestige2','inline')
-  } else {
-	  hideElement('abletoprestige2')
-	  showElement('maxout2','inline')
-  }
-  if (player.prestiges[0]<player.prestiges[1]+4) {
-	  updateElement('prestige1Gen',ROMAN_NUMERALS[player.prestiges[0]+1])
-	  hideElement('maxout')
-	  showElement('abletoprestige','inline')
-  } else {
-	  hideElement('abletoprestige')
-	  showElement('maxout','inline')
-  }
-  updateElement('prestige3Req',60+40*player.prestiges[2])
-  if (player.prestiges[2]==0) {
-	  hideElement('prestige3Feature')
-  } else {
-	  showElement('prestige3Feature','block')
-	  updateElement('timeReduction',8+2*player.prestiges[2])
+  if (tab=='stats') {
+	  updateElement('statsTotal','You have gained a total of '+format(player.totalErrors)+' errors.')
+	  updateElement('statsPlaytime','You have played for '+formatTime(player.playtime)+'.')
+	  if (player.prestiges[0]>0) {
+		  showElement('statsPrestige1','block')
+		  updateElement('statsPrestige1','You upgraded your computers, '+format(player.prestiges[0],0,1)+' times.')
+	  } else {
+		  hideElement('statsPrestige1')
+	  }
+	  if (player.prestiges[1]>0) {
+		  showElement('statsPrestige2','block')
+		  updateElement('statsPrestige2','You have '+format(player.prestiges[1],0,1)+' new computers.')
+	  } else {
+		  hideElement('statsPrestige2')
+	  }
+	  if (player.prestiges[2]>0) {
+		  showElement('statsPrestige3','block')
+		  updateElement('statsPrestige3','You have '+format(player.prestiges[2],0,1)+' networks.')
+	  } else {
+		  hideElement('statsPrestige3')
+	  }
   }
 }
 
@@ -226,6 +272,8 @@ function increaseErrors() {
   var s = (new Date().getTime()-player.time)/1000 // number of seconds since last tick
   player.time = new Date().getTime()
   player.errors = player.errors.add(getEPS().mul(s));
+  player.totalErrors = player.totalErrors.add(getEPS().mul(s));
+  player.playtime+=s
   display()
 }
 
@@ -255,11 +303,16 @@ function load(savefile) {
 		delete player.prestige1
 		delete player.prestige2
 	  }
+	  if (player.build < 4) {
+		player.playtime=0
+		player.totalErrors=0
+	  }
 	  player.version = 0
-	  player.build = 3
+	  player.build = 4
 	  
 	  //if the value is a Decimal, set it to be a Decimal here.
 	  player.errors = new Decimal(player.errors)
+	  player.totalErrors = new Decimal(player.totalErrors)
 	  for (let i=0;i<9;i++) {
 		player.compCost[i] = new Decimal(player.compCost[i])
 	  }

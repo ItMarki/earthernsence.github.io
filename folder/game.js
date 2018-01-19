@@ -204,7 +204,7 @@ function createStoryElement(message) {
 
 function getEPS() {
   let ret = new Decimal(0);
-  for (let i=0;i<9;i++) ret = ret.add(player.compAmount[i]*player.compPow[i].times(Decimal.pow(1.1,player.compAmount[i]-1)).times(player.boost))
+  for (let i=0;i<9;i++) ret = ret.add(Decimal.times(player.compAmount[i],player.compPow[i]).times(Decimal.pow(1.1,player.compAmount[i]-1)).times(player.boost))
   return ret;
 }
 

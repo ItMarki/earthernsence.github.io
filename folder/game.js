@@ -300,7 +300,7 @@ function load(savefile) {
 	  //when adding a new player variable, PLEASE ADD A NEW LINE!!
 	  if (player.version == undefined) player.version = 0;
 	  if (player.build == undefined) player.build = 0;
-	  if (player.genUpgradeCost == undefined) player.genUpgradeCost = new Decimal(1000);
+	  if (player.genUpgradeCost == undefined) player.genUpgradeCost = 1000;
 	  if (player.build < 1) {
 		for (let i=0;i<9;i++) {
 			player.compCost[i] = parseint(player.compCost[i])
@@ -333,6 +333,7 @@ function load(savefile) {
 	  for (let i=0;i<9;i++) {
 		player.compCost[i] = new Decimal(player.compCost[i])
 	  }
+	  player.genUpgradecost = new Decimal(player.genUpgradeCost);
 	  player.boost=new Decimal(player.boost)
 	  
 	  increaseErrors()

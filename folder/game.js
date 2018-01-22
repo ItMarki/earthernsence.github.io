@@ -143,7 +143,7 @@ function buyGenUpgrade() {
     if (player.errors.gte(player.genUpgradeCost)) {
     player.errors = player.errors.sub(player.genUpgradeCost);
     player.boost=player.boost.mul(new Decimal(2));
-    player.genUpgradeCost = player.genUpgradeCost.mul(new Decimal(10))
+    player.genUpgradeCost = player.genUpgradeCost.mul(new Decimal(10));
   }
   display()
 }
@@ -232,7 +232,7 @@ function display() {
 	  }
 	  if (player.compAmount[2]>0) {
 		  showElement('genUpgrade','block');
-		  updateElement('genIncreaseCost','Cost: ' + player.genUpgradeCost);
+		  updateElement('genIncreaseCost','Cost: ' + format(player.genUpgradeCost);
 		  updateElement('genBoost',player.boost);
 	  } else {
 		  hideElement('genUpgrade')

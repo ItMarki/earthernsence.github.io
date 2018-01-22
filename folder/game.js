@@ -333,7 +333,7 @@ function load(savefile) {
 	  for (let i=0;i<9;i++) {
 		player.compCost[i] = new Decimal(player.compCost[i])
 	  }
-	  player.genUpgradecost = new Decimal(player.genUpgradeCost);
+	  player.genUpgradeCost = new Decimal(player.genUpgradeCost);
 	  player.boost=new Decimal(player.boost)
 	  
 	  increaseErrors()

@@ -231,8 +231,8 @@ function display() {
 		  }
 	  }
 	  if (player.compAmount[2]>0) {
-		  showElement('genUpgrade','block')
-		  updateElement('genIncreaseCost',"Cost" '+ player.genUpgradeCost);
+		  showElement('genUpgrade','block');
+		  updateElement('genIncreaseCost','Cost: ' + player.genUpgradeCost);
 		  updateElement('genBoost',player.boost);
 	  } else {
 		  hideElement('genUpgrade')

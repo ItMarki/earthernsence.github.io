@@ -13,7 +13,7 @@ player = {
   playtime: 0,
   time: new Date().getTime(),
   version: 0,
-  build: 5
+  build: 6
 }
 tab='computers'
 const story = ['','','','','']
@@ -300,7 +300,6 @@ function load(savefile) {
 	  //when adding a new player variable, PLEASE ADD A NEW LINE!!
 	  if (player.version == undefined) player.version = 0;
 	  if (player.build == undefined) player.build = 0;
-	  if (player.genUpgradeCost == undefined) player.genUpgradeCost = 1000;
 	  if (player.build < 1) {
 		for (let i=0;i<9;i++) {
 			player.compCost[i] = parseint(player.compCost[i])
@@ -324,8 +323,11 @@ function load(savefile) {
 		player.boost=1
 		delete player.timeUpgrades
 	  }
+if (player.build<6) {
+    player.genUpgradeCost=1000
+}
 	  player.version = 0
-	  player.build = 5
+	  player.build = 6
 	  
 	  //if the value is a Decimal, set it to be a Decimal here.
 	  player.errors = new Decimal(player.errors)

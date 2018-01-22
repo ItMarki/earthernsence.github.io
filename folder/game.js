@@ -232,7 +232,7 @@ function display() {
 	  }
 	  if (player.compAmount[2]>0) {
 		  showElement('genUpgrade','block');
-		  updateElement('genIncreaseCost','Cost: ' + format(player.genUpgradeCost);
+		  updateElement('genIncreaseCost','Cost: ' + format(player.genUpgradeCost));
 		  updateElement('genBoost',player.boost);
 	  } else {
 		  hideElement('genUpgrade')

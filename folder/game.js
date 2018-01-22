@@ -220,7 +220,7 @@ function getEPS() {
 
 function display() {
   document.getElementById("errors").innerHTML = format(player.errors) //this is the base, except in the parentheses add the HTML tag of the thing you're changing
-  document.getElementById("eps").innerHTML = getEPS()
+  document.getElementById("eps").innerHTML = format(getEPS())
   if (tab=='computers') {
 	  for (let i=0;i<Math.min(player.prestiges[1]+4,9);i++) document.getElementById("cop"+(i+1)).innerHTML = "Cost: " + format(player.compCost[i]) + " (" + player.compAmount[i] + ")"
 	  for (i=0;i<5;i++) {

@@ -6,6 +6,7 @@ player = {
   compCost: [new Decimal(10),new Decimal(100),new Decimal(1000),new Decimal(10000),new Decimal(1e6),new Decimal(1e8),new Decimal(1e10),new Decimal(1e13),new Decimal(1e16)],
   compAmount: [0,0,0,0,0,0,0,0,0],
   compPow: [1,10,100,1000,1e4,1e5,1e6,1e7,1e8],
+		genUpgradeCost: new Decimal(1000),
   boost: new Decimal(1),
   prestiges: [0,0,0],
   story: 0,
@@ -138,6 +139,15 @@ function buyGen(tier,bulk=1) {
   }
 }
 
+function buyGenUpgrade() {
+    if (player.errors.gte(player.genUpgradeCost)) {
+    player.errors = player.errors.sub(player.genUpgradeCost);
+    player.boost=player.boost.mul(new Decimal(2));
+    player.genUpgradeCost = player.genUpgradeCost.mul(new Decimal(10))
+  }
+  display()
+}
+
 function prestige(tier) {
   switch(tier) { //don't allow prestiging until you match reqs
     case 1: if (player.compAmount[player.prestiges[0]] < 10) return; break;
@@ -222,6 +232,8 @@ function display() {
 	  }
 	  if (player.compAmount[2]>0) {
 		  showElement('genUpgrade','block')
+		  updateElement('genIncreaseCost',"Cost" '+ player.genUpgradeCost);
+		  updateElement('genBoost',player.boost);
 	  } else {
 		  hideElement('genUpgrade')
 	  }

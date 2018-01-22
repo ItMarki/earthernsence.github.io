@@ -6,7 +6,7 @@ player = {
   compCost: [new Decimal(10),new Decimal(100),new Decimal(1000),new Decimal(10000),new Decimal(1e6),new Decimal(1e8),new Decimal(1e10),new Decimal(1e13),new Decimal(1e16)],
   compAmount: [0,0,0,0,0,0,0,0,0],
   compPow: [1,10,100,1000,1e4,1e5,1e6,1e7,1e8],
-		genUpgradeCost: new Decimal(1000),
+  genUpgradeCost: new Decimal(1000),
   boost: new Decimal(1),
   prestiges: [0,0,0],
   story: 0,
@@ -43,7 +43,7 @@ function format(num,decimalPoints=0,offset=0) {
 		return 'Infinite'
 	} else {
 		var abbid=Math.max(Math.floor(num.e/3)-offset,0)
-		var mantissa=num.div(Decimal.pow(1000,abbid)).toFixed((decimalPoints<2)?2:decimalPoints)
+		var mantissa=num.div(Decimal.pow(1000,abbid)).toFixed((abbid>0&&decimalPoints<2)?2:decimalPoints)
 		if (mantissa==Math.pow(1000,1+offset)) {
 			mantissa=mantissa/1000
 			abbid+=1
@@ -140,12 +140,11 @@ function buyGen(tier,bulk=1) {
 }
 
 function buyGenUpgrade() {
-    if (player.errors.gte(player.genUpgradeCost)) {
+  if (player.errors.gte(player.genUpgradeCost)) {
     player.errors = player.errors.sub(player.genUpgradeCost);
-    player.boost=player.boost.mul(new Decimal(2));
+    player.boost=player.boost.mul(new Decimal(2+0.01*player.prestiges[2]));
     player.genUpgradeCost = player.genUpgradeCost.mul(new Decimal(10));
   }
-  display()
 }
 
 function prestige(tier) {
@@ -159,11 +158,11 @@ function prestige(tier) {
 	//Highest tier - Hard reset
 	localStorage.clear('errorSave')
   }
-  if (tier==3) {
+  if (tier>2) {
 	//Tier 3 - Networks
 	player.prestiges[2]=(tier==3)?player.prestiges[2]+1:0
   }
-  if (tier==2) {
+  if (tier>1) {
 	//Tier 2 - I.P. change
 	player.prestiges[1]=(tier==2)?player.prestiges[1]+1:0
   }
@@ -174,6 +173,7 @@ function prestige(tier) {
   player.compCost = [new Decimal(10),new Decimal(100),new Decimal(1000),new Decimal(10000),new Decimal(1e6),new Decimal(1e8),new Decimal(1e10),new Decimal(1e13),new Decimal(1e16)];
   player.compAmount=[0,0,0,0,0,0,0,0,0]
   player.compPow=[1,10,100,1000,1e4,1e5,1e6,1e7,1e8]
+  player.genUpgradeCost=new Decimal(1000)
   player.boost=new Decimal(1)
   player.time = new Date().getTime()
   display()
@@ -198,6 +198,15 @@ function prestige(tier) {
 	  } 
 	  if (player.story==9&&player.prestiges[1]==5) {
 		createStoryElement("You ran out of computers. We need to setup a network.")
+        player.story+=1
+	  }
+	  
+	  case 3:if (player.story==10&&player.prestiges[2]==1) {
+		createStoryElement("Wonderful, you setup a network. I hope you to install anti-virus too, but it is cost too much. :'(")
+        player.story+=1
+	  }
+	  if (player.story==11&&player.prestiges[2]==2) {
+		createStoryElement("You tried to install another network, but it's collided and upgraded to your first network.")
         player.story+=1
 	  } break
   }
@@ -232,8 +241,9 @@ function display() {
 	  }
 	  if (player.compAmount[2]>0) {
 		  showElement('genUpgrade','block');
+		  updateElement('genIncrease',(2+0.01*player.prestiges[2]));
 		  updateElement('genIncreaseCost','Cost: ' + format(player.genUpgradeCost));
-		  updateElement('genBoost',player.boost);
+		  updateElement('genBoost',format(player.boost));
 	  } else {
 		  hideElement('genUpgrade')
 	  }
@@ -323,9 +333,9 @@ function load(savefile) {
 		player.boost=1
 		delete player.timeUpgrades
 	  }
-if (player.build<6) {
-    player.genUpgradeCost=1000
-}
+	  if (player.build<6) {
+		player.genUpgradeCost=1000
+	  }
 	  player.version = 0
 	  player.build = 6
 	  

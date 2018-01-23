@@ -6,7 +6,7 @@ player = {
   compCost: [new Decimal(10),new Decimal(100),new Decimal(1000),new Decimal(10000),new Decimal(1e6),new Decimal(1e8),new Decimal(1e10),new Decimal(1e13),new Decimal(1e16)],
   compAmount: [0,0,0,0,0,0,0,0,0],
   compPow: [1,10,100,1000,1e4,1e5,1e6,1e7,1e8],
-		genUpgradeCost: new Decimal(1000),
+  genUpgradeCost: new Decimal(1000),
   boost: new Decimal(1),
   prestiges: [0,0,0],
   story: 0,
@@ -176,6 +176,7 @@ function prestige(tier) {
   player.compPow=[1,10,100,1000,1e4,1e5,1e6,1e7,1e8]
   player.boost=new Decimal(1)
   player.time = new Date().getTime()
+  player.genUpgradeCost=new Decimal(1000)
   display()
   
   switch (tier) {

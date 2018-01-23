@@ -141,7 +141,8 @@ function buyGen(tier,bulk=1) {
 
 function buyGenUpgrade() {
     if (player.errors.gte(player.genUpgradeCost)) {
-    player.errors = player.errors.sub(player.genUpgradeCost);
+
+	   player.errors = player.errors.sub(player.genUpgradeCost);
     player.boost=player.boost.mul(new Decimal(2));
     player.genUpgradeCost = player.genUpgradeCost.mul(new Decimal(10));
   }
@@ -159,6 +160,9 @@ function prestige(tier) {
 	//Highest tier - Hard reset
 	localStorage.clear('errorSave')
   }
+	if (tier==4) {
+		//Actually tier 3, but eh. - Internet Boosts
+		player.prestiges[3]=(tier==4)?player.prestiges[3]+1:0
   if (tier==3) {
 	//Tier 3 - Networks
 	player.prestiges[2]=(tier==3)?player.prestiges[2]+1:0

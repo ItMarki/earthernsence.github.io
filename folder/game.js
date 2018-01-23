@@ -180,24 +180,44 @@ function prestige(tier) {
   
   switch (tier) {
 	  case 1: if (player.story==4&&player.prestiges[0]==1) {
-		createStoryElement("Wonderful, you have upgraded your computers.")
+		createStoryElement("Computers are waking up...")
         player.story+=1
 	  }
-	  if (player.story==5&&player.prestiges[0]==4) {
-		createStoryElement("You max out your computers but it still giving you errors. Why not do something else?")
+		  if (player.story==4&&player.prestiges[0]==1) {
+			  createStoryElement("Wakey wakey!")
+			  player.story+=1
+		  }
+	  if (player.story==5&&player.prestiges[0]==2) {
+		createStoryElement("Ah, here we are. Awake and operational.")
         player.story+=1
-	  } break
+	  }
+		  if (player.story==6&&player.prestiges[0]=3) {
+			  createStoryElement("Network is being horrible. These upgrades don't do anything. What I'd give for an ethernet cord.")
+			  player.story+=1
+		  } 
+		  if (player.story==7&&player.prestiges[0]=4) {
+			  createStoryElement("I still haven't introduced myself? I'm your first ever Tier I computer. I can't believe you've finally had the care to upgrade me.")
+			  player.story+=1
+		  } break
 	  
-	  case 2: if (player.story==6&&player.prestiges[1]==1) {
-		createStoryElement("You bought your new computer. What it does do now?")
+	  case 2: if (player.story==8&&player.prestiges[1]==1) {
+		createStoryElement("Trust me. I stay through it all. Keep getting these I.P. Changes and we'll be set in no time.")
         player.story+=1
 	  } 
-	  if (player.story==8&&player.prestiges[1]==2) {
-		createStoryElement("You keep buying your new computers, but it doesn\'t work for all.")
+	  if (player.story==9&&player.prestiges[1]==2) {
+		createStoryElement("Atta boy! Keep getting em. Also, Tier VI Computers are my best friends. Get more!")
         player.story+=1
 	  } 
-	  if (player.story==9&&player.prestiges[1]==5) {
-		createStoryElement("You ran out of computers. We need to setup a network.")
+		  if (player.story==10&&player.prestiges[1]==3) {
+			  createStoryElement("Tier VII computers are bullies. Get through them NOW.")
+			  player.story+=1
+		  }
+		  if (player.story==11&&player.prestiges[1]==4) {
+			  createStoryElement("Tier VIII! Soon, everybody, soon.")
+			  player.story+=1
+		  }
+	  if (player.story==12&&player.prestiges[1]==5) {
+		createStoryElement("The Internet Boosts are in sight. Get 15 Tier IX computers to buy one.")
         player.story+=1
 	  } break
   }

@@ -150,7 +150,7 @@ function buyGenUpgrade() {
 function prestige(tier) {
   switch(tier) { //don't allow prestiging until you match reqs
     case 1: if (player.compAmount[player.prestiges[0]] < 10) return; break;
-    case 2: if (player.compAmount[player.prestiges[1]+3] < 20) return; break;
+    case 2: if (player.compAmount[Math.min(player.prestiges[1]+3,8)] < 20+Math.max(player.prestiges[1]-5,0)) return; break;
     case 3: if (player.compAmount[8] < 60+40*player.prestiges[2]) return; break;
     case Infinity: if (!confirm('Are you really sure to reset? You will lose everything you have!')) return; break;
   }
@@ -163,7 +163,7 @@ function prestige(tier) {
 	player.prestiges[2]=(tier==3)?player.prestiges[2]+1:0
   }
   if (tier>1) {
-	//Tier 2 - I.P. change
+	//Tier 2 - I.P. change/Internet boost
 	player.prestiges[1]=(tier==2)?player.prestiges[1]+1:0
   }
   
@@ -174,7 +174,7 @@ function prestige(tier) {
   player.compAmount=[0,0,0,0,0,0,0,0,0]
   player.compPow=[1,10,100,1000,1e4,1e5,1e6,1e7,1e8]
   player.genUpgradeCost=new Decimal(1000)
-  player.boost=new Decimal(1)
+  player.boost=Decimal.pow(2+0.01*player.prestiges[2],Math.max(player.prestiges[1]-5,0)*5)
   player.time = new Date().getTime()
   display()
   
@@ -191,11 +191,11 @@ function prestige(tier) {
 		createStoryElement("Ah, here we are. Awake and operational.")
         player.story+=1
 	  }
-		  if (player.story==6&&player.prestiges[0]=3) {
+		  if (player.story==6&&player.prestiges[0]==3) {
 			  createStoryElement("Network is being horrible. These upgrades don't do anything. What I'd give for an ethernet cord.")
 			  player.story+=1
 		  } 
-		  if (player.story==7&&player.prestiges[0]=4) {
+		  if (player.story==7&&player.prestiges[0]==4) {
 			  createStoryElement("I still haven't introduced myself? I'm your first ever Tier I computer. I can't believe you've finally had the care to upgrade me.")
 			  player.story+=1
 		  } break
@@ -217,16 +217,24 @@ function prestige(tier) {
 			  player.story+=1
 		  }
 	  if (player.story==12&&player.prestiges[1]==5) {
-		createStoryElement("The Internet Boosts are in sight. Get 15 Tier IX computers to buy one.")
+		createStoryElement("The Internet Boosts are in sight. Get 20 Tier IX computers to buy one.")
+        player.story+=1
+	  }
+	  if (player.story==13&&player.prestiges[1]==6) {
+		createStoryElement("I got a boost? Good job, you get a <i>small</i> prize.")
+        player.story+=1
+	  }
+	  if (player.story==14&&player.prestiges[1]==9) {
+		createStoryElement("Networks was found, but all are private for me. :(")
         player.story+=1
 	  }
 	  
-	  case 3:if (player.story==10&&player.prestiges[2]==1) {
-		createStoryElement("Wonderful, you setup a network. I hope you to install anti-virus too, but it is cost too much. :'(")
+	  case 3:if (player.story==15&&player.prestiges[2]==1) {
+		createStoryElement("Wow, a network was found! I better connect it now.")
         player.story+=1
 	  }
-	  if (player.story==11&&player.prestiges[2]==2) {
-		createStoryElement("You tried to install another network, but it's collided and upgraded to your first network.")
+	  if (player.story==16&&player.prestiges[2]==2) {
+		createStoryElement("Another network? I find out your new network was better so I installed it.")
         player.story+=1
 	  } break
   }
@@ -267,14 +275,13 @@ function display() {
 	  } else {
 		  hideElement('genUpgrade')
 	  }
+	  updateElement('prestige2Gen',format(20+Math.max(player.prestiges[1]-5,0),0,1)+' Tier '+ROMAN_NUMERALS[Math.min(player.prestiges[1]+4,9)])
 	  if (player.prestiges[1]<5) {
-		  updateElement('prestige2Gen',ROMAN_NUMERALS[player.prestiges[1]+4])
-		  updateElement('afterPrestige2Gen',ROMAN_NUMERALS[player.prestiges[1]+5])
-		  hideElement('maxout2')
-		  showElement('abletoprestige2','inline')
+		updateElement('ipChange','Gain Tier '+ROMAN_NUMERALS[player.prestiges[1]+5]+' Computer, but resets everything.')
+		updateElement('prestige2Type','I.P. Change')
 	  } else {
-		  hideElement('abletoprestige2')
-		  showElement('maxout2','inline')
+		updateElement('ipChange','Gain headstart for boost, but resets everything.')
+		updateElement('prestige2Type','Internet boost')
 	  }
 	  if (player.prestiges[0]<player.prestiges[1]+4) {
 		  updateElement('prestige1Gen',ROMAN_NUMERALS[player.prestiges[0]+1])
@@ -297,7 +304,11 @@ function display() {
 	  }
 	  if (player.prestiges[1]>0) {
 		  showElement('statsPrestige2','block')
-		  updateElement('statsPrestige2','You have '+format(player.prestiges[1],0,1)+' new computers.')
+		  if (player.prestiges[1]<6) {
+			  updateElement('statsPrestige2','You have '+player.prestiges[1]+' new computers.')
+		  } else {
+			  updateElement('statsPrestige2','You have 5 new computers and boosted your computers '+format(player.prestiges[1]-5,0,1)+' times.')
+		  }
 	  } else {
 		  hideElement('statsPrestige2')
 	  }

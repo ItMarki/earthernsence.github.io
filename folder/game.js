@@ -173,9 +173,9 @@ function prestige(tier) {
   player.compCost = [new Decimal(10),new Decimal(100),new Decimal(1000),new Decimal(10000),new Decimal(1e6),new Decimal(1e8),new Decimal(1e10),new Decimal(1e13),new Decimal(1e16)];
   player.compAmount=[0,0,0,0,0,0,0,0,0]
   player.compPow=[1,10,100,1000,1e4,1e5,1e6,1e7,1e8]
-  player.genUpgradeCost=new Decimal(1000)
   player.boost=Decimal.pow(2+0.01*player.prestiges[2],Math.max(player.prestiges[1]-5,0)*5)
   player.time = new Date().getTime()
+  player.genUpgradeCost=new Decimal(1000)
   display()
   
   switch (tier) {

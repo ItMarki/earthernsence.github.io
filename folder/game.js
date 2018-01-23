@@ -6,7 +6,7 @@ player = {
   compCost: [new Decimal(10),new Decimal(100),new Decimal(1000),new Decimal(10000),new Decimal(1e6),new Decimal(1e8),new Decimal(1e10),new Decimal(1e13),new Decimal(1e16)],
   compAmount: [0,0,0,0,0,0,0,0,0],
   compPow: [1,10,100,1000,1e4,1e5,1e6,1e7,1e8],
-		genUpgradeCost: new Decimal(1000),
+  genUpgradeCost: new Decimal(1000),
   boost: new Decimal(1),
   prestiges: [0,0,0],
   story: 0,
@@ -43,7 +43,7 @@ function format(num,decimalPoints=0,offset=0) {
 		return 'Infinite'
 	} else {
 		var abbid=Math.max(Math.floor(num.e/3)-offset,0)
-		var mantissa=num.div(Decimal.pow(1000,abbid)).toFixed((decimalPoints<2)?2:decimalPoints)
+		var mantissa=num.div(Decimal.pow(1000,abbid)).toFixed((abbid>0&&decimalPoints<2)?2:decimalPoints)
 		if (mantissa==Math.pow(1000,1+offset)) {
 			mantissa=mantissa/1000
 			abbid+=1
@@ -140,19 +140,17 @@ function buyGen(tier,bulk=1) {
 }
 
 function buyGenUpgrade() {
-    if (player.errors.gte(player.genUpgradeCost)) {
-
-	   player.errors = player.errors.sub(player.genUpgradeCost);
-    player.boost=player.boost.mul(new Decimal(2));
+  if (player.errors.gte(player.genUpgradeCost)) {
+    player.errors = player.errors.sub(player.genUpgradeCost);
+    player.boost=player.boost.mul(new Decimal(2+0.01*player.prestiges[2]));
     player.genUpgradeCost = player.genUpgradeCost.mul(new Decimal(10));
   }
-  display()
 }
 
 function prestige(tier) {
   switch(tier) { //don't allow prestiging until you match reqs
     case 1: if (player.compAmount[player.prestiges[0]] < 10) return; break;
-    case 2: if (player.compAmount[player.prestiges[1]+3] < 20) return; break;
+    case 2: if (player.compAmount[Math.min(player.prestiges[1]+3,8)] < 20+Math.max(player.prestiges[1]-5,0)) return; break;
     case 3: if (player.compAmount[8] < 60+40*player.prestiges[2]) return; break;
     case Infinity: if (!confirm('Are you really sure to reset? You will lose everything you have!')) return; break;
   }
@@ -160,15 +158,12 @@ function prestige(tier) {
 	//Highest tier - Hard reset
 	localStorage.clear('errorSave')
   }
-	if (tier==4) {
-		//Actually tier 3, but eh. - Internet Boosts
-		player.prestiges[3]=(tier==4)?player.prestiges[3]+1:0
-  if (tier==3) {
+  if (tier>2) {
 	//Tier 3 - Networks
 	player.prestiges[2]=(tier==3)?player.prestiges[2]+1:0
   }
-  if (tier==2) {
-	//Tier 2 - I.P. change
+  if (tier>1) {
+	//Tier 2 - I.P. change/Internet boost
 	player.prestiges[1]=(tier==2)?player.prestiges[1]+1:0
   }
   
@@ -178,8 +173,9 @@ function prestige(tier) {
   player.compCost = [new Decimal(10),new Decimal(100),new Decimal(1000),new Decimal(10000),new Decimal(1e6),new Decimal(1e8),new Decimal(1e10),new Decimal(1e13),new Decimal(1e16)];
   player.compAmount=[0,0,0,0,0,0,0,0,0]
   player.compPow=[1,10,100,1000,1e4,1e5,1e6,1e7,1e8]
-  player.boost=new Decimal(1)
+  player.boost=Decimal.pow(2+0.01*player.prestiges[2],Math.max(player.prestiges[1]-5,0)*5)
   player.time = new Date().getTime()
+  player.genUpgradeCost=new Decimal(1000)
   display()
   
   switch (tier) {
@@ -195,11 +191,11 @@ function prestige(tier) {
 		createStoryElement("Ah, here we are. Awake and operational.")
         player.story+=1
 	  }
-		  if (player.story==6&&player.prestiges[0]=3) {
+		  if (player.story==6&&player.prestiges[0]==3) {
 			  createStoryElement("Network is being horrible. These upgrades don't do anything. What I'd give for an ethernet cord.")
 			  player.story+=1
 		  } 
-		  if (player.story==7&&player.prestiges[0]=4) {
+		  if (player.story==7&&player.prestiges[0]==4) {
 			  createStoryElement("I still haven't introduced myself? I'm your first ever Tier I computer. I can't believe you've finally had the care to upgrade me.")
 			  player.story+=1
 		  } break
@@ -221,7 +217,24 @@ function prestige(tier) {
 			  player.story+=1
 		  }
 	  if (player.story==12&&player.prestiges[1]==5) {
-		createStoryElement("The Internet Boosts are in sight. Get 15 Tier IX computers to buy one.")
+		createStoryElement("The Internet Boosts are in sight. Get 20 Tier IX computers to buy one.")
+        player.story+=1
+	  }
+	  if (player.story==13&&player.prestiges[1]==6) {
+		createStoryElement("I got a boost? Good job, you get a <i>small</i> prize.")
+        player.story+=1
+	  }
+	  if (player.story==14&&player.prestiges[1]==9) {
+		createStoryElement("Networks was found, but all are private for me. :(")
+        player.story+=1
+	  }
+	  
+	  case 3:if (player.story==15&&player.prestiges[2]==1) {
+		createStoryElement("Wow, a network was found! I better connect it now.")
+        player.story+=1
+	  }
+	  if (player.story==16&&player.prestiges[2]==2) {
+		createStoryElement("Another network? I find out your new network was better so I installed it.")
         player.story+=1
 	  } break
   }
@@ -256,19 +269,19 @@ function display() {
 	  }
 	  if (player.compAmount[2]>0) {
 		  showElement('genUpgrade','block');
+		  updateElement('genIncrease',(2+0.01*player.prestiges[2]));
 		  updateElement('genIncreaseCost','Cost: ' + format(player.genUpgradeCost));
-		  updateElement('genBoost',player.boost);
+		  updateElement('genBoost',format(player.boost));
 	  } else {
 		  hideElement('genUpgrade')
 	  }
+	  updateElement('prestige2Gen',format(20+Math.max(player.prestiges[1]-5,0),0,1)+' Tier '+ROMAN_NUMERALS[Math.min(player.prestiges[1]+4,9)])
 	  if (player.prestiges[1]<5) {
-		  updateElement('prestige2Gen',ROMAN_NUMERALS[player.prestiges[1]+4])
-		  updateElement('afterPrestige2Gen',ROMAN_NUMERALS[player.prestiges[1]+5])
-		  hideElement('maxout2')
-		  showElement('abletoprestige2','inline')
+		updateElement('ipChange','Gain Tier '+ROMAN_NUMERALS[player.prestiges[1]+5]+' Computer, but resets everything.')
+		updateElement('prestige2Type','I.P. Change')
 	  } else {
-		  hideElement('abletoprestige2')
-		  showElement('maxout2','inline')
+		updateElement('ipChange','Gain headstart for boost, but resets everything.')
+		updateElement('prestige2Type','Internet boost')
 	  }
 	  if (player.prestiges[0]<player.prestiges[1]+4) {
 		  updateElement('prestige1Gen',ROMAN_NUMERALS[player.prestiges[0]+1])
@@ -291,7 +304,11 @@ function display() {
 	  }
 	  if (player.prestiges[1]>0) {
 		  showElement('statsPrestige2','block')
-		  updateElement('statsPrestige2','You have '+format(player.prestiges[1],0,1)+' new computers.')
+		  if (player.prestiges[1]<6) {
+			  updateElement('statsPrestige2','You have '+player.prestiges[1]+' new computers.')
+		  } else {
+			  updateElement('statsPrestige2','You have 5 new computers and boosted your computers '+format(player.prestiges[1]-5,0,1)+' times.')
+		  }
 	  } else {
 		  hideElement('statsPrestige2')
 	  }
@@ -347,9 +364,9 @@ function load(savefile) {
 		player.boost=1
 		delete player.timeUpgrades
 	  }
-if (player.build<6) {
-    player.genUpgradeCost=1000
-}
+	  if (player.build<6) {
+		player.genUpgradeCost=1000
+	  }
 	  player.version = 0
 	  player.build = 6
 	  

@@ -126,11 +126,11 @@ function buyGen(tier,bulk=1) {
         player.story+=1
       } break;
       case 3: if (player.story==3) {
-        createStoryElement("A Tier IV Computer was powerful, does it?")
+        createStoryElement("A Tier IV Computer is great, isn't it?")
         player.story+=1
       } break;
       case 4: if (player.story==7) {
-        createStoryElement("Your new computer still generates errors. Oh come on!")
+        createStoryElement("Errors? Still? You can do better than that!")
         player.story+=1
       } break;
     }

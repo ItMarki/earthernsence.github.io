@@ -9,19 +9,22 @@ player = {
   genUpgradeCost: new Decimal(1000),
   boost: new Decimal(1),
   prestiges: [0,0,0],
-  story: 0,
+  story: -1,
   playtime: 0,
   time: new Date().getTime(),
   version: 0,
-  build: 6
+  build: 7
 }
 tab='computers'
 const story = ['','','','','']
 const TIER_NAMES = ['first','second','third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 'ninth']; // can add more if more gens/story elements, cuz that uses this too
 const ROMAN_NUMERALS=[]
-const costMult=[2,2.5,3,4,6,9,14,22,35]
+const costMult=[2,2.5,3,4,5,6,8,10,12]
 const abbs=['','k','M','B','T']
 
+var storyMessages=["Pancakes is ready!","Wakey wakey! Aw, c'mon, you still got the rest of the day to sleep. Get up baby, get up!","Nice! A Tier III Computer. Well deserved.","A Tier IV Computer is great, isn't it?","Computers are waking up...","Ah, here we are. Awake and operational.","Network is being horrible. These upgrades don't do anything. What I'd give for an ethernet cord.","I still haven't introduced myself? I'm your first ever Tier I computer. I can't believe you've finally had the care to upgrade me.","Trust me. I stay through it all. Keep getting these I.P. Changes and we'll be set in no time.","Errors? Still? You can do better than that!",
+	"Atta boy! Keep getting em. Also, Tier VI Computers are my best friends. Get more!","Tier VII computers are bullies. Get through them NOW.","Tier VIII! Soon, everybody, soon.","The Internet Boosts are in sight. Get 20 Tier IX computers to buy one.","I got a boost? Good job, you get a <i>small</i> prize.","Networks was found, but all are private for me. :(","The PC found a network! This seems legit. Let's hop on.","Computer: Connecting network. Please wait, this may take a few minutes.","Aw, really? I hate these things.","Computer: Connected.",
+	"Finally! Can't wait to test this bad boy out.","Hey, we're off! Got a I.P. Change as well. The end is near.","Another network? I find out your new network was better so I installed it."]
 	
 function updateElement(elementID,value) {
 	document.getElementById(elementID).innerHTML=value
@@ -106,10 +109,10 @@ function changeMults() {
   document.getElementById('buyMult').innerHTML=player.buyMult+'x'
 }
 
-function newStory(story, message) {
-  if (player.story != story) return;
-  AddToStory(message);
-  player.story++;
+function newStory(story) {
+  if (player.story>=story) return;
+  updateStory()
+  player.story=story
 }
 
 function buyGen(tier,bulk=1) {
@@ -119,11 +122,11 @@ function buyGen(tier,bulk=1) {
     player.compCost[tier] = player.compCost[tier].mul(costMult[tier])
 
     switch (tier) {
-      case 0: newStory(0,"Pancakes is ready!"); break;
-      case 1: newStory(1,"Wakey wakey! Aw, c'mon, you still got the rest of the day to sleep. Get up baby, get up!"); break;
-      case 2: newStory(2,"Nice! A Tier III Computer. Well deserved."); break;
-      case 3: newStory(3,"A Tier IV Computer is great, isn't it?"); break;
-      case 4: newStory(7,"Errors? Still? You can do better than that!"); break;
+      case 0: newStory(0); break;
+      case 1: newStory(1); break;
+      case 2: newStory(2); break;
+      case 3: newStory(3); break;
+      case 4: newStory(9); break;
     }
 
     display()
@@ -148,8 +151,10 @@ function prestige(tier) {
   if (tier==Infinity) {
 	//Highest tier - Hard reset
 	localStorage.clear('errorSave')
-	  player.story = 0;
-	  ClearStory();
+	player.playtime=0
+	player.totalErrors=new Decimal(0)
+	player.story=-1
+	updateStory()
   }
   
   player.errors = new Decimal(10); //current errors
@@ -163,14 +168,14 @@ function prestige(tier) {
     player.prestiges[0]++
     switch(player.prestiges[2]) {
       case 0: switch(player.prestiges[0]) {
-        case 1: newStory(4,"Computers are waking up..."); break;
-        case 2: newStory(5,"Ah, here we are. Awake and operational."); break;
-        case 3: newStory(6,"Network is being horrible. These upgrades don't do anything. What I'd give for an ethernet cord."); break;
-        case 4: newStory(7,"I still haven't introduced myself? I'm your first ever Tier I computer. I can't believe you've finally had the care to upgrade me."); break;
+        case 1: newStory(4); break;
+        case 2: newStory(5); break;
+        case 3: newStory(6); break;
+        case 4: newStory(7); break;
       } break;
       case 1: switch(player.prestiges[0]) {
-        case 1: newStory(17,"Aw, really? I hate these things."); break;
-        case 2: newStory(18,"Computer: Connected."); newStory(19,"Finally! Can't wait to test this bad boy out."); break;
+        case 1: newStory(18); break;
+        case 2: newStory(20); break;
       }
     }    
   } else {
@@ -178,22 +183,22 @@ function prestige(tier) {
     if (tier==2) {
       player.prestiges[1]++
       switch(player.prestiges[1]) {
-        case 1: newStory(8,"Trust me. I stay through it all. Keep getting these I.P. Changes and we'll be set in no time."); break;
-        case 2: newStory(9,"Atta boy! Keep getting em. Also, Tier VI Computers are my best friends. Get more!"); break;
-        case 3: newStory(10,"Tier VII computers are bullies. Get through them NOW."); break;
-        case 4: newStory(11,"Tier VIII! Soon, everybody, soon."); break;
-        case 5: newStory(12,"The Internet Boosts are in sight. Get 20 Tier IX computers to buy one."); break;
-        case 6: newStory(13,"I got a boost? Good job, you get a <i>small</i> prize."); break;
-        case 9: newStory(14,"Networks was found, but all are private for me. :("); break;
+        case 1: newStory(8); break;
+        case 2: newStory(10); break;
+        case 3: newStory(11); break;
+        case 4: newStory(12); break;
+        case 5: newStory(13); break;
+        case 6: newStory(14); break;
+        case 9: newStory(15); break;
       }
-      if (player.prestiges[2]==1) newStory(20,"Hey, we're off! Got a I.P. Change as well. The end is near.");
+      if (player.prestiges[2]==1) newStory(21);
     } else {
       player.prestiges[1] = 0
       if (tier==3) {
         player.prestiges[2]++;
         switch(player.prestiges[2]) {
-          case 1: newStory(15,"The PC found a network! This seems legit. Let's hop on."); newStory(16,"Computer: Connecting network. Please wait, this may take a few minutes."); break;
-          case 2: newStory(21,"Another network? I find out your new network was better so I installed it."); break;
+          case 1: newStory(17); break;
+          case 2: newStory(22); break;
         }
       }
     }
@@ -209,7 +214,7 @@ function getMultTier(tier) {
 function getEPS() {
   let ret = new Decimal(0);
   for (let i=0;i<9;i++) {
-    ret = ret.add(Decimal.pow(1.03+i/50,player.compAmount[i]-1).times(player.compAmount[i]).mul(player.compPow[i]).times(player.boost).mul(getMultTier(i+1)))
+    ret = ret.add(Decimal.pow(Math.pow(1.05,i+1),player.compAmount[i]-1).times(player.compAmount[i]).mul(player.compPow[i]).times(player.boost).mul(getMultTier(i+1)))
   }
   return ret;
 }
@@ -326,8 +331,11 @@ function load(savefile) {
 	  if (player.build<6) {
 		player.genUpgradeCost=1000
 	  }
+	  if (player.build<7) {
+		player.story-=1
+	  }
 	  player.version = 0
-	  player.build = 6
+	  player.build = 7
 	  
 	  //if the value is a Decimal, set it to be a Decimal here.
 	  player.errors = new Decimal(player.errors)
@@ -339,6 +347,7 @@ function load(savefile) {
 	  player.boost=new Decimal(player.boost)
 	  
 	  increaseErrors()
+	  updateStory()
 	  console.log('Game loaded!')
   } catch (e) {
 	  console.log('Your save failed to load:\n'+e)
@@ -377,30 +386,18 @@ function setupRoman() {
 	}
 }
 
-function ClearStory() {
-	var Table = document.getElementsByClassName("storybox")[0];
-	for(var i=0;i<Table.rows.length;i++) Table.deleteRow(i);
-	drawStorybox()
-}
-
-function AddToStory(text) {
+function updateStory() {
     var Table = document.getElementsByClassName("storybox")[0];
-    var Row = Table.insertRow(Table.rows.length);
-    Row.insertCell(0).innerHTML = text;
-    drawStorybox()
-}
-
-function drawStorybox() {
-    var Table = document.getElementsByClassName("storybox")[0];
-    if(Table.rows.length>5)Table.deleteRow(0);
-    Table.style.paddingTop = 150-(Table.rows.length*30) + "px"
+    for (i=0;i<5;i++) {
+		document.getElementById("story"+(4-i)).innerHTML=(player.story-i<0)?'':storyMessages[player.story-i]
+	}
+    Table.style.paddingTop = 150-(Math.min(player.story,5)*30) + "px"
 }
 
 
 function gameInit() {
 	setupRoman()
 	load(localStorage.getItem('errorSave'))
-	drawStorybox()
 	var tickspeed=0
 	updated=true
 	setInterval(function(){

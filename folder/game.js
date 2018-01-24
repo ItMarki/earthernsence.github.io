@@ -148,6 +148,8 @@ function prestige(tier) {
   if (tier==Infinity) {
 	//Highest tier - Hard reset
 	localStorage.clear('errorSave')
+	  player.story = 0;
+	  ClearStory();
   }
   
   player.errors = new Decimal(10); //current errors
@@ -375,7 +377,13 @@ function setupRoman() {
 	}
 }
 
-function AddToStory(text){
+function ClearStory() {
+	var Table = document.getElementsByClassName("storybox")[0];
+	for(var i=0;i<Table.rows.length;i++) Table.deleteRow(i);
+	drawStorybox()
+}
+
+function AddToStory(text) {
     var Table = document.getElementsByClassName("storybox")[0];
     var Row = Table.insertRow(Table.rows.length);
     Row.insertCell(0).innerHTML = text;

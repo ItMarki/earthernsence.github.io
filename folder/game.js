@@ -111,8 +111,8 @@ function changeMults() {
 
 function newStory(story) {
   if (player.story>=story) return;
-  updateStory()
   player.story=story
+  updateStory()
 }
 
 function buyGen(tier,bulk=1) {

@@ -114,23 +114,23 @@ function buyGen(tier,bulk=1) {
 
     switch (tier) {
       case 0: if (player.story==0) {
-        createStoryElement("Pancakes is ready!")
+        AddToStory("Pancakes is ready!")
         player.story+=1
       } break;
       case 1: if (player.story==1) {
-        createStoryElement("Wakey wakey! Aw, c'mon, you still got the rest of the day to sleep. Get up baby, get up!")
+        AddToStory("Wakey wakey! Aw, c'mon, you still got the rest of the day to sleep. Get up baby, get up!")
         player.story++
       } break;
       case 2: if (player.story==2) {
-        createStoryElement("Nice! A Tier III Computer. Well deserved.")
+        AddToStory("Nice! A Tier III Computer. Well deserved.")
         player.story+=1
       } break;
       case 3: if (player.story==3) {
-        createStoryElement("A Tier IV Computer is great, isn't it?")
+        AddToStory("A Tier IV Computer is great, isn't it?")
         player.story+=1
       } break;
       case 4: if (player.story==7) {
-        createStoryElement("Errors? Still? You can do better than that!")
+        AddToStory("Errors? Still? You can do better than that!")
         player.story+=1
       } break;
     }
@@ -180,61 +180,61 @@ function prestige(tier) {
   
   switch (tier) {
 	  case 1: if (player.story==4&&player.prestiges[0]==1) {
-		createStoryElement("Computers are waking up...")
+	      AddToStory("Computers are waking up...")
         player.story+=1
 	  }
 		  if (player.story==4&&player.prestiges[0]==1) {
-			  createStoryElement("Wakey wakey!")
+		      AddToStory("Wakey wakey!")
 			  player.story+=1
 		  }
 	  if (player.story==5&&player.prestiges[0]==2) {
-		createStoryElement("Ah, here we are. Awake and operational.")
+	      AddToStory("Ah, here we are. Awake and operational.")
         player.story+=1
 	  }
 		  if (player.story==6&&player.prestiges[0]==3) {
-			  createStoryElement("Network is being horrible. These upgrades don't do anything. What I'd give for an ethernet cord.")
+		      AddToStory("Network is being horrible. These upgrades don't do anything. What I'd give for an ethernet cord.")
 			  player.story+=1
 		  } 
 		  if (player.story==7&&player.prestiges[0]==4) {
-			  createStoryElement("I still haven't introduced myself? I'm your first ever Tier I computer. I can't believe you've finally had the care to upgrade me.")
+		      AddToStory("I still haven't introduced myself? I'm your first ever Tier I computer. I can't believe you've finally had the care to upgrade me.")
 			  player.story+=1
 		  } break
 	  
 	  case 2: if (player.story==8&&player.prestiges[1]==1) {
-		createStoryElement("Trust me. I stay through it all. Keep getting these I.P. Changes and we'll be set in no time.")
+	      AddToStory("Trust me. I stay through it all. Keep getting these I.P. Changes and we'll be set in no time.")
         player.story+=1
 	  } 
 	  if (player.story==9&&player.prestiges[1]==2) {
-		createStoryElement("Atta boy! Keep getting em. Also, Tier VI Computers are my best friends. Get more!")
+	      AddToStory("Atta boy! Keep getting em. Also, Tier VI Computers are my best friends. Get more!")
         player.story+=1
 	  } 
 		  if (player.story==10&&player.prestiges[1]==3) {
-			  createStoryElement("Tier VII computers are bullies. Get through them NOW.")
+		      AddToStory("Tier VII computers are bullies. Get through them NOW.")
 			  player.story+=1
 		  }
 		  if (player.story==11&&player.prestiges[1]==4) {
-			  createStoryElement("Tier VIII! Soon, everybody, soon.")
+		      AddToStory("Tier VIII! Soon, everybody, soon.")
 			  player.story+=1
 		  }
 	  if (player.story==12&&player.prestiges[1]==5) {
-		createStoryElement("The Internet Boosts are in sight. Get 20 Tier IX computers to buy one.")
+	      AddToStory("The Internet Boosts are in sight. Get 20 Tier IX computers to buy one.")
         player.story+=1
 	  }
 	  if (player.story==13&&player.prestiges[1]==6) {
-		createStoryElement("I got a boost? Good job, you get a <i>small</i> prize.")
+	      AddToStory("I got a boost? Good job, you get a <i>small</i> prize.")
         player.story+=1
 	  }
 	  if (player.story==14&&player.prestiges[1]==9) {
-		createStoryElement("Networks was found, but all are private for me. :(")
+	      AddToStory("Networks was found, but all are private for me. :(")
         player.story+=1
 	  }
 	  
 	  case 3:if (player.story==15&&player.prestiges[2]==1) {
-		createStoryElement("Wow, a network was found! I better connect it now.")
+	      AddToStory("Wow, a network was found! I better connect it now.")
         player.story+=1
 	  }
 	  if (player.story==16&&player.prestiges[2]==2) {
-		createStoryElement("Another network? I find out your new network was better so I installed it.")
+	      AddToStory("Another network? I find out your new network was better so I installed it.")
         player.story+=1
 	  } break
   }
@@ -418,17 +418,24 @@ function setupRoman() {
 	}
 }
 
+function AddToStory(text){
+    var Table = document.getElementsByClassName("storybox")[0];
+    var Row = Table.insertRow(Table.rows.length);
+    Row.insertCell(0).innerHTML = text;
+    drawStorybox()
+}
 
 function drawStorybox() {
-  rect(50, 50, 150, 250);
-  line(50, 75, 150, 75); 
+    var Table = document.getElementsByClassName("storybox")[0];
+    if(Table.rows.length>5)Table.deleteRow(0);
+    Table.style.paddingTop = 150-(Table.rows.length*30) + "px"
 }
-//drawStorybox();
+
 
 function gameInit() {
 	setupRoman()
 	load(localStorage.getItem('errorSave'))
-	
+	drawStorybox()
 	var tickspeed=0
 	updated=true
 	setInterval(function(){
@@ -437,7 +444,7 @@ function gameInit() {
 			setTimeout(function(){
 				var startTime=new Date().getTime()
 				try {
-					increaseErrors()
+				    increaseErrors()
 				} catch (e) {
 					console.log('A game error has been occured: '+e)
 				}

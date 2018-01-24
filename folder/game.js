@@ -106,33 +106,24 @@ function changeMults() {
   document.getElementById('buyMult').innerHTML=player.buyMult+'x'
 }
 
+function newStory(story, message) {
+  if (player.story != story) return;
+  AddToStory(message);
+  player.story++;
+}
+
 function buyGen(tier,bulk=1) {
   if (player.errors.gte(player.compCost[tier])) {
-	player.compAmount[tier]+=1
+	player.compAmount[tier]++
     player.errors = player.errors.sub(player.compCost[tier])
     player.compCost[tier] = player.compCost[tier].mul(costMult[tier])
 
     switch (tier) {
-      case 0: if (player.story==0) {
-        AddToStory("Pancakes is ready!")
-        player.story+=1
-      } break;
-      case 1: if (player.story==1) {
-        AddToStory("Wakey wakey! Aw, c'mon, you still got the rest of the day to sleep. Get up baby, get up!")
-        player.story++
-      } break;
-      case 2: if (player.story==2) {
-        AddToStory("Nice! A Tier III Computer. Well deserved.")
-        player.story+=1
-      } break;
-      case 3: if (player.story==3) {
-        AddToStory("A Tier IV Computer is great, isn't it?")
-        player.story+=1
-      } break;
-      case 4: if (player.story==7) {
-        AddToStory("Errors? Still? You can do better than that!")
-        player.story+=1
-      } break;
+      case 0: newStory(0,"Pancakes is ready!"); break;
+      case 1: newStory(1,"Wakey wakey! Aw, c'mon, you still got the rest of the day to sleep. Get up baby, get up!"); break;
+      case 2: newStory(2,"Nice! A Tier III Computer. Well deserved."); break;
+      case 3: newStory(3,"A Tier IV Computer is great, isn't it?"); break;
+      case 4: newStory(7,"Errors? Still? You can do better than that!"); break;
     }
 
     display()
@@ -158,17 +149,7 @@ function prestige(tier) {
 	//Highest tier - Hard reset
 	localStorage.clear('errorSave')
   }
-  if (tier>2) {
-	//Tier 3 - Networks
-	player.prestiges[2]=(tier==3)?player.prestiges[2]+1:0
-  }
-  if (tier>1) {
-	//Tier 2 - I.P. change/Internet boost
-	player.prestiges[1]=(tier==2)?player.prestiges[1]+1:0
-  }
   
-  //Tier 1 - Update computers
-  player.prestiges[0]=(tier==1)?player.prestiges[0]+1:0
   player.errors = new Decimal(10); //current errors
   player.compCost = [new Decimal(10),new Decimal(100),new Decimal(1000),new Decimal(10000),new Decimal(1e6),new Decimal(1e8),new Decimal(1e10),new Decimal(1e13),new Decimal(1e16)];
   player.compAmount=[0,0,0,0,0,0,0,0,0]
@@ -176,82 +157,58 @@ function prestige(tier) {
   player.boost=Decimal.pow(2+0.01*player.prestiges[2],Math.max(player.prestiges[1]-5,0)*5)
   player.time = new Date().getTime()
   player.genUpgradeCost=new Decimal(1000)
-  display()
-  
-  switch (tier) {
-	  case 1: if (player.story==4&&player.prestiges[0]==1) {
-	      AddToStory("Computers are waking up...")
-        player.story+=1
-	  }
-		  if (player.story==4&&player.prestiges[0]==1) {
-		      AddToStory("Wakey wakey!")
-			  player.story+=1
-		  }
-	  if (player.story==5&&player.prestiges[0]==2) {
-	      AddToStory("Ah, here we are. Awake and operational.")
-        player.story+=1
-	  }
-		  if (player.story==6&&player.prestiges[0]==3) {
-		      AddToStory("Network is being horrible. These upgrades don't do anything. What I'd give for an ethernet cord.")
-			  player.story+=1
-		  } 
-		  if (player.story==7&&player.prestiges[0]==4) {
-		      AddToStory("I still haven't introduced myself? I'm your first ever Tier I computer. I can't believe you've finally had the care to upgrade me.")
-			  player.story+=1
-		  } break
-	  
-	  case 2: if (player.story==8&&player.prestiges[1]==1) {
-	      AddToStory("Trust me. I stay through it all. Keep getting these I.P. Changes and we'll be set in no time.")
-        player.story+=1
-	  } 
-	  if (player.story==9&&player.prestiges[1]==2) {
-	      AddToStory("Atta boy! Keep getting em. Also, Tier VI Computers are my best friends. Get more!")
-        player.story+=1
-	  } 
-		  if (player.story==10&&player.prestiges[1]==3) {
-		      AddToStory("Tier VII computers are bullies. Get through them NOW.")
-			  player.story+=1
-		  }
-		  if (player.story==11&&player.prestiges[1]==4) {
-		      AddToStory("Tier VIII! Soon, everybody, soon.")
-			  player.story+=1
-		  }
-	  if (player.story==12&&player.prestiges[1]==5) {
-	      AddToStory("The Internet Boosts are in sight. Get 20 Tier IX computers to buy one.")
-        player.story+=1
-	  }
-	  if (player.story==13&&player.prestiges[1]==6) {
-	      AddToStory("I got a boost? Good job, you get a <i>small</i> prize.")
-        player.story+=1
-	  }
-	  if (player.story==14&&player.prestiges[1]==9) {
-	      AddToStory("Networks was found, but all are private for me. :(")
-        player.story+=1
-	  }
-	  
-	  case 3:if (player.story==15&&player.prestiges[2]==1) {
-	      AddToStory("Wow, a network was found! I better connect it now.")
-        player.story+=1
-	  }
-	  if (player.story==16&&player.prestiges[2]==2) {
-	      AddToStory("Another network? I find out your new network was better so I installed it.")
-        player.story+=1
-	  } break
+  if (tier==1) {
+    player.prestiges[0]++
+    switch(player.prestiges[2]) {
+      case 0: switch(player.prestiges[0]) {
+        case 1: newStory(4,"Computers are waking up..."); break;
+        case 2: newStory(5,"Ah, here we are. Awake and operational."); break;
+        case 3: newStory(6,"Network is being horrible. These upgrades don't do anything. What I'd give for an ethernet cord."); break;
+        case 4: newStory(7,"I still haven't introduced myself? I'm your first ever Tier I computer. I can't believe you've finally had the care to upgrade me."); break;
+      } break;
+      case 1: switch(player.prestiges[0]) {
+        case 1: newStory(17,"Aw, really? I hate these things."); break;
+        case 2: newStory(18,"Computer: Connected."); newStory(19,"Finally! Can't wait to test this bad boy out."); break;
+      }
+    }    
+  } else {
+    player.prestiges[0] = 0
+    if (tier==2) {
+      player.prestiges[1]++
+      switch(player.prestiges[1]) {
+        case 1: newStory(8,"Trust me. I stay through it all. Keep getting these I.P. Changes and we'll be set in no time."); break;
+        case 2: newStory(9,"Atta boy! Keep getting em. Also, Tier VI Computers are my best friends. Get more!"); break;
+        case 3: newStory(10,"Tier VII computers are bullies. Get through them NOW."); break;
+        case 4: newStory(11,"Tier VIII! Soon, everybody, soon."); break;
+        case 5: newStory(12,"The Internet Boosts are in sight. Get 20 Tier IX computers to buy one."); break;
+        case 6: newStory(13,"I got a boost? Good job, you get a <i>small</i> prize."); break;
+        case 9: newStory(14,"Networks was found, but all are private for me. :("); break;
+      }
+      if (player.prestiges[2]==1) newStory(20,"Hey, we're off! Got a I.P. Change as well. The end is near.");
+    } else {
+      player.prestiges[1] = 0
+      if (tier==3) {
+        player.prestiges[2]++;
+        switch(player.prestiges[2]) {
+          case 1: newStory(15,"The PC found a network! This seems legit. Let's hop on."); newStory(16,"Computer: Connecting network. Please wait, this may take a few minutes."); break;
+          case 2: newStory(21,"Another network? I find out your new network was better so I installed it."); break;
+        }
+      }
+    }
   }
+  display()
 }
 
-function createStoryElement(message) {
-	for (j=4;j>0;j--) {
-		story[j]=story[j-1]
-		updateElement(TIER_NAMES[j]+'Story',story[j])
-	}
-	story[0]=message
-	updateElement('firstStory',story[0])
+function getMultTier(tier) {
+  let ret = new Decimal(1);
+  if (player.prestiges[0] >= tier) ret = ret.mul(2);
+  return ret;
 }
-
 function getEPS() {
   let ret = new Decimal(0);
-  for (let i=0;i<9;i++) ret = ret.add(Decimal.times(player.compAmount[i],player.compPow[i]).times(Decimal.pow(1.1,player.compAmount[i]-1)).times(player.boost))
+  for (let i=0;i<9;i++) {
+    ret = ret.add(Decimal.pow(1.03+i/50,player.compAmount[i]-1).times(player.compAmount[i]).mul(player.compPow[i]).times(player.boost).mul(getMultTier(i+1)))
+  }
   return ret;
 }
 

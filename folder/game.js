@@ -230,10 +230,30 @@ function prestige(tier) {
 	  }
 	  
 	  case 3:if (player.story==15&&player.prestiges[2]==1) {
-		createStoryElement("Wow, a network was found! I better connect it now.")
+		createStoryElement("The PC found a network! This seems legit. Let's hop on.")
         player.story+=1
 	  }
-	  if (player.story==16&&player.prestiges[2]==2) {
+		  if (player.story==16&&player.prestiges[2]==1) {
+			  createStoryElement("Computer: Connecting network. Please wait, this may take a few minutes.")
+					     player.story+=1
+					     }
+					     if (player.story==17&&player.prestiges[2]==1&&player.prestiges[0]==1) {
+				  createStoryElement("Aw, really? I hate these things.")
+						     player.story+=1
+					     }
+		  if (player.story==18&&player.prestiges[2]==1&&player.prestiges[0]==2) {
+			  createStoryElement("Computer: Connected.")
+			  player.story+=1
+		  }
+		   if (player.story==19&&player.prestiges[2]==1&&player.prestiges[0]==2) {
+			  createStoryElement("Finally! Can't wait to test this bad boy out.")
+			  player.story+=1
+		   }
+			    if (player.story==20&&player.prestiges[2]==1&&player.prestiges[1]==1) {
+			  createStoryElement("Hey, we're off! Got a I.P. Change as well. The end is near.")
+ 				  player.story+=1
+			    }
+	  if (player.story==21&&player.prestiges[2]==2) {
 		createStoryElement("Another network? I find out your new network was better so I installed it.")
         player.story+=1
 	  } break

@@ -209,9 +209,16 @@ function createStoryElement(message) {
 	updateElement('firstStory',story[0])
 }
 
+function getMultTier(tier) {
+  let ret = new Decimal(1);
+  if (player.prestiges[0] >= tier) ret = ret.mul(2);
+  return ret;
+}
 function getEPS() {
   let ret = new Decimal(0);
-  for (let i=0;i<9;i++) ret = ret.add(Decimal.pow(1.1,player.compAmount[i]-1).times(player.compAmount[i]).mul(player.compPow[i]).times(player.boost))
+  for (let i=0;i<9;i++) {
+    ret = ret.add(Decimal.pow(1.03+i/50,player.compAmount[i]-1).times(player.compAmount[i]).mul(player.compPow[i]).times(player.boost).mul(getMultTier(i+1)))
+  }
   return ret;
 }
 

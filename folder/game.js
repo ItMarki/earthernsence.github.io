@@ -137,7 +137,7 @@ function buyGenUpgrade() {
   if (player.errors.gte(player.genUpgradeCost)) {
     player.errors = player.errors.sub(player.genUpgradeCost);
     player.boost=player.boost.mul(new Decimal(2+0.01*player.prestiges[2]));
-    player.genUpgradeCost = player.genUpgradeCost.mul(new Decimal(10));
+    player.genUpgradeCost = player.genUpgradeCost.mul(new Decimal(3));
   }
 }
 

@@ -387,7 +387,6 @@ function setupRoman() {
 }
 
 function updateStory() {
-    console.log("hi")
     var Table = document.getElementsByClassName("storybox")[0].tBodies[0];
     for(var i = 0;i<player.story+1;i++){
          if(Table.rows.length<=i){ 

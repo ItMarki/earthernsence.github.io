@@ -387,12 +387,17 @@ function setupRoman() {
 }
 
 function updateStory() {
-    var Table = document.getElementsByClassName("storybox")[0];
-    for (i=0;i<5;i++) {
-		document.getElementById("story"+(4-i)).innerHTML=(player.story-i<0)?'':storyMessages[player.story-i]
-	}
-    Table.style.paddingTop = 150-(Math.min(player.story,5)*30) + "px"
+    console.log("hi")
+    var Table = document.getElementsByClassName("storybox")[0].tBodies[0];
+    for(var i = 0;i<player.story+1;i++){
+         if(Table.rows.length<=i){ 
+            var Row = Table.insertRow(i);
+            var Cell = Row.insertCell(0);
+         }
+         Table.rows[i].cells[0].innerHTML = storyMessages[i];
+    }
 }
+
 
 
 function gameInit() {

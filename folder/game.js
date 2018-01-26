@@ -389,9 +389,13 @@ function setupRoman() {
 function updateStory() {
     var Table = document.getElementsByClassName("storybox")[0];
     for (i=0;i<5;i++) {
-		document.getElementById("story"+(4-i)).innerHTML=(player.story-i<0)?'':storyMessages[player.story-i]
+		if (player.story-i<0) {
+			hideElement("story"+(4-i))
+		} else {
+			showElement("story"+(4-i),'table-row')
+			updateElement("story"+(4-i),storyMessages[player.story-i])
+		}
 	}
-    Table.style.paddingTop = 150-(Math.min(player.story,5)*30) + "px"
 }
 
 

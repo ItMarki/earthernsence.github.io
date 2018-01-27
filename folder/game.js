@@ -282,8 +282,6 @@ function display() {
 	  } else {
 		  hideElement('statsPrestige3')
 	  }
-	  if (tab=='achievements') {
-		  showElement('soon™')
   }
 }
 

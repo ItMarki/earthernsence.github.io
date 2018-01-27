@@ -42,7 +42,7 @@ function format(num,decimalPoints=0,offset=0) {
 	num=new Decimal(num)
 	if (isNaN(num.mantissa)) {
 		return '?'
-	} else if (num.eq(1/0)) {
+	} else if (num.eq(Infinity)) {
 		return 'Infinite'
 	} else {
 		var abbid=Math.max(Math.floor(num.e/3)-offset,0)
@@ -116,21 +116,22 @@ function newStory(story) {
 }
 
 function buyGen(tier,bulk=1) {
-  if (player.errors.gte(player.compCost[tier])) {
-	player.compAmount[tier]++
-    player.errors = player.errors.sub(player.compCost[tier])
-    player.compCost[tier] = player.compCost[tier].mul(costMult[tier])
+	bulk = Math.min(bulk,Decimal.affordGeometricSeries(player.errors,player.compCost[tier],player.costMult[tier],0))
+	if (bulk==0) return;
 
-    switch (tier) {
-      case 0: newStory(0); break;
-      case 1: newStory(1); break;
-      case 2: newStory(2); break;
-      case 3: newStory(3); break;
-      case 4: newStory(9); break;
-    }
+	player.compAmount[tier]+=bulk;
+  player.errors = player.errors.sub(Decimal.sumGeometricSeries(bulk,player.compCost[tier],player.costMult[tier],0))
+  player.compCost[tier] = player.compCost[tier].mul(Decimal.pow(costMult[tier],bulk))
 
-    display()
+  switch (tier) {
+    case 0: newStory(0); break;
+    case 1: newStory(1); break;
+    case 2: newStory(2); break;
+    case 3: newStory(3); break;
+    case 4: newStory(9); break;
   }
+
+  display()
 }
 
 function buyGenUpgrade() {
@@ -219,12 +220,18 @@ function getEPS() {
   return ret;
 }
 
+function buyCost(tier) {
+	let bulk = Math.min(player.buyAmount,Decimal.affordGeometricSeries(player.errors,player.compCost[tier],player.costMult[tier],0))
+	if (bulk==0) bulk = 1;
+	return Decimal.sumGeometricSeries(bulk,player.compCost[tier],player.costMult[tier],0)
+}
+
 function display() {
   document.getElementById("errors").innerHTML = format(player.errors) //this is the base, except in the parentheses add the HTML tag of the thing you're changing
   document.getElementById("eps").innerHTML = format(getEPS())
   if (tab=='computers') {
-	  for (let i=0;i<Math.min(player.prestiges[1]+4,9);i++) document.getElementById("cop"+(i+1)).innerHTML = "Cost: " + format(player.compCost[i]) + " (" + player.compAmount[i] + ")"
-	  for (i=0;i<5;i++) {
+	  for (let i=0;i<Math.min(player.prestiges[1]+4,9);i++) document.getElementById("cop"+(i+1)).innerHTML = "Cost: " + format(buyCost(i)) + " (" + player.compAmount[i] + ")"
+	  for (let i=0;i<5;i++) {
 		  if (player.prestiges[1]>i) {
 			showElement(TIER_NAMES[i+4]+'Comp','block')
 		  } else {

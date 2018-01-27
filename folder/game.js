@@ -238,7 +238,7 @@ function display() {
 		  updateElement('genBoost',format(player.boost));
 	  } else {
 		  hideElement('genUpgrade')
-	  }
+}
 	  updateElement('prestige2Gen',format(20+Math.max(player.prestiges[1]-5,0),0,1)+' Tier '+ROMAN_NUMERALS[Math.min(player.prestiges[1]+4,9)])
 	  if (player.prestiges[1]<5) {
 		updateElement('ipChange','Gain Tier '+ROMAN_NUMERALS[player.prestiges[1]+5]+' Computer, but resets everything.')
@@ -282,6 +282,8 @@ function display() {
 	  } else {
 		  hideElement('statsPrestige3')
 	  }
+	  if (tab=='achievements') {
+		  showElement('soon™')
   }
 }
 

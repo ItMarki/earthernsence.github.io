@@ -12,15 +12,15 @@ player = {
   story: -1,
   playtime: 0,
   time: new Date().getTime(),
+  notation: 0,
   version: 0,
-  build: 7
+  build: 8
 }
 tab='computers'
 const story = ['','','','','']
 const TIER_NAMES = ['first','second','third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 'ninth']; // can add more if more gens/story elements, cuz that uses this too
 const ROMAN_NUMERALS=[]
 const costMult=[2,2.5,3,4,5,6,8,10,12]
-const abbs=['','k','M','B','T']
 
 var storyMessages=["Pancakes is ready!","Wakey wakey! Aw, c'mon, you still got the rest of the day to sleep. Get up baby, get up!","Nice! A Tier III Computer. Well deserved.","A Tier IV Computer is great, isn't it?","Computers are waking up...","Ah, here we are. Awake and operational.","Network is being horrible. These upgrades don't do anything. What I'd give for an ethernet cord.","I still haven't introduced myself? I'm your first ever Tier I computer. I can't believe you've finally had the care to upgrade me.","Trust me. I stay through it all. Keep getting these I.P. Changes and we'll be set in no time.","Errors? Still? You can do better than that!",
 	"Atta boy! Keep getting em. Also, Tier VI Computers are my best friends. Get more!","Tier VII computers are bullies. Get through them NOW.","Tier VIII! Soon, everybody, soon.","The Internet Boosts are in sight. Get 20 Tier IX computers to buy one.","I got a boost? Good job, you get a <i>small</i> prize.","Networks was found, but all are private for me. :(","The PC found a network! This seems legit. Let's hop on.","Computer: Connecting network. Please wait, this may take a few minutes.","Aw, really? I hate these things.","Computer: Connected.",
@@ -38,20 +38,48 @@ function hideElement(elementID) {
 	document.getElementById(elementID).style.display='none'
 }
 
+var notationArray = ["Standard","Scientific","Engineering","Logarithm"]
+
+function abbreviate(i) {
+	if(i==0) return "K"
+	if(i==1) return "M"
+	if(i==2) return "B"
+	var units = ["","U","Du","T","Q","Qi","S","Sp","O","N"]
+	var tens = ["","D","V","Tg","Qg","Qig","Sg","SPg","Og","Ng"]
+	var hundreds = ["","C","Dc","Tc","Qc","Qic","Sc","Spc","Oc","Nc"]
+	var i2=Math.floor(i/10)
+	var i3=Math.floor(i2/10)
+	var unit = units[i%10]
+	var ten = tens[i2%10]
+	var hundred = hundreds[i3%10]
+	return unit+ten+hundred
+}
+
 function format(num,decimalPoints=0,offset=0) {
+	if (num.lte(9999.5)) return a.toFixed(3)
 	num=new Decimal(num)
 	if (isNaN(num.mantissa)) {
 		return '?'
 	} else if (num.eq(1/0)) {
 		return 'Infinite'
 	} else {
+		var e = num.e;
+		var e2 = 3*Math.floor(e/3);
 		var abbid=Math.max(Math.floor(num.e/3)-offset,0)
-		var mantissa=num.div(Decimal.pow(1000,abbid)).toFixed((abbid>0&&decimalPoints<2)?2:decimalPoints)
-		if (mantissa==Math.pow(1000,1+offset)) {
-			mantissa=mantissa/1000
-			abbid+=1
+		var m=num.div(Decimal.pow(10,num.e)).toFixed((abbid>0&&decimalPoints<2)?2:decimalPoints)
+		if (m>9.9995) {
+			m = 1
+			e++
 		}
-		return mantissa+(abbid>4?letter(abbid+22):abbs[abbid])
+		var m2=num.div(Decimal.pow(1000,abbid)).toFixed((abbid>0&&decimalPoints<2)?2:decimalPoints)
+		if (m2>999.95) {
+			m2 = 1
+		abbid++
+		}
+	if (player.notation==1) return num.toExponential(3).replace("e+","e")
+	if (player.notation==3) return "e"+Math.round(1000*num.log10())/1000
+	if(player.notation==0) return m2+abbreviate(abbid)
+		if(player.notation==2) return m2+"e"+e2
 	}
 }
 
@@ -84,6 +112,12 @@ function formatTime(s) {
 	} else {
 		return 'Infinite'
 	}
+}
+
+function switchNotation() {
+	player.notation++
+	if(player.notation>notationArray.length-1) game.notation=0
+	updateElement("notationID",notationArray[game.notation])
 }
 
 function switchTab(tabid) {
@@ -334,8 +368,11 @@ function load(savefile) {
 	  if (player.build<7) {
 		player.story-=1
 	  }
+	  if (player.build<8) {
+		player.notation=0
+	  }
 	  player.version = 0
-	  player.build = 7
+	  player.build = 8
 	  
 	  //if the value is a Decimal, set it to be a Decimal here.
 	  player.errors = new Decimal(player.errors)

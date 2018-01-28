@@ -11,7 +11,7 @@ player = {
   time: 0,
   notation: 0,
   version: 0,
-  build: 11
+  build: 12
 }
 tab='computers'
 oldtab=tab
@@ -240,8 +240,8 @@ function prestige(tier) {
 
 function getMultTier(tier) {
   let ret = new Decimal.pow(10,tier-1)
-  ret = ret.mul(Decimal.pow(Math.pow(1.05+i*0.01,i+1),player.compAmount[tier-1]))
-  ret = ret.mul(Decimal.pow(2+0.01*player.prestiges[2],player.boostPower+Math.max(player.prestiges[1]-5,0)*20))
+  ret = ret.mul(Decimal.pow(Math.pow(1.04+tier*0.01,tier),player.compAmount[tier-1]))
+  ret = ret.mul(Decimal.pow(2+0.2*player.prestiges[2],player.boostPower+Math.max(player.prestiges[1]-5,0)*20))
   ret = ret.mul(Decimal.pow(2,Math.ceil((player.prestiges[0]-tier)/9)))
   return ret
 }
@@ -266,9 +266,9 @@ function gameTick() {
   updateElement('eps',format(getEPS()))
   if (player.compAmount[2]>0) {
 	  showElement('genUpgrade','block');
-	  updateElement('genIncrease',(200+1*player.prestiges[2])/100);
+	  updateElement('genIncrease',(10+player.prestiges[2])/5);
 	  updateElement('genIncreaseCost','Cost: ' + format(costs.boost));
-	  updateElement('genBoost',format(Decimal.pow(2+0.01*player.prestiges[2],player.boostPower+Math.max(player.prestiges[1]-5,0)*20)));
+	  updateElement('genBoost',format(Decimal.pow(2+0.2*player.prestiges[2],player.boostPower+Math.max(player.prestiges[1]-5,0)*20)));
   } else {
 	  hideElement('genUpgrade')
   }
@@ -303,7 +303,7 @@ function gameTick() {
 		updateElement('prestige2Type','Internet boost')
 	  }
 	  updateElement('prestige3Req',player.prestiges[2]*20+50)
-	  updateElement('netMulti',(201+player.prestiges[2])/100)
+	  updateElement('netMulti',(11+player.prestiges[2])/5)
   }
   if (tab=='stats') {
 	  updateElement('statsTotal','You have gained a total of '+format(player.totalErrors)+' errors.')

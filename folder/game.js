@@ -1,4 +1,4 @@
-//Calling it this because it will be main game JS thing?
+//game.js
 
 player = {
   errors: new Decimal(10), //current errors
@@ -6,22 +6,25 @@ player = {
   compCost: [new Decimal(10),new Decimal(100),new Decimal(1000),new Decimal(10000),new Decimal(1e6),new Decimal(1e8),new Decimal(1e10),new Decimal(1e13),new Decimal(1e16)],
   compAmount: [0,0,0,0,0,0,0,0,0],
   compPow: [1,10,100,1000,1e4,1e5,1e6,1e7,1e8],
-		genUpgradeCost: new Decimal(1000),
+  genUpgradeCost: new Decimal(1000),
   boost: new Decimal(1),
   prestiges: [0,0,0],
-  story: 0,
+  story: -1,
   playtime: 0,
   time: new Date().getTime(),
   version: 0,
-  build: 5
+  build: 7
 }
 tab='computers'
 const story = ['','','','','']
 const TIER_NAMES = ['first','second','third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 'ninth']; // can add more if more gens/story elements, cuz that uses this too
 const ROMAN_NUMERALS=[]
-const costMult=[2,2.5,3,4,6,9,14,22,35]
+const costMult=[2,2.5,3,4,5,6,8,10,12]
 const abbs=['','k','M','B','T']
 
+var storyMessages=["Pancakes is ready!","Wakey wakey! Aw, c'mon, you still got the rest of the day to sleep. Get up baby, get up!","Nice! A Tier III Computer. Well deserved.","A Tier IV Computer is great, isn't it?","Computers are waking up...","Ah, here we are. Awake and operational.","Network is being horrible. These upgrades don't do anything. What I'd give for an ethernet cord.","I still haven't introduced myself? I'm your first ever Tier I computer. I can't believe you've finally had the care to upgrade me.","Trust me. I stay through it all. Keep getting these I.P. Changes and we'll be set in no time.","Errors? Still? You can do better than that!",
+	"Atta boy! Keep getting em. Also, Tier VI Computers are my best friends. Get more!","Tier VII computers are bullies. Get through them NOW.","Tier VIII! Soon, everybody, soon.","The Internet Boosts are in sight. Get 20 Tier IX computers to buy one.","I got a boost? Good job, you get a <i>small</i> prize.","Networks was found, but all are private for me. :(","The PC found a network! This seems legit. Let's hop on.","Computer: Connecting network. Please wait, this may take a few minutes.","Aw, really? I hate these things.","Computer: Connected.",
+	"Finally! Can't wait to test this bad boy out.","Hey, we're off! Got a I.P. Change as well. The end is near.","Another network? I find out your new network was better so I installed it."]
 	
 function updateElement(elementID,value) {
 	document.getElementById(elementID).innerHTML=value
@@ -43,7 +46,7 @@ function format(num,decimalPoints=0,offset=0) {
 		return 'Infinite'
 	} else {
 		var abbid=Math.max(Math.floor(num.e/3)-offset,0)
-		var mantissa=num.div(Decimal.pow(1000,abbid)).toFixed((decimalPoints<2)?2:decimalPoints)
+		var mantissa=num.div(Decimal.pow(1000,abbid)).toFixed((abbid>0&&decimalPoints<2)?2:decimalPoints)
 		if (mantissa==Math.pow(1000,1+offset)) {
 			mantissa=mantissa/1000
 			abbid+=1
@@ -106,33 +109,24 @@ function changeMults() {
   document.getElementById('buyMult').innerHTML=player.buyMult+'x'
 }
 
+function newStory(story) {
+  if (player.story>=story) return;
+  player.story=story
+  updateStory()
+}
+
 function buyGen(tier,bulk=1) {
   if (player.errors.gte(player.compCost[tier])) {
-	player.compAmount[tier]+=1
+	player.compAmount[tier]++
     player.errors = player.errors.sub(player.compCost[tier])
     player.compCost[tier] = player.compCost[tier].mul(costMult[tier])
 
     switch (tier) {
-      case 0: if (player.story==0) {
-        createStoryElement("Pancakes is ready!")
-        player.story+=1
-      } break;
-      case 1: if (player.story==1) {
-        createStoryElement("Wakey wakey! Aw, c'mon, you still got the rest of the day to sleep. Get up baby, get up!")
-        player.story++
-      } break;
-      case 2: if (player.story==2) {
-        createStoryElement("Nice! A Tier III Computer. Well deserved.")
-        player.story+=1
-      } break;
-      case 3: if (player.story==3) {
-        createStoryElement("A Tier IV Computer was powerful, does it?")
-        player.story+=1
-      } break;
-      case 4: if (player.story==7) {
-        createStoryElement("Your new computer still generates errors. Oh come on!")
-        player.story+=1
-      } break;
+      case 0: newStory(0); break;
+      case 1: newStory(1); break;
+      case 2: newStory(2); break;
+      case 3: newStory(3); break;
+      case 4: newStory(9); break;
     }
 
     display()
@@ -140,87 +134,94 @@ function buyGen(tier,bulk=1) {
 }
 
 function buyGenUpgrade() {
-    if (player.errors.gte(player.genUpgradeCost)) {
+  if (player.errors.gte(player.genUpgradeCost)) {
     player.errors = player.errors.sub(player.genUpgradeCost);
-    player.boost=player.boost.mul(new Decimal(2));
-    player.genUpgradeCost = player.genUpgradeCost.mul(new Decimal(10))
+    player.boost=player.boost.mul(new Decimal(2+0.01*player.prestiges[2]));
+    player.genUpgradeCost = player.genUpgradeCost.mul(new Decimal(4));
   }
-  display()
 }
 
 function prestige(tier) {
   switch(tier) { //don't allow prestiging until you match reqs
     case 1: if (player.compAmount[player.prestiges[0]] < 10) return; break;
-    case 2: if (player.compAmount[player.prestiges[1]+3] < 20) return; break;
+    case 2: if (player.compAmount[Math.min(player.prestiges[1]+3,8)] < 20+Math.max(player.prestiges[1]-5,0)) return; break;
     case 3: if (player.compAmount[8] < 60+40*player.prestiges[2]) return; break;
     case Infinity: if (!confirm('Are you really sure to reset? You will lose everything you have!')) return; break;
   }
   if (tier==Infinity) {
 	//Highest tier - Hard reset
 	localStorage.clear('errorSave')
-  }
-  if (tier==3) {
-	//Tier 3 - Networks
-	player.prestiges[2]=(tier==3)?player.prestiges[2]+1:0
-  }
-  if (tier==2) {
-	//Tier 2 - I.P. change
-	player.prestiges[1]=(tier==2)?player.prestiges[1]+1:0
+	player.playtime=0
+	player.totalErrors=new Decimal(0)
+	player.story=-1
+	updateStory()
   }
   
-  //Tier 1 - Update computers
-  player.prestiges[0]=(tier==1)?player.prestiges[0]+1:0
   player.errors = new Decimal(10); //current errors
   player.compCost = [new Decimal(10),new Decimal(100),new Decimal(1000),new Decimal(10000),new Decimal(1e6),new Decimal(1e8),new Decimal(1e10),new Decimal(1e13),new Decimal(1e16)];
   player.compAmount=[0,0,0,0,0,0,0,0,0]
   player.compPow=[1,10,100,1000,1e4,1e5,1e6,1e7,1e8]
-  player.boost=new Decimal(1)
+  player.boost=Decimal.pow(2+0.01*player.prestiges[2],Math.max(player.prestiges[1]-5,0)*5)
   player.time = new Date().getTime()
-  display()
-  
-  switch (tier) {
-	  case 1: if (player.story==4&&player.prestiges[0]==1) {
-		createStoryElement("Wonderful, you have upgraded your computers.")
-        player.story+=1
-	  }
-	  if (player.story==5&&player.prestiges[0]==4) {
-		createStoryElement("You max out your computers but it still giving you errors. Why not do something else?")
-        player.story+=1
-	  } break
-	  
-	  case 2: if (player.story==6&&player.prestiges[1]==1) {
-		createStoryElement("You bought your new computer. What it does do now?")
-        player.story+=1
-	  } 
-	  if (player.story==8&&player.prestiges[1]==2) {
-		createStoryElement("You keep buying your new computers, but it doesn\'t work for all.")
-        player.story+=1
-	  } 
-	  if (player.story==9&&player.prestiges[1]==5) {
-		createStoryElement("You ran out of computers. We need to setup a network.")
-        player.story+=1
-	  } break
+  player.genUpgradeCost=new Decimal(1000)
+  if (tier==1) {
+    player.prestiges[0]++
+    switch(player.prestiges[2]) {
+      case 0: switch(player.prestiges[0]) {
+        case 1: newStory(4); break;
+        case 2: newStory(5); break;
+        case 3: newStory(6); break;
+        case 4: newStory(7); break;
+      } break;
+      case 1: switch(player.prestiges[0]) {
+        case 1: newStory(18); break;
+        case 2: newStory(20); break;
+      }
+    }    
+  } else {
+    player.prestiges[0] = 0
+    if (tier==2) {
+      player.prestiges[1]++
+      switch(player.prestiges[1]) {
+        case 1: newStory(8); break;
+        case 2: newStory(10); break;
+        case 3: newStory(11); break;
+        case 4: newStory(12); break;
+        case 5: newStory(13); break;
+        case 6: newStory(14); break;
+        case 9: newStory(15); break;
+      }
+      if (player.prestiges[2]==1) newStory(21);
+    } else {
+      player.prestiges[1] = 0
+      if (tier==3) {
+        player.prestiges[2]++;
+        switch(player.prestiges[2]) {
+          case 1: newStory(17); break;
+          case 2: newStory(22); break;
+        }
+      }
+    }
   }
+  display()
 }
 
-function createStoryElement(message) {
-	for (j=4;j>0;j--) {
-		story[j]=story[j-1]
-		updateElement(TIER_NAMES[j]+'Story',story[j])
-	}
-	story[0]=message
-	updateElement('firstStory',story[0])
+function getMultTier(tier) {
+  let ret = new Decimal(1);
+  if (player.prestiges[0] >= tier) ret = ret.mul(2);
+  return ret;
 }
-
 function getEPS() {
   let ret = new Decimal(0);
-  for (let i=0;i<9;i++) ret = ret.add(Decimal.times(player.compAmount[i],player.compPow[i]).times(Decimal.pow(1.1,player.compAmount[i]-1)).times(player.boost))
+  for (let i=0;i<9;i++) {
+    ret = ret.add(Decimal.pow(Math.pow(1.05,i+1),player.compAmount[i]-1).times(player.compAmount[i]).mul(player.compPow[i]).times(player.boost).mul(getMultTier(i+1)))
+  }
   return ret;
 }
 
 function display() {
   document.getElementById("errors").innerHTML = format(player.errors) //this is the base, except in the parentheses add the HTML tag of the thing you're changing
-  document.getElementById("eps").innerHTML = getEPS()
+  document.getElementById("eps").innerHTML = format(getEPS())
   if (tab=='computers') {
 	  for (let i=0;i<Math.min(player.prestiges[1]+4,9);i++) document.getElementById("cop"+(i+1)).innerHTML = "Cost: " + format(player.compCost[i]) + " (" + player.compAmount[i] + ")"
 	  for (i=0;i<5;i++) {
@@ -231,20 +232,20 @@ function display() {
 		  }
 	  }
 	  if (player.compAmount[2]>0) {
-		  showElement('genUpgrade','block')
-		  updateElement('genIncreaseCost',"Cost" '+ player.genUpgradeCost);
-		  updateElement('genBoost',player.boost);
+		  showElement('genUpgrade','block');
+		  updateElement('genIncrease',(2+0.01*player.prestiges[2]));
+		  updateElement('genIncreaseCost','Cost: ' + format(player.genUpgradeCost));
+		  updateElement('genBoost',format(player.boost));
 	  } else {
 		  hideElement('genUpgrade')
-	  }
+}
+	  updateElement('prestige2Gen',format(20+Math.max(player.prestiges[1]-5,0),0,1)+' Tier '+ROMAN_NUMERALS[Math.min(player.prestiges[1]+4,9)])
 	  if (player.prestiges[1]<5) {
-		  updateElement('prestige2Gen',ROMAN_NUMERALS[player.prestiges[1]+4])
-		  updateElement('afterPrestige2Gen',ROMAN_NUMERALS[player.prestiges[1]+5])
-		  hideElement('maxout2')
-		  showElement('abletoprestige2','inline')
+		updateElement('ipChange','Gain Tier '+ROMAN_NUMERALS[player.prestiges[1]+5]+' Computer, but resets everything.')
+		updateElement('prestige2Type','I.P. Change')
 	  } else {
-		  hideElement('abletoprestige2')
-		  showElement('maxout2','inline')
+		updateElement('ipChange','Gain headstart for boost, but resets everything.')
+		updateElement('prestige2Type','Internet boost')
 	  }
 	  if (player.prestiges[0]<player.prestiges[1]+4) {
 		  updateElement('prestige1Gen',ROMAN_NUMERALS[player.prestiges[0]+1])
@@ -267,7 +268,11 @@ function display() {
 	  }
 	  if (player.prestiges[1]>0) {
 		  showElement('statsPrestige2','block')
-		  updateElement('statsPrestige2','You have '+format(player.prestiges[1],0,1)+' new computers.')
+		  if (player.prestiges[1]<6) {
+			  updateElement('statsPrestige2','You have '+player.prestiges[1]+' new computers.')
+		  } else {
+			  updateElement('statsPrestige2','You have 5 new computers and boosted your computers '+format(player.prestiges[1]-5,0,1)+' times.')
+		  }
 	  } else {
 		  hideElement('statsPrestige2')
 	  }
@@ -323,8 +328,14 @@ function load(savefile) {
 		player.boost=1
 		delete player.timeUpgrades
 	  }
+	  if (player.build<6) {
+		player.genUpgradeCost=1000
+	  }
+	  if (player.build<7) {
+		player.story-=1
+	  }
 	  player.version = 0
-	  player.build = 5
+	  player.build = 7
 	  
 	  //if the value is a Decimal, set it to be a Decimal here.
 	  player.errors = new Decimal(player.errors)
@@ -332,9 +343,11 @@ function load(savefile) {
 	  for (let i=0;i<9;i++) {
 		player.compCost[i] = new Decimal(player.compCost[i])
 	  }
+	  player.genUpgradeCost = new Decimal(player.genUpgradeCost);
 	  player.boost=new Decimal(player.boost)
 	  
 	  increaseErrors()
+	  updateStory()
 	  console.log('Game loaded!')
   } catch (e) {
 	  console.log('Your save failed to load:\n'+e)
@@ -373,17 +386,22 @@ function setupRoman() {
 	}
 }
 
-
-function drawStorybox() {
-  rect(50, 50, 150, 250);
-  line(50, 75, 150, 75); 
+function updateStory() {
+    var Table = document.getElementsByClassName("storybox")[0].tBodies[0];
+    for(var i = 0;i<player.story+1;i++){
+         if(Table.rows.length<=i){ 
+            var Row = Table.insertRow(i);
+            var Cell = Row.insertCell(0);
+         }
+         Table.rows[i].cells[0].innerHTML = storyMessages[i];
+    }
 }
-//drawStorybox();
+
+
 
 function gameInit() {
 	setupRoman()
 	load(localStorage.getItem('errorSave'))
-	
 	var tickspeed=0
 	updated=true
 	setInterval(function(){
@@ -392,7 +410,7 @@ function gameInit() {
 			setTimeout(function(){
 				var startTime=new Date().getTime()
 				try {
-					increaseErrors()
+				    increaseErrors()
 				} catch (e) {
 					console.log('A game error has been occured: '+e)
 				}

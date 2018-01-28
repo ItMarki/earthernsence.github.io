@@ -1,5 +1,6 @@
-
+ 
 <!DOCTYPE html>
+<!--index.html-->
 <html>
 <head>
 	<style>
@@ -11,18 +12,30 @@
 			width:48px;
 		}
 	</style>
+    <link rel="stylesheet" type="text/css" href="folder/styles.css" />
 	<script type="text/javascript" src="break_infinity.min.js"> </script>
 	<script type="text/javascript" src="folder/game.js"> </script>
 </head>
 <body style="text-align:center" onload='gameInit()'>
  <div id="game">
+     <div style="margin-bottom:10px;">
+     <div style="margin-left:20%;max-width:80%; display:inline-block;">
   <h1 id="logo">The Console Error Game</h1>
   <div>You have <text id="errors">x</text> errors.</div>
   <div>You are making <text id="eps">x</text> errors per second.</div>
   <div id='genUpgrade'>Increase the boost by <text id='genIncrease'>2</text>x.<br>
   <button id="genIncreaseCost" onclick="buyGenUpgrade()">Cost: 1000</button><button id="buyMax">Buy Max</button><br>
   Production boost: <text id='genBoost'>1</text>x</div><br>
-  <div><button onclick='switchTab("computers")'>Computers</button><button onclick='switchTab("options")'>Options</button><button onclick='switchTab("stats")'>Stats</button></div> <br>
+  <div><button onclick='switchTab("computers")'>Computers</button><button onclick='switchTab("options")'>Options</button><button onclick='switchTab("stats")'>Stats</button></div>
+         </div>
+     <div style="width:20%;  display:inline-block;float:right; margin-right:15px;">
+         <table class="storybox">
+             <thead><tr><th>Storybox</th></tr></thead>
+             <tbody>
+             </tbody>
+         </table>
+     </div>
+</div>
   <!--<button id="buyMult" onclick="changeMults();">1x</button><br>-->
   <div id='computersTab'>
 	  <div>Tier I Computer:<button id="cop1" onClick='buyGen(0)'> (<text id="firstAmt">x</text>)</button></div>
@@ -36,8 +49,8 @@
 	  <div id='ninthComp' style='display:none'>Tier IX Computer:<button id="cop9"  onClick='buyGen(8)'> (<text id="ninthAmt">x</text>)</button></div>
 	  <br>
 	  <div> Upgrade Computers: <text id='abletoprestige'>Requires 10 Tier <text id='prestige1Gen'>IV</text> Computers <button id="upgradeComputers" onClick='prestige(1)'>Reset back to beginning of run, but gain a small boost.</button></text><text id='maxout' style='display:none'>Max out!</text></div>
-	  <div> I.P. Change: <text id='abletoprestige2'>Requires 20 Tier <text id='prestige2Gen'>IV</text> Computers <button id="ipChange" onClick='prestige(2)'>Gain Tier <text id='afterPrestige2Gen'>V</text> Computer, but resets everything.</button></text><text id='maxout2' style='display:none'>Max out!</text></div>
-	  <div> Network: Requires <text id='prestige3Req'>60</text> Tier IX Computers <button id="network">Reset everything, but gain a Generation Time upgrade.</button></div>
+	  <div> <text id='prestige2Type'>I.P. Change</text>: Requires <text id='prestige2Gen'>20 Tier IV</text> Computers <button id="ipChange" onClick='prestige(2)'></button></div>
+	  <div> Network: Requires <text id='prestige3Req'>60</text> Tier IX Computers <button id="network">Reset everything, but gain a Production Boost upgrade (<text id='netMulti'>X</text>).</button></div>
   </div>
   <div id='optionsTab' style='display:none'>
 	  <button class='optionButton' onClick='save()'>Save</button>
@@ -52,12 +65,10 @@
 	  <div id='statsPrestige1'>You upgraded your computers, X times.</div>
 	  <div id='statsPrestige2'>You have X new computers.</div>
 	  <div id='statsPrestige3'>You have X networks.</div>
+	</div>
+	  <div id='achievementsTab' style='display:none'>
+		  <h1 id="soon™"> Soon™</h1>
   </div>
-  <div id="storybox" style='position:absolute;width:100%;bottom:0;text-align:center'>
-  <div id='firstStory'></div>
-  <div id='secondStory'></div>
-  <div id='thirdStory'></div>
-  <div id='fourthStory'></div>
-  <div id='fifthStory'></div></div>
+     </div>
 </body>
 </html>

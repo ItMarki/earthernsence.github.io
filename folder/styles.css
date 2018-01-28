@@ -1,3 +1,25 @@
+table.sidebar {
+    display: table;
+    width: 100%;
+    background-color: darkblue;
+    font-size: 12;
+    height: 500px;
+}
+table.sidebar tbody {
+    width: 100%
+}
+table.sidebar tbody {
+    text-align:left;
+    overflow: auto;
+    display: block;
+}
+table.sidebar tr {
+    width: 100%;
+        display: table;
+            table-layout:fixed;
+}
+        
+
 table.storybox {
     display: table;
     width: 100%;

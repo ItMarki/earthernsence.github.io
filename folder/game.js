@@ -38,7 +38,7 @@ function hideElement(elementID) {
 	document.getElementById(elementID).style.display='none'
 }
 
-var notationArray = ["Standard","Scientific","Engineering","Logarithm","Letters","Hybrid"]
+var notationArray = ["Standard","Scientific","Engineering","Logarithm","Letters","Mixed"]
 
 function abbreviate(i) {
 	if(i==0) return "K"

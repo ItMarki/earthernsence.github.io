@@ -14,7 +14,7 @@ player = {
   time: new Date().getTime(),
   notation: 0,
   version: 0,
-  build: 8
+  build: 9
 }
 tab='computers'
 const story = ['','','','','']
@@ -38,7 +38,7 @@ function hideElement(elementID) {
 	document.getElementById(elementID).style.display='none'
 }
 
-var notationArray = ["Standard","Scientific","Engineering","Logarithm"]
+var notationArray = ["Standard","Scientific","Engineering","Logarithm","Letters","Mixed"]
 
 function abbreviate(i) {
 	if(i==0) return "K"
@@ -56,30 +56,26 @@ function abbreviate(i) {
 }
 
 function format(num,decimalPoints=0,offset=0) {
-	if (num.lte(9999.5)) return a.toFixed(3)
 	num=new Decimal(num)
 	if (isNaN(num.mantissa)) {
 		return '?'
 	} else if (num.eq(1/0)) {
 		return 'Infinite'
+	} else if (num.lt(999.5)) {
+		return num.round()
 	} else {
-		var e = num.e;
-		var e2 = 3*Math.floor(e/3);
 		var abbid=Math.max(Math.floor(num.e/3)-offset,0)
-		var m=num.div(Decimal.pow(10,num.e)).toFixed((abbid>0&&decimalPoints<2)?2:decimalPoints)
-		if (m>9.9995) {
-			m = 1
-			e++
+		var mantissa=num.div(Decimal.pow(1000,abbid)).toFixed((abbid>0&&decimalPoints<2)?2:decimalPoints)
+		if (mantissa==Math.pow(1000,1+offset)) {
+			mantissa=mantissa/1000
+			abbid+=1
 		}
-		var m2=num.div(Decimal.pow(1000,abbid)).toFixed((abbid>0&&decimalPoints<2)?2:decimalPoints)
-		if (m2>999.95) {
-			m2 = 1
-		abbid++
-		}
-	if (player.notation==1) return num.toExponential(3).replace("e+","e")
-	if (player.notation==3) return "e"+Math.round(1000*num.log10())/1000
-	if(player.notation==0) return m2+abbreviate(abbid)
-		if(player.notation==2) return m2+"e"+e2
+		if (player.notation==0||(player.notation==5&&abbid<5)) return mantissa+abbreviate(abbid-1)
+		if (player.notation==1) return (num.div(Decimal.pow(10,num.e)).toFixed((abbid>0&&decimalPoints<2)?2:decimalPoints))+"e"+num.e
+		if (player.notation==2) return mantissa+"e"+(abbid*3)
+		if (player.notation==3) return "e"+Math.round(1000*num.log10())/1000
+		if (player.notation==4) return mantissa+letter(abbid)
+		if (player.notation==5&&abbid>4) return mantissa+letter(abbid+22)
 	}
 }
 
@@ -116,8 +112,8 @@ function formatTime(s) {
 
 function switchNotation() {
 	player.notation++
-	if(player.notation>notationArray.length-1) game.notation=0
-	updateElement("notationID",notationArray[game.notation])
+	if(player.notation>notationArray.length-1) player.notation=0
+	updateElement("notationID",notationArray[player.notation])
 }
 
 function switchTab(tabid) {
@@ -372,7 +368,7 @@ function load(savefile) {
 		player.notation=0
 	  }
 	  player.version = 0
-	  player.build = 8
+	  player.build = 9
 	  
 	  //if the value is a Decimal, set it to be a Decimal here.
 	  player.errors = new Decimal(player.errors)
@@ -385,6 +381,7 @@ function load(savefile) {
 	  
 	  increaseErrors()
 	  updateStory()
+	  updateElement("notationID",notationArray[player.notation])
 	  console.log('Game loaded!')
   } catch (e) {
 	  console.log('Your save failed to load:\n'+e)

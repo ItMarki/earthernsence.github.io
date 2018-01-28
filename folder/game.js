@@ -11,7 +11,7 @@ player = {
   time: 0,
   notation: 0,
   version: 0,
-  build: 10
+  build: 11
 }
 tab='computers'
 oldtab=tab
@@ -23,7 +23,7 @@ const costMult=[2,2.5,3,4,5,6,8,10,12]
 var costs={comp:[new Decimal(10),new Decimal(100),new Decimal(1e3),new Decimal(1e4),new Decimal(1e6),new Decimal(1e8),new Decimal(1e10),new Decimal(1e13),new Decimal(1e16)],boost:new Decimal(0)}
 var storyMessages=["Pancakes is ready!","Wakey wakey! Aw, c'mon, you still got the rest of the day to sleep. Get up baby, get up!","Nice! A Tier III Computer. Well deserved.","A Tier IV Computer is great, isn't it?","Computers are waking up...","Ah, here we are. Awake and operational.","Network is being horrible. These upgrades don't do anything. What I'd give for an ethernet cord.","I still haven't introduced myself? I'm your first ever Tier I computer. I can't believe you've finally had the care to upgrade me.","Trust me. I stay through it all. Keep getting these I.P. Changes and we'll be set in no time.","Errors? Still? You can do better than that!",
 	"Atta boy! Keep getting em. Also, Tier VI Computers are my best friends. Get more!","Tier VII computers are bullies. Get through them NOW.","Tier VIII! Soon, everybody, soon.","The Internet Boosts are in sight. Get 20 Tier IX computers to buy one.","I got a boost? Good job, you get a <i>small</i> prize.","Networks was found, but all are private for me. :(","The PC found a network! This seems legit. Let's hop on.","Computer: Connecting network. Please wait, this may take a few minutes.","Aw, really? I hate these things.","Computer: Connected.",
-	"Finally! Can't wait to test this bad boy out.","Hey, we're off! Got a I.P. Change as well. The end is near.","Another network? I find out your new network was better so I installed it."]
+	"Finally! Can't wait to test this bad boy out.","Hey, we're off! Got a I.P. Change as well. The end is near.","Another network? I find out your new network was better so I installed it.","A third network? I am getting notifications for that..."]
 	
 function updateElement(elementID,value) {
 	document.getElementById(elementID).innerHTML=value
@@ -176,9 +176,9 @@ function buyGenUpgrade() {
 
 function prestige(tier) {
   switch(tier) { //don't allow prestiging until you match reqs
-    case 1: if (player.compAmount[Math.min(player.prestiges[0],8)]<Math.max(player.prestiges[0]+2,10)) return; break;
-    case 2: if (player.compAmount[Math.min(player.prestiges[1]+3,8)] < 20+Math.max(player.prestiges[1]-5,0)*2) return; break;
-    case 3: if (player.compAmount[8]<30+player.prestiges[2]*15) return; break;
+    case 1: if (player.compAmount[Math.min(player.prestiges[0],8)]<Math.max(player.prestiges[0]*5-30,10)) return; break;
+    case 2: if (player.compAmount[Math.min(player.prestiges[1]+3,8)] <Math.max(player.prestiges[1]*10-20,20)) return; break;
+    case 3: if (player.compAmount[8]<player.prestiges[2]*20+50) return; break;
     case Infinity: if (!confirm('Are you really sure to reset? You will lose everything you have!')) return; break;
   }
   if (tier==Infinity) {
@@ -230,6 +230,7 @@ function prestige(tier) {
         switch(player.prestiges[2]) {
           case 1: newStory(17); break;
           case 2: newStory(22); break;
+          case 3: newStory(23); break;
         }
       }
     }
@@ -238,15 +239,17 @@ function prestige(tier) {
 }
 
 function getMultTier(tier) {
-  let ret = new Decimal(1);
-  if (player.prestiges[0] >= tier) ret = ret.mul(2);
-  return ret;
+  let ret = new Decimal.pow(10,tier-1)
+  ret = ret.mul(Decimal.pow(Math.pow(1.05+i*0.01,i+1),player.compAmount[tier-1]))
+  ret = ret.mul(Decimal.pow(2+0.01*player.prestiges[2],player.boostPower+Math.max(player.prestiges[1]-5,0)*20))
+  ret = ret.mul(Decimal.pow(2,Math.ceil((player.prestiges[0]-tier)/9)))
+  return ret
 }
 
 function getEPS() {
   let ret = new Decimal(0);
   for (let i=0;i<9;i++) {
-    ret = ret.add(Decimal.pow(Math.pow(1.05+i*0.01,i+1),player.compAmount[i]-1).times(player.compAmount[i]).mul(Decimal.pow(10,i)).times(Decimal.pow(2+0.01*player.prestiges[2],player.boostPower+Math.max(player.prestiges[1]-5,0)*5)).mul(getMultTier(i+1)))
+    ret = ret.add(Decimal.mul(getMultTier(i+1),player.compAmount[i]))
   }
   return ret;
 }
@@ -265,7 +268,7 @@ function gameTick() {
 	  showElement('genUpgrade','block');
 	  updateElement('genIncrease',(200+1*player.prestiges[2])/100);
 	  updateElement('genIncreaseCost','Cost: ' + format(costs.boost));
-	  updateElement('genBoost',format(Decimal.pow(2+0.01*player.prestiges[2],player.boostPower+Math.max(player.prestiges[1]-5,0)*5)));
+	  updateElement('genBoost',format(Decimal.pow(2+0.01*player.prestiges[2],player.boostPower+Math.max(player.prestiges[1]-5,0)*20)));
   } else {
 	  hideElement('genUpgrade')
   }
@@ -284,14 +287,14 @@ function gameTick() {
 		  }
 	  }
 	  if (player.prestiges[0]<player.prestiges[1]+4) {
-		  updateElement('prestige1Gen',format(Math.max(player.prestiges[0]+1,10),0,1)+' Tier '+ROMAN_NUMERALS[Math.min(player.prestiges[0]+1,9)])
+		  updateElement('prestige1Gen',format(Math.max(player.prestiges[0]*5-30,10),0,1)+' Tier '+ROMAN_NUMERALS[Math.min(player.prestiges[0]+1,9)])
 		  hideElement('maxout')
 		  showElement('abletoprestige','inline')
 	  } else {
 		  hideElement('abletoprestige')
 		  showElement('maxout','inline')
 	  }
-	  updateElement('prestige2Gen',format(20+Math.max(player.prestiges[1]-5,0)*2,0,1)+' Tier '+ROMAN_NUMERALS[Math.min(player.prestiges[1]+4,9)])
+	  updateElement('prestige2Gen',format(Math.max(player.prestiges[1]*10-20,20),0,1)+' Tier '+ROMAN_NUMERALS[Math.min(player.prestiges[1]+4,9)])
 	  if (player.prestiges[1]<5) {
 		updateElement('ipChange','Gain Tier '+ROMAN_NUMERALS[player.prestiges[1]+5]+' Computer, but resets everything.')
 		updateElement('prestige2Type','I.P. Change')
@@ -299,7 +302,7 @@ function gameTick() {
 		updateElement('ipChange','Gain headstart for boost, but resets everything.')
 		updateElement('prestige2Type','Internet boost')
 	  }
-	  updateElement('prestige3Req',30+player.prestiges[2]*15)
+	  updateElement('prestige3Req',player.prestiges[2]*20+50)
 	  updateElement('netMulti',(201+player.prestiges[2])/100)
   }
   if (tab=='stats') {

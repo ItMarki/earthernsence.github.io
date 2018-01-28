@@ -5,13 +5,19 @@ table.sidebar {
     font-size: 12;
     height: 500px;
 }
-table.sidebar tbody {
+table.sidebar tbody
+table.sidebar thead {
     width: 100%
 }
 table.sidebar tbody {
     text-align:left;
     overflow: auto;
     display: block;
+}
+table.storybox thead {
+    text-align:center;
+    display: table;
+    table-layout: fixed;
 }
 table.sidebar tr {
     width: 100%;

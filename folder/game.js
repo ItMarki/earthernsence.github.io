@@ -1,4 +1,4 @@
-//Calling it this because it will be main game JS thing?
+//game.js
 
 player = {
   errors: new Decimal(10), //current errors

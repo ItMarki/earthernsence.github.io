@@ -1,28 +1,6 @@
-table.sidebar {
-    display: table;
-    width: 100%;
-    background-color: darkblue;
-    font-size: 12;
-    height: 500px;
-}
-table.sidebar tbody
-table.sidebar thead {
-    width: 100%
-}
-table.sidebar tbody {
-    text-align:left;
-    overflow: auto;
-    display: block;
-}
-table.storybox thead {
-    text-align:center;
-    display: table;
-    table-layout: fixed;
-}
 table.sidebar tr {
-    width: 100%;
-        display: table;
-            table-layout:fixed;
+    height:0%;
+	vertical-align:0
 }
         
 
@@ -45,12 +23,12 @@ table.storybox thead {
     width: calc(100% - 16px); /* assuming scrollbar width as 16px */
 }
 
-    table.storybox tbody {
-        text-align: left;
-        overflow: auto;
-        height: 125px;
-        display: block;
-    }
+table.storybox tbody {
+    text-align: left;
+    overflow: auto;
+    height: 125px;
+    display: block;
+}
 
 table.storybox tr {
     width: 100%;

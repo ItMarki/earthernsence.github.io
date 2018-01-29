@@ -11,7 +11,7 @@ player = {
   time: 0,
   notation: 0,
   version: 0,
-  build: 12
+  build: 13
 }
 tab='computers'
 oldtab=tab
@@ -176,9 +176,9 @@ function buyGenUpgrade() {
 
 function prestige(tier) {
   switch(tier) { //don't allow prestiging until you match reqs
-    case 1: if (player.compAmount[Math.min(player.prestiges[0],8)]<Math.max(player.prestiges[0]*5-30,10)) return; break;
-    case 2: if (player.compAmount[Math.min(player.prestiges[1]+3,8)] <Math.max(player.prestiges[1]*10-20,20)) return; break;
-    case 3: if (player.compAmount[8]<player.prestiges[2]*20+50) return; break;
+    case 1: if (player.compAmount[player.prestiges[0]]<10) return; break;
+    case 2: if (player.compAmount[Math.min(player.prestiges[1]+3,8)]<Math.max(player.prestiges[1]*15-40,20)) return; break;
+    case 3: if (player.compAmount[8]<player.prestiges[2]*40+80) return; break;
     case Infinity: if (!confirm('Are you really sure to reset? You will lose everything you have!')) return; break;
   }
   if (tier==Infinity) {
@@ -220,7 +220,7 @@ function prestige(tier) {
         case 4: newStory(12); break;
         case 5: newStory(13); break;
         case 6: newStory(14); break;
-        case 10: newStory(15); break;
+        case 8: newStory(15); break;
       }
       if (player.prestiges[2]==1) newStory(21);
     } else {
@@ -240,9 +240,10 @@ function prestige(tier) {
 
 function getMultTier(tier) {
   let ret = new Decimal.pow(10,tier-1)
-  ret = ret.mul(Decimal.pow(Math.pow(1.04+tier*0.01,tier),player.compAmount[tier-1]))
-  ret = ret.mul(Decimal.pow(2+0.2*player.prestiges[2],player.boostPower+Math.max(player.prestiges[1]-5,0)*20))
-  ret = ret.mul(Decimal.pow(2,Math.ceil((player.prestiges[0]-tier)/9)))
+  ret = ret.mul(Decimal.pow(Math.pow(1.05,tier),player.compAmount[tier-1]))
+  ret = ret.mul(Decimal.pow(2+0.01*player.prestiges[2],player.boostPower))
+  if (player.prestiges[0]>=tier) ret.mul(2)
+  ret = ret.mul(Decimal.pow(2+Math.floor(player.compAmount[8]/5)*0.5,player.prestiges[1]))
   return ret
 }
 
@@ -266,9 +267,9 @@ function gameTick() {
   updateElement('eps',format(getEPS()))
   if (player.compAmount[2]>0) {
 	  showElement('genUpgrade','block');
-	  updateElement('genIncrease',(10+player.prestiges[2])/5);
+	  updateElement('genIncrease',(200+player.prestiges[2])/100);
 	  updateElement('genIncreaseCost','Cost: ' + format(costs.boost));
-	  updateElement('genBoost',format(Decimal.pow(2+0.2*player.prestiges[2],player.boostPower+Math.max(player.prestiges[1]-5,0)*20)));
+	  updateElement('genBoost',format(Decimal.pow(2+0.01*player.prestiges[2],player.boostPower)));
   } else {
 	  hideElement('genUpgrade')
   }
@@ -286,24 +287,24 @@ function gameTick() {
 			hideElement(TIER_NAMES[i+4]+'Comp')
 		  }
 	  }
-	  if (player.prestiges[0]<player.prestiges[1]+4) {
-		  updateElement('prestige1Gen',format(Math.max(player.prestiges[0]*5-30,10),0,1)+' Tier '+ROMAN_NUMERALS[Math.min(player.prestiges[0]+1,9)])
+	  if (player.prestiges[0]<Math.min(player.prestiges[1]+4,9)) {
+		  updateElement('prestige1Gen',ROMAN_NUMERALS[Math.min(player.prestiges[0]+1,9)])
 		  hideElement('maxout')
 		  showElement('abletoprestige','inline')
 	  } else {
 		  hideElement('abletoprestige')
 		  showElement('maxout','inline')
 	  }
-	  updateElement('prestige2Gen',format(Math.max(player.prestiges[1]*10-20,20),0,1)+' Tier '+ROMAN_NUMERALS[Math.min(player.prestiges[1]+4,9)])
+	  updateElement('prestige2Gen',format(Math.max(player.prestiges[1]*15-40,20),0,1)+' Tier '+ROMAN_NUMERALS[Math.min(player.prestiges[1]+4,9)])
 	  if (player.prestiges[1]<5) {
 		updateElement('ipChange','Gain Tier '+ROMAN_NUMERALS[player.prestiges[1]+5]+' Computer, but resets everything.')
 		updateElement('prestige2Type','I.P. Change')
 	  } else {
-		updateElement('ipChange','Gain headstart for boost, but resets everything.')
+		updateElement('ipChange','Gain boost for computers, but resets everything.')
 		updateElement('prestige2Type','Internet boost')
 	  }
-	  updateElement('prestige3Req',player.prestiges[2]*20+50)
-	  updateElement('netMulti',(11+player.prestiges[2])/5)
+	  updateElement('prestige3Req',player.prestiges[2]*40+80)
+	  updateElement('netMulti',(201+player.prestiges[2])/100)
   }
   if (tab=='stats') {
 	  updateElement('statsTotal','You have gained a total of '+format(player.totalErrors)+' errors.')
@@ -385,7 +386,7 @@ function load(savefile) {
 		delete player.genUpgradeCost
 	  }
 	  player.version = 0
-	  player.build = 10
+	  player.build = 13
 	  
 	  //if the value is a Decimal, set it to be a Decimal here.
 	  player.errors = new Decimal(player.errors)

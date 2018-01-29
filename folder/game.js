@@ -1,4 +1,4 @@
-//game.js
+ //game.js and only game.js
 
 player = {
   errors: new Decimal(10), //current errors

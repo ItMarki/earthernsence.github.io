@@ -437,7 +437,7 @@ function updateStory() {
 	Table.innerHTML=''
     for (var i=0;i<=player.story;i++) {
 		var row=Table.insertRow(i)
-		row.innerHTML=storyMessages[player.story-i]
+		row.innerHTML=storyMessages[i]
     }
 }
 

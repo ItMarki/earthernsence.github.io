@@ -6,6 +6,6 @@ Aarex, Username5243, Merp, and Slabdrill will be helping out on the project.
 Discord is at https://discord.gg/9xqbdbF
 Have fun! Game is at https://frostbite5.github.io/frostbite-ceg/ .
 
-##Purpose of The Game
+## Purpose of The Game
 
 I designed this game for fun. I like doing JS, HTML, and a small amount of CSS, no matter how bad I may be.

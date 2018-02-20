@@ -242,7 +242,7 @@ function getMultTier(tier) {
   let ret = new Decimal.pow(10,tier-1)
   ret = ret.mul(Decimal.pow(Math.pow(1.05,tier),player.compAmount[tier-1]))
   ret = ret.mul(Decimal.pow(2+0.01*player.prestiges[2],player.boostPower))
-  if (player.prestiges[0]>=tier) ret.mul(2)
+  if (player.prestiges[0]>=tier) ret = ret.mul(2)
   ret = ret.mul(Decimal.pow(2+Math.floor(player.compAmount[8]/5)*0.5,player.prestiges[1]))
   return ret
 }

@@ -7,11 +7,12 @@ player = {
   boostPower:0,
   prestiges: [0,0,0],
   story: -1,
+  upgrades: [],
   playtime: 0,
   time: 0,
   notation: 0,
-  version: 0,
-  build: 13
+  version: 1,
+  build: 1
 }
 tab='computers'
 oldtab=tab
@@ -20,7 +21,7 @@ const TIER_NAMES = ['first','second','third', 'fourth', 'fifth', 'sixth', 'seven
 const ROMAN_NUMERALS=[]
 const costMult=[2,2.5,3,4,5,6,8,10,12]
 
-var costs={comp:[new Decimal(10),new Decimal(100),new Decimal(1e3),new Decimal(1e4),new Decimal(1e6),new Decimal(1e8),new Decimal(1e10),new Decimal(1e13),new Decimal(1e16)],boost:new Decimal(0)}
+var costs={comp:[new Decimal(10),new Decimal(100),new Decimal(1e3),new Decimal(1e4),new Decimal(1e6),new Decimal(1e8),new Decimal(1e10),new Decimal(1e13),new Decimal(1e16)],boost:new Decimal(0),upgs:[new Decimal(0)]}
 var storyMessages=["Pancakes is ready!","Wakey wakey! Aw, c'mon, you still got the rest of the day to sleep. Get up baby, get up!","Nice! A Tier III Computer. Well deserved.","A Tier IV Computer is great, isn't it?","Computers are waking up...","Ah, here we are. Awake and operational.","Network is being horrible. These upgrades don't do anything. What I'd give for an ethernet cord.","I still haven't introduced myself? I'm your first ever Tier I computer. I can't believe you've finally had the care to upgrade me.","Trust me. I stay through it all. Keep getting these I.P. Changes and we'll be set in no time.","Errors? Still? You can do better than that!",
 	"Atta boy! Keep getting em. Also, Tier VI Computers are my best friends. Get more!","Tier VII computers are bullies. Get through them NOW.","Tier VIII! Soon, everybody, soon.","The Internet Boosts are in sight. Get 20 Tier IX computers to buy one.","I got a boost? Good job, you get a <i>small</i> prize.","Networks was found, but all are private for me. :(","The PC found a network! This seems legit. Let's hop on.","Computer: Connecting network. Please wait, this may take a few minutes.","Aw, really? I hate these things.","Computer: Connected.",
 	"Finally! Can't wait to test this bad boy out.","Hey, we're off! Got a I.P. Change as well. The end is near.","Another network? I find out your new network was better so I installed it.","A third network? I am getting notifications for that..."]
@@ -189,6 +190,10 @@ function prestige(tier) {
 	player.story=-1
 	updateStory()
   }
+  if (tier==3) {
+	//Tier 3 - Networks
+	player.upgrades=[]
+  }
   
   player.errors = new Decimal(10); //current errors
   player.compAmount=[0,0,0,0,0,0,0,0,0]
@@ -244,6 +249,7 @@ function getMultTier(tier) {
   ret = ret.mul(Decimal.pow(2+0.01*player.prestiges[2],player.boostPower))
   if (player.prestiges[0]>=tier) ret = ret.mul(2)
   ret = ret.mul(Decimal.pow(2+Math.floor(player.compAmount[8]/5)*0.5,player.prestiges[1]))
+  if (player.upgrades.includes(1)) ret = ret.mul(2)
   return ret
 }
 
@@ -253,6 +259,13 @@ function getEPS() {
     ret = ret.add(Decimal.mul(getMultTier(i+1),player.compAmount[i]))
   }
   return ret;
+}
+
+function buyUpg(id) {
+  if (!player.upgrades.includes(id)&&player.errors.gte(costs.upgs[id-1])) {
+    player.errors=player.errors.sub(costs.upgs[id-1])
+    player.upgrades.push(id)
+  }
 }
 
 function gameTick() {
@@ -299,9 +312,13 @@ function gameTick() {
 	  if (player.prestiges[1]<5) {
 		updateElement('ipChange','Gain Tier '+ROMAN_NUMERALS[player.prestiges[1]+5]+' Computer, but resets everything.')
 		updateElement('prestige2Type','I.P. Change')
+		showElement('upgradereq','inline')
+		hideElement('upg1')
 	  } else {
 		updateElement('ipChange','Gain boost for computers, but resets everything.')
 		updateElement('prestige2Type','Internet boost')
+		hideElement('upgradereq')
+		showElement('upg1','inline')
 	  }
 	  updateElement('prestige3Req',player.prestiges[2]*40+80)
 	  updateElement('netMulti',(201+player.prestiges[2])/100)
@@ -345,48 +362,56 @@ function load(savefile) {
 	  //when adding a new player variable, PLEASE ADD A NEW LINE!!
 	  if (player.version == undefined) player.version = 0;
 	  if (player.build == undefined) player.build = 0;
-	  if (player.build < 1) {
-		for (let i=0;i<9;i++) {
-			player.compCost[i] = parseint(player.compCost[i])
-			player.compPow[i] = parseint(player.compPow[i])
+	  if (player.version <= 0) {
+		  if (player.build < 1) {
+			for (let i=0;i<9;i++) {
+				player.compCost[i] = parseint(player.compCost[i])
+				player.compPow[i] = parseint(player.compPow[i])
+			}
+		  }
+		  if (player.build < 2) {
+			player.time=new Date().getTime()
+		  }
+		  if (player.build < 3) {
+			player.prestiges=[player.prestige1,player.prestige2,0]
+			player.timeUpgrades=0
+			delete player.prestige1
+			delete player.prestige2
+		  }
+		  if (player.build < 4) {
+			player.playtime=0
+			player.totalErrors=0
+		  }
+		  if (player.build < 5) {
+			player.boost=1
+			delete player.timeUpgrades
+		  }
+		  if (player.build<6) {
+			player.genUpgradeCost=1000
+		  }
+		  if (player.build<7) {
+			player.story-=1
+		  }
+		  if (player.build<8) {
+			player.notation=0
+		  }
+		  if (player.build<10) {
+			player.boostPower=Math.floor(Decimal.log10(player.boost)/Math.log10(2))
+			if (isNaN(player.boost)) player.boostPower=0
+			delete player.compCost
+			delete player.compPow
+			delete player.boost
+			delete player.genUpgradeCost
+		  }
+		player.build = 0
+	  }
+	  if (player.version <= 1) {
+	    if (player.build < 1) {
+			player.upgrades=[]
 		}
 	  }
-	  if (player.build < 2) {
-		player.time=new Date().getTime()
-	  }
-	  if (player.build < 3) {
-		player.prestiges=[player.prestige1,player.prestige2,0]
-		player.timeUpgrades=0
-		delete player.prestige1
-		delete player.prestige2
-	  }
-	  if (player.build < 4) {
-		player.playtime=0
-		player.totalErrors=0
-	  }
-	  if (player.build < 5) {
-		player.boost=1
-		delete player.timeUpgrades
-	  }
-	  if (player.build<6) {
-		player.genUpgradeCost=1000
-	  }
-	  if (player.build<7) {
-		player.story-=1
-	  }
-	  if (player.build<8) {
-		player.notation=0
-	  }
-	  if (player.build<10) {
-		player.boostPower=Math.floor(Decimal.log10(player.boost)/Math.log10(2))
-		if (isNaN(player.boost)) player.boostPower=0
-		delete player.compCost
-		delete player.compPow
-		delete player.boost
-		delete player.genUpgradeCost
-	  }
-	  player.version = 0
-	  player.build = 13
+	  player.version = 1
+	  player.build = 1
 	  
 	  //if the value is a Decimal, set it to be a Decimal here.
 	  player.errors = new Decimal(player.errors)

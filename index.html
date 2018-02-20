@@ -64,14 +64,11 @@
 			  <tbody></tbody>
 		  </table>
 	  </tr></td>
-	  <tr style='height:100%'><td><!--
-		  <b style='font-size:32px'>Upgrades</b>
-		  <div>Upgrade: <button id="upg1" onClick='buyUpg(1)'>Cost: 0</button></div>
-		  <div>Upgrade: <button id="upg2" onClick='buyUpg(2)'>Cost: 0</button></div>
-		  <div>Upgrade: <button id="upg3" onClick='buyUpg(3)'>Cost: 0</button></div>
-		  <div>Upgrade: <button id="upg4" onClick='buyUpg(4)'>Cost: 0</button></div>
-		  <div>Upgrade: <button id="upg5" onClick='buyUpg(5)'>Cost: 0</button></div>
-	  --></tr></td>
+	  <tr style='height:100%'><td>
+		  <b style='font-size:32px'>Upgrades</b><br>
+		  <div id='upgradereq'>Unlocks at 5 I.P. Changes</div>
+		  <div id='upg1' style='display:none'>Computers are 2x stronger: <button id="upg1button" onClick='buyUpg(1)'>Cost: idk</button></div>
+	  </tr></td>
 	  <tr><td>
 		  <b style='font-size:32px'>Prestiges</b>
 		  <div>Upgrade Computers: <text id='abletoprestige'>Requires 10 Tier <text id='prestige1Gen'>IV</text> Computers <button id="upgradeComputers" onClick='prestige(1)'>Reset back to beginning of run, but gain a small boost.</button></text><text id='maxout' style='display:none'>Max out!</text></div>

@@ -6,11 +6,12 @@
 		body {
 			margin:0
 		}
-		optionButton {
-			height:24px;
-			width:48px;
+		body {background-color: #999999; margin:0px}
+		button {background-color: #e5e5e5; margin-left:5px; border:none}
+		.optionButton {
+			height:48px;
+			width:72px;
 		}
-		body {background-color: #494949; margin: 0px}
 	</style>
     <link rel="stylesheet" type="text/css" href="folder/styles.css" />
 	<script type="text/javascript" src="break_infinity.min.js"> </script>
@@ -39,11 +40,11 @@
 	  <div id='ninthComp' style='display:none'>Tier IX Computer:<button id="cop9"  onClick='buyGen(8)'> (<text id="ninthAmt">x</text>)</button></div>
   </div>
   <div id='optionsTab' style='display:none'>
-	  <button class='optionButton' onClick='save()'>Save</button>
-	  <button class='optionButton' onClick='exportSave()'>Export</button>
-	  <button class='optionButton' onClick='importSave()'>Import</button>
-	  <button class='optionButton' onclick='switchNotation()'>Notation: <div id="notationID">Standard</div></button>
-	  <button class='optionButton' onClick='prestige(Infinity)'>Reset</button>
+	  <table align=center><tr><td><button class='optionButton' onClick='save()'>Save</button></td>
+	  <td><button class='optionButton' onClick='exportSave()'>Export</button></td>
+	  <td><button class='optionButton' onClick='importSave()'>Import</button></td>
+	  <td><button class='optionButton' onclick='switchNotation()'>Notation: <div id="notationID">Standard</div></button></td>
+	  <td><button class='optionButton' onClick='prestige(Infinity)'>Reset</button></td></tr></table>
 	  <div id='exportSave' style='display:none'> Here is your export save. The dev recommends putting it in a safe spot. <input id='exportText' style='width: 480px'></input></div>
   </div>
   <div id='statsTab' style='display:none'>

@@ -190,7 +190,7 @@ function prestige(tier) {
 	player.story=-1
 	updateStory()
   }
-  if (tier==3) {
+  if (tier>2) {
 	//Tier 3 - Networks
 	player.upgrades=[]
   }
@@ -247,9 +247,22 @@ function getMultTier(tier) {
   let ret = new Decimal.pow(10,tier-1)
   ret = ret.mul(Decimal.pow(Math.pow(1.05,tier),player.compAmount[tier-1]))
   ret = ret.mul(Decimal.pow(2+0.01*player.prestiges[2],player.boostPower))
-  if (player.prestiges[0]>=tier) ret = ret.mul(2)
+  if (player.prestiges[0]>=tier) ret = ret.mul(player.upgrades.includes(14)?2.5:2)
   ret = ret.mul(Decimal.pow(2+Math.floor(player.compAmount[8]/5)*0.5,player.prestiges[1]))
-  if (player.upgrades.includes(1)) ret = ret.mul(2)
+  if (player.upgrades.includes(1)) ret = ret.mul(5)
+  if (player.upgrades.includes(2)) ret = ret.mul(5)
+  if (player.upgrades.includes(3)) ret = ret.mul(100)
+  if (player.upgrades.includes(4)&&tier==1) ret = ret.mul(1+player.compAmount[0])
+  if (player.upgrades.includes(5)&&tier==2) ret = ret.mul(1+player.compAmount[1])
+  if (player.upgrades.includes(6)&&tier==3) ret = ret.mul(1+player.compAmount[2])
+  if (player.upgrades.includes(7)&&tier==4) ret = ret.mul(1+player.compAmount[3])
+  if (player.upgrades.includes(8)&&tier==5) ret = ret.mul(1+player.compAmount[4])
+  if (player.upgrades.includes(9)&&tier==6) ret = ret.mul(1+player.compAmount[5])
+  if (player.upgrades.includes(10)&&tier==7) ret = ret.mul(1+player.compAmount[6])
+  if (player.upgrades.includes(11)&&tier==8) ret = ret.mul(1+player.compAmount[7])
+  if (player.upgrades.includes(12)&&tier==9) ret = ret.mul(1+player.compAmount[8])
+  if (player.upgrades.includes(13)) ret = ret.mul(1+player.compAmount[0]+player.compAmount[1]+player.compAmount[2]+player.compAmount[3]+player.compAmount[4]+player.compAmount[5]+player.compAmount[6]+player.compAmount[7]+player.compAmount[8])
+  if (player.upgrades.includes(14)&&tier<5) ret = ret.mul(100)
   return ret
 }
 
@@ -262,10 +275,27 @@ function getEPS() {
 }
 
 function buyUpg(id) {
-  if (!player.upgrades.includes(id)&&player.errors.gte(costs.upgs[id-1])) {
-    player.errors=player.errors.sub(costs.upgs[id-1])
-    player.upgrades.push(id)
-  }
+	switch (id) {
+		case 1: if (player.errors.lt(1e4)) {return} else {player.errors=player.errors.sub(1e4)}; break
+		case 2: if (player.errors.lt(1e8)) {return} else {player.errors=player.errors.sub(1e20)}; break
+		case 3: if (player.errors.lt(1e20)) {return} else {player.errors=player.errors.sub(1e20)}; break
+		case 4: if (player.errors.lt(1e4)&&player.compAmount[0]<20) {return} else {player.errors=player.errors.sub(1e4)}; break
+		case 5: if (player.errors.lt(1e8)&&player.compAmount[1]<20) {return} else {player.errors=player.errors.sub(1e8)}; break
+		case 6: if (player.compAmount[2]<20) {return}; break
+		case 7: if (player.compAmount[3]<20) {return}; break
+		case 8: if (player.compAmount[4]<20) {return}; break
+		case 9: if (player.compAmount[5]<20) {return}; break
+		case 10: if (player.compAmount[6]<20) {return}; break
+		case 11: if (player.compAmount[7]<20) {return}; break
+		case 12: if (player.compAmount[8]<20) {return}; break
+		case 13: for (check=4;check<13;check++) {
+			if (!player.upgrades.includes(check)) return
+			}
+			break
+		case 14: if (player.prestiges[0]<9) {return}; break
+		case 15: if (player.prestiges[1]<5) {return}; break
+	}
+	player.upgrades.push(id)
 }
 
 function gameTick() {
@@ -309,16 +339,23 @@ function gameTick() {
 		  showElement('maxout','inline')
 	  }
 	  updateElement('prestige2Gen',format(Math.max(player.prestiges[1]*15-40,20),0,1)+' Tier '+ROMAN_NUMERALS[Math.min(player.prestiges[1]+4,9)])
+	  if (player.prestiges[1]<3) {
+		hideElement('upgcate1')
+		updateElement('upgradereq','Unlocks at 3 I.P. changes')
+	  } else {
+		showElement('upgcate1','inline')
+		updateElement('upgradereq','Next at 5 I.P. changes')
+	  }
 	  if (player.prestiges[1]<5) {
 		updateElement('ipChange','Gain Tier '+ROMAN_NUMERALS[player.prestiges[1]+5]+' Computer, but resets everything.')
 		updateElement('prestige2Type','I.P. Change')
 		showElement('upgradereq','inline')
-		hideElement('upg1')
+		hideElement('upgcate2')
 	  } else {
 		updateElement('ipChange','Gain boost for computers, but resets everything.')
 		updateElement('prestige2Type','Internet boost')
 		hideElement('upgradereq')
-		showElement('upg1','inline')
+		showElement('upgcate2','inline')
 	  }
 	  updateElement('prestige3Req',player.prestiges[2]*40+80)
 	  updateElement('netMulti',(201+player.prestiges[2])/100)
@@ -408,6 +445,9 @@ function load(savefile) {
 	  if (player.version <= 1) {
 	    if (player.build < 1) {
 			player.upgrades=[]
+		}
+	    if (player.build < 2) {
+			if (player.upgrades.includes(1)) player.upgrades=[3]
 		}
 	  }
 	  player.version = 1

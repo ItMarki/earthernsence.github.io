@@ -277,7 +277,7 @@ function getEPS() {
 function buyUpg(id) {
 	switch (id) {
 		case 1: if (player.errors.lt(1e4)) {return} else {player.errors=player.errors.sub(1e4)}; break
-		case 2: if (player.errors.lt(1e8)) {return} else {player.errors=player.errors.sub(1e20)}; break
+		case 2: if (player.errors.lt(1e8)) {return} else {player.errors=player.errors.sub(1e8)}; break
 		case 3: if (player.errors.lt(1e20)) {return} else {player.errors=player.errors.sub(1e20)}; break
 		case 4: if (player.errors.lt(1e4)&&player.compAmount[0]<20) {return} else {player.errors=player.errors.sub(1e4)}; break
 		case 5: if (player.errors.lt(1e8)&&player.compAmount[1]<20) {return} else {player.errors=player.errors.sub(1e8)}; break
@@ -289,7 +289,7 @@ function buyUpg(id) {
 		case 11: if (player.compAmount[7]<20) {return}; break
 		case 12: if (player.compAmount[8]<20) {return}; break
 		case 13: for (check=4;check<13;check++) {
-			if (!player.upgrades.includes(check)) return
+			if (!player.upgrades.includes(check)&&player.compAmount[check-4]<45) return
 			}
 			break
 		case 14: if (player.prestiges[0]<9) {return}; break

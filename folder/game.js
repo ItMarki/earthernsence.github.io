@@ -12,7 +12,7 @@ player = {
   time: 0,
   notation: 0,
   version: 1,
-  build: 3
+  build: 4
 }
 tab='computers'
 oldtab=tab
@@ -148,7 +148,7 @@ function updateCosts() {
 	for (i=0;i<9;i++) {
 		costs.comp[i]=Decimal.times(baseCosts[i],Decimal.pow(costMult[i],player.compAmount[i]))
 	}
-	costs.boost=new Decimal(1e3).times(Decimal.pow(4,player.boostPower))
+	costs.boost=new Decimal(1e3).times(Decimal.pow(4+Math.floor(player.boostPower/100)*2,player.boostPower))
 }
 
 function buyGen(tier,bulk=1) {
@@ -169,6 +169,14 @@ function buyGen(tier,bulk=1) {
 
 function buyGenUpgrade() {
   if (player.errors.gte(costs.boost)) {
+    player.errors=player.errors.sub(costs.boost)
+    player.boostPower+=1
+    updateCosts()
+  }
+}
+
+function maxGenUpgrade() {
+  while (player.errors.gte(costs.boost)) {
     player.errors=player.errors.sub(costs.boost)
     player.boostPower+=1
     updateCosts()
@@ -323,7 +331,7 @@ function gameTick() {
 	  showElement(tab+'Tab','block')
 	  oldtab=tab
   }
-  if (player.prestiges[0]<Math.min(player.prestiges[1]+4,player.upgrades.includes(16)?Math.max(player.prestiges[2]+4,9):9)) {
+  if (player.prestiges[0]<Math.min(player.prestiges[1]+4,player.upgrades.includes(15)?Math.max(player.prestiges[1]+4,9):9)) {
 	  updateElement('prestige1Gen',Math.max(player.prestiges[0]*10-70,10)+' Tier '+ROMAN_NUMERALS[Math.min(player.prestiges[0]+1,9)])
 	  hideElement('maxout')
 	  showElement('abletoprestige','inline')
@@ -453,7 +461,7 @@ function load(savefile) {
 		}
 	  }
 	  player.version = 1
-	  player.build = 3
+	  player.build = 4
 	  
 	  //if the value is a Decimal, set it to be a Decimal here.
 	  player.errors = new Decimal(player.errors)

@@ -12,7 +12,7 @@ player = {
   time: 0,
   notation: 0,
   version: 1,
-  build: 1
+  build: 3
 }
 tab='computers'
 oldtab=tab
@@ -177,7 +177,7 @@ function buyGenUpgrade() {
 
 function prestige(tier) {
   switch(tier) { //don't allow prestiging until you match reqs
-    case 1: if (player.compAmount[player.prestiges[0]]<10) return; break;
+    case 1: if (player.compAmount[Math.min(player.prestiges[0],8)]<Math.max(player.prestiges[0]*10-70,10)) return; break;
     case 2: if (player.compAmount[Math.min(player.prestiges[1]+3,8)]<Math.max(player.prestiges[1]*15-40,20)) return; break;
     case 3: if (player.compAmount[8]<player.prestiges[2]*40+80) return; break;
     case Infinity: if (!confirm('Are you really sure to reset? You will lose everything you have!')) return; break;
@@ -246,23 +246,24 @@ function prestige(tier) {
 function getMultTier(tier) {
   let ret = new Decimal.pow(10,tier-1)
   ret = ret.mul(Decimal.pow(Math.pow(1.05,tier),player.compAmount[tier-1]))
-  ret = ret.mul(Decimal.pow(2+0.01*player.prestiges[2],player.boostPower))
+  ret = ret.mul(Decimal.pow(2+0.5*player.prestiges[2],player.boostPower))
   if (player.prestiges[0]>=tier) ret = ret.mul(player.upgrades.includes(14)?2.5:2)
+  if (player.prestiges[0]>9&&tier==9) ret = ret.mul(Decimal.pow(player.upgrades.includes(14)?2.5:2,player.prestiges[0]-9))
   ret = ret.mul(Decimal.pow(2+Math.floor(player.compAmount[8]/5)*0.5,player.prestiges[1]))
-  if (player.upgrades.includes(1)) ret = ret.mul(5)
+  if (player.upgrades.includes(1)) ret = ret.mul(2)
   if (player.upgrades.includes(2)) ret = ret.mul(5)
-  if (player.upgrades.includes(3)) ret = ret.mul(100)
-  if (player.upgrades.includes(4)&&tier==1) ret = ret.mul(1+player.compAmount[0])
-  if (player.upgrades.includes(5)&&tier==2) ret = ret.mul(1+player.compAmount[1])
-  if (player.upgrades.includes(6)&&tier==3) ret = ret.mul(1+player.compAmount[2])
-  if (player.upgrades.includes(7)&&tier==4) ret = ret.mul(1+player.compAmount[3])
-  if (player.upgrades.includes(8)&&tier==5) ret = ret.mul(1+player.compAmount[4])
-  if (player.upgrades.includes(9)&&tier==6) ret = ret.mul(1+player.compAmount[5])
-  if (player.upgrades.includes(10)&&tier==7) ret = ret.mul(1+player.compAmount[6])
-  if (player.upgrades.includes(11)&&tier==8) ret = ret.mul(1+player.compAmount[7])
-  if (player.upgrades.includes(12)&&tier==9) ret = ret.mul(1+player.compAmount[8])
-  if (player.upgrades.includes(13)) ret = ret.mul(1+player.compAmount[0]+player.compAmount[1]+player.compAmount[2]+player.compAmount[3]+player.compAmount[4]+player.compAmount[5]+player.compAmount[6]+player.compAmount[7]+player.compAmount[8])
-  if (player.upgrades.includes(14)&&tier<5) ret = ret.mul(100)
+  if (player.upgrades.includes(3)) ret = ret.mul(10)
+  if (player.upgrades.includes(4)&&tier==1) ret = ret.mul(Math.pow(1.15,Math.sqrt(player.compAmount[0])))
+  if (player.upgrades.includes(5)&&tier==2) ret = ret.mul(Math.pow(1.15,Math.sqrt(player.compAmount[1])))
+  if (player.upgrades.includes(6)&&tier==3) ret = ret.mul(Math.pow(1.15,Math.sqrt(player.compAmount[2])))
+  if (player.upgrades.includes(7)&&tier==4) ret = ret.mul(Math.pow(1.15,Math.sqrt(player.compAmount[3])))
+  if (player.upgrades.includes(8)&&tier==5) ret = ret.mul(Math.pow(1.15,Math.sqrt(player.compAmount[4])))
+  if (player.upgrades.includes(9)&&tier==6) ret = ret.mul(Math.pow(1.15,Math.sqrt(player.compAmount[5])))
+  if (player.upgrades.includes(10)&&tier==7) ret = ret.mul(Math.pow(1.15,Math.sqrt(player.compAmount[6])))
+  if (player.upgrades.includes(11)&&tier==8) ret = ret.mul(Math.pow(1.15,Math.sqrt(player.compAmount[7])))
+  if (player.upgrades.includes(12)&&tier==9) ret = ret.mul(Math.pow(1.15,Math.sqrt(player.compAmount[8])))
+  if (player.upgrades.includes(13)) ret = ret.mul(Math.pow(1.05,Math.sqrt(player.compAmount[0]+player.compAmount[1]+player.compAmount[2]+player.compAmount[3]+player.compAmount[4]+player.compAmount[5]+player.compAmount[6]+player.compAmount[7]+player.compAmount[8])))
+  if (player.upgrades.includes(14)&&tier<5) ret = ret.mul(10)
   return ret
 }
 
@@ -275,21 +276,22 @@ function getEPS() {
 }
 
 function buyUpg(id) {
+	if (player.upgrades.includes(id)) return
 	switch (id) {
 		case 1: if (player.errors.lt(1e4)) {return} else {player.errors=player.errors.sub(1e4)}; break
-		case 2: if (player.errors.lt(1e8)) {return} else {player.errors=player.errors.sub(1e8)}; break
+		case 2: if (player.errors.lt(1e10)) {return} else {player.errors=player.errors.sub(1e10)}; break
 		case 3: if (player.errors.lt(1e20)) {return} else {player.errors=player.errors.sub(1e20)}; break
-		case 4: if (player.errors.lt(1e4)&&player.compAmount[0]<20) {return} else {player.errors=player.errors.sub(1e4)}; break
-		case 5: if (player.errors.lt(1e8)&&player.compAmount[1]<20) {return} else {player.errors=player.errors.sub(1e8)}; break
-		case 6: if (player.compAmount[2]<20) {return}; break
-		case 7: if (player.compAmount[3]<20) {return}; break
-		case 8: if (player.compAmount[4]<20) {return}; break
-		case 9: if (player.compAmount[5]<20) {return}; break
-		case 10: if (player.compAmount[6]<20) {return}; break
-		case 11: if (player.compAmount[7]<20) {return}; break
+		case 4: if (player.errors.lt(1e35)&&player.compAmount[0]<95) {return} else {player.errors=player.errors.sub(1e35)}; break
+		case 5: if (player.errors.lt(1e8)&&player.compAmount[1]<80) {return} else {player.errors=player.errors.sub(1e8)}; break
+		case 6: if (player.compAmount[2]<70) {return}; break
+		case 7: if (player.compAmount[3]<60) {return}; break
+		case 8: if (player.compAmount[4]<50) {return}; break
+		case 9: if (player.compAmount[5]<45) {return}; break
+		case 10: if (player.compAmount[6]<30) {return}; break
+		case 11: if (player.compAmount[7]<25) {return}; break
 		case 12: if (player.compAmount[8]<20) {return}; break
 		case 13: for (check=4;check<13;check++) {
-			if (!player.upgrades.includes(check)&&player.compAmount[check-4]<45) return
+			if (!player.upgrades.includes(check)&&player.compAmount[check-4]<30) return
 			}
 			break
 		case 14: if (player.prestiges[0]<9) {return}; break
@@ -310,9 +312,9 @@ function gameTick() {
   updateElement('eps',format(getEPS()))
   if (player.compAmount[2]>0) {
 	  showElement('genUpgrade','block');
-	  updateElement('genIncrease',(200+player.prestiges[2])/100);
+	  updateElement('genIncrease',(4+player.prestiges[2])/2);
 	  updateElement('genIncreaseCost','Cost: ' + format(costs.boost));
-	  updateElement('genBoost',format(Decimal.pow(2+0.01*player.prestiges[2],player.boostPower)));
+	  updateElement('genBoost',format(Decimal.pow(2+0.5*player.prestiges[2],player.boostPower)));
   } else {
 	  hideElement('genUpgrade')
   }
@@ -321,8 +323,8 @@ function gameTick() {
 	  showElement(tab+'Tab','block')
 	  oldtab=tab
   }
-  if (player.prestiges[0]<Math.min(player.prestiges[1]+4,9)) {
-	  updateElement('prestige1Gen',ROMAN_NUMERALS[Math.min(player.prestiges[0]+1,9)])
+  if (player.prestiges[0]<Math.min(player.prestiges[1]+4,player.upgrades.includes(16)?Math.max(player.prestiges[2]+4,9):9)) {
+	  updateElement('prestige1Gen',Math.max(player.prestiges[0]*10-70,10)+' Tier '+ROMAN_NUMERALS[Math.min(player.prestiges[0]+1,9)])
 	  hideElement('maxout')
 	  showElement('abletoprestige','inline')
   } else {
@@ -340,12 +342,16 @@ function gameTick() {
   if (player.prestiges[1]<5) {
 	  updateElement('ipChange','Gain Tier '+ROMAN_NUMERALS[player.prestiges[1]+5]+' Computer, but resets everything.')
 	  updateElement('prestige2Type','I.P. Change')
+	  showElement('upgradereq','inline')
+	  hideElement('upgcate2')
   } else {
 	  updateElement('ipChange','Gain boost for computers, but resets everything.')
 	  updateElement('prestige2Type','Internet boost')
+	  hideElement('upgradereq')
+	  showElement('upgcate2','inline')
   }
   updateElement('prestige3Req',player.prestiges[2]*40+80)
-  updateElement('netMulti',(201+player.prestiges[2])/100)
+  updateElement('netMulti',(5+player.prestiges[2])/2)
   if (tab=='computers') {
 	  for (let i=0;i<Math.min(player.prestiges[1]+4,9);i++) updateElement("cop"+(i+1),"Cost: " + format(costs.comp[i]) + " (" + player.compAmount[i] + ")")
 	  for (i=0;i<5;i++) {
@@ -447,7 +453,7 @@ function load(savefile) {
 		}
 	  }
 	  player.version = 1
-	  player.build = 1
+	  player.build = 3
 	  
 	  //if the value is a Decimal, set it to be a Decimal here.
 	  player.errors = new Decimal(player.errors)

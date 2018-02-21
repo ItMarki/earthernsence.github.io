@@ -1,18 +1,18 @@
- //game.js and only game.js
+  //game.js and only game.js
 
 player = {
   errors: new Decimal(10), //current errors
-  totalErrors: new Decimal(0),
-  compAmount: [0,0,0,0,0,0,0,0,0],
-  boostPower:0,
-  prestiges: [0,0,0],
-  story: -1,
-  upgrades: [],
-  playtime: 0,
-  time: 0,
-  notation: 0,
-  version: 1,
-  build: 4
+  totalErrors: new Decimal(0), //total errors that display in stats
+  compAmount: [0,0,0,0,0,0,0,0,0], //amounts that are shown on computer button
+  boostPower:0, //
+  prestiges: [0,0,0], //amount of prestiges where [X,0,0] is X UC, [0,X,0] is X networks...? and [0,0,X] is X I.P changes, i think. Someone can update me if im wrong.
+  story: -1, //amount of story.
+  upgrades: [], //see lines 261-274
+  playtime: 0, //total time spent online ingame
+  time: 0, //total time displayed in stats
+  notation: 0, //notation setting, see options
+  version: 1, //very important
+  build: 4 //used for us to communicate commits, helps a lot
 }
 tab='computers'
 oldtab=tab

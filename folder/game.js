@@ -321,6 +321,31 @@ function gameTick() {
 	  showElement(tab+'Tab','block')
 	  oldtab=tab
   }
+  if (player.prestiges[0]<Math.min(player.prestiges[1]+4,9)) {
+	  updateElement('prestige1Gen',ROMAN_NUMERALS[Math.min(player.prestiges[0]+1,9)])
+	  hideElement('maxout')
+	  showElement('abletoprestige','inline')
+  } else {
+	  hideElement('abletoprestige')
+	  showElement('maxout','inline')
+  }
+  updateElement('prestige2Gen',format(Math.max(player.prestiges[1]*15-40,20),0,1)+' Tier '+ROMAN_NUMERALS[Math.min(player.prestiges[1]+4,9)])
+  if (player.prestiges[1]<3) {
+	  hideElement('upgcate1')
+	  updateElement('upgradereq','Unlocks at 3 I.P. changes')
+  } else {
+	  showElement('upgcate1','inline')
+	  updateElement('upgradereq','Next at 5 I.P. changes')
+  }
+  if (player.prestiges[1]<5) {
+	  updateElement('ipChange','Gain Tier '+ROMAN_NUMERALS[player.prestiges[1]+5]+' Computer, but resets everything.')
+	  updateElement('prestige2Type','I.P. Change')
+  } else {
+	  updateElement('ipChange','Gain boost for computers, but resets everything.')
+	  updateElement('prestige2Type','Internet boost')
+  }
+  updateElement('prestige3Req',player.prestiges[2]*40+80)
+  updateElement('netMulti',(201+player.prestiges[2])/100)
   if (tab=='computers') {
 	  for (let i=0;i<Math.min(player.prestiges[1]+4,9);i++) updateElement("cop"+(i+1),"Cost: " + format(costs.comp[i]) + " (" + player.compAmount[i] + ")")
 	  for (i=0;i<5;i++) {
@@ -330,35 +355,6 @@ function gameTick() {
 			hideElement(TIER_NAMES[i+4]+'Comp')
 		  }
 	  }
-	  if (player.prestiges[0]<Math.min(player.prestiges[1]+4,9)) {
-		  updateElement('prestige1Gen',ROMAN_NUMERALS[Math.min(player.prestiges[0]+1,9)])
-		  hideElement('maxout')
-		  showElement('abletoprestige','inline')
-	  } else {
-		  hideElement('abletoprestige')
-		  showElement('maxout','inline')
-	  }
-	  updateElement('prestige2Gen',format(Math.max(player.prestiges[1]*15-40,20),0,1)+' Tier '+ROMAN_NUMERALS[Math.min(player.prestiges[1]+4,9)])
-	  if (player.prestiges[1]<3) {
-		hideElement('upgcate1')
-		updateElement('upgradereq','Unlocks at 3 I.P. changes')
-	  } else {
-		showElement('upgcate1','inline')
-		updateElement('upgradereq','Next at 5 I.P. changes')
-	  }
-	  if (player.prestiges[1]<5) {
-		updateElement('ipChange','Gain Tier '+ROMAN_NUMERALS[player.prestiges[1]+5]+' Computer, but resets everything.')
-		updateElement('prestige2Type','I.P. Change')
-		showElement('upgradereq','inline')
-		hideElement('upgcate2')
-	  } else {
-		updateElement('ipChange','Gain boost for computers, but resets everything.')
-		updateElement('prestige2Type','Internet boost')
-		hideElement('upgradereq')
-		showElement('upgcate2','inline')
-	  }
-	  updateElement('prestige3Req',player.prestiges[2]*40+80)
-	  updateElement('netMulti',(201+player.prestiges[2])/100)
   }
   if (tab=='stats') {
 	  updateElement('statsTotal','You have gained a total of '+format(player.totalErrors)+' errors.')

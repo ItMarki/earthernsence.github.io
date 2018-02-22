@@ -12,7 +12,7 @@ player = {
   time: 0, //total time displayed in stats
   notation: 0, //notation setting, see options
   version: 1, //very important
-  build: 5 //used for us to communicate commits, helps a lot
+  build: 6 //used for us to communicate commits, helps a lot
 }
 tab='computers'
 oldtab=tab
@@ -28,6 +28,10 @@ var storyMessages=["Pancakes is ready!","Wakey wakey! Aw, c'mon, you still got t
 	
 function updateElement(elementID,value) {
 	document.getElementById(elementID).innerHTML=value
+}
+	
+function updateClass(elementID,value) {
+	document.getElementById(elementID).className=value
 }
 	
 function showElement(elementID,style) {
@@ -47,19 +51,39 @@ function abbreviate(i) {
 	var units = ["","U","Du","T","Q","Qi","S","Sp","O","N"]
 	var tens = ["","D","V","Tg","Qg","Qig","Sg","SPg","Og","Ng"]
 	var hundreds = ["","C","Dc","Tc","Qc","Qic","Sc","Spc","Oc","Nc"]
-	var i2=Math.floor(i/10)
-	var i3=Math.floor(i2/10)
-	var unit = units[i%10]
-	var ten = tens[i2%10]
-	var hundred = hundreds[i3%10]
-	return unit+ten+hundred
+	var higherAbbs = ["","MI","MC","NA","PC","FM"]
+	var result=''
+	var step=0
+	while (i>0) {
+		if (i%1000>0) {
+			if (step>0&&i%1000==1) {
+				if (result=='') {
+					result=higherAbbs[step]
+				} else {
+					result=higherAbbs[step]+'-'+result
+				}
+			} else {
+				var unit = units[i%10]
+				var ten = tens[Math.floor(i/10)%10]
+				var hundred = hundreds[Math.floor(i/100)%10]
+				if (result=='') {
+					result=unit+ten+hundred+higherAbbs[step]
+				} else {
+					result=unit+ten+hundred+higherAbbs[step]+'-'+result
+				}
+			}
+		}
+		i=Math.floor(i/1000)
+		step++
+	}
+	return result
 }
 
 function format(num,decimalPoints=0,offset=0) {
 	num=new Decimal(num)
 	if (isNaN(num.mantissa)) {
 		return '?'
-	} else if (num.eq(1/0)) {
+	} else if (num.gte(1/0)) {
 		return 'Infinite'
 	} else if (num.lt(999.5)) {
 		return num.round()
@@ -289,21 +313,24 @@ function buyUpg(id) {
 		case 1: if (player.errors.lt(1e4)) {return} else {player.errors=player.errors.sub(1e4)}; break
 		case 2: if (player.errors.lt(1e10)) {return} else {player.errors=player.errors.sub(1e10)}; break
 		case 3: if (player.errors.lt(1e20)) {return} else {player.errors=player.errors.sub(1e20)}; break
-		case 4: if (player.errors.lt(1e35)&&player.compAmount[0]<95) {return} else {player.errors=player.errors.sub(1e35)}; break
-		case 5: if (player.errors.lt(1e8)&&player.compAmount[1]<80) {return} else {player.errors=player.errors.sub(1e8)}; break
-		case 6: if (player.compAmount[2]<70) {return}; break
-		case 7: if (player.compAmount[3]<60) {return}; break
-		case 8: if (player.compAmount[4]<50) {return}; break
-		case 9: if (player.compAmount[5]<45) {return}; break
-		case 10: if (player.compAmount[6]<30) {return}; break
-		case 11: if (player.compAmount[7]<25) {return}; break
-		case 12: if (player.compAmount[8]<20) {return}; break
-		case 13: for (check=4;check<13;check++) {
-			if (!player.upgrades.includes(check)&&player.compAmount[check-4]<30) return
+		case 4: if (player.errors.lt(1e35)&&player.compAmount[0]<100) {return} else {player.errors=player.errors.sub(1e35)}; break
+		case 5: if (player.errors.lt(1e40)&&player.compAmount[1]<100) {return} else {player.errors=player.errors.sub(1e40)}; break
+		case 6: if (player.errors.lt(1e50)&&player.compAmount[2]<100) {return} else {player.errors=player.errors.sub(1e50)}; break
+		case 7: if (player.errors.lt(1e65)&&player.compAmount[3]<100) {return} else {player.errors=player.errors.sub(1e65)}; break
+		case 8: if (player.errors.lt(1e75)&&player.compAmount[4]<100) {return} else {player.errors=player.errors.sub(1e75)}; break
+		case 9: if (player.errors.lt(1e85)&&player.compAmount[5]<100) {return} else {player.errors=player.errors.sub(1e85)}; break
+		case 10: if (player.errors.lt(1e100)&&player.compAmount[6]<100) {return} else {player.errors=player.errors.sub(1e100)}; break
+		case 11: if (player.errors.lt(1e115)&&player.compAmount[7]<100) {return} else {player.errors=player.errors.sub(1e115)}; break
+		case 12: if (player.errors.lt(1e125)&&player.compAmount[8]<100) {return} else {player.errors=player.errors.sub(1e125)}; break
+		case 13: if (player.errors.lt(1e140)) return
+			for (check=4;check<13;check++) {
+				if (!player.upgrades.includes(check)&&player.compAmount[check-4]<110) return
 			}
+			player.errors=player.errors.sub(1e140)
 			break
 		case 14: if (player.prestiges[0]<9) {return}; break
 		case 15: if (player.prestiges[1]<5) {return}; break
+		case 16: if (player.prestiges[1]<7) {return}; break
 	}
 	player.upgrades.push(id)
 }
@@ -331,7 +358,7 @@ function gameTick() {
 	  showElement(tab+'Tab','block')
 	  oldtab=tab
   }
-  if (player.prestiges[0]<Math.min(player.prestiges[1]+4,player.upgrades.includes(15)?Math.max(player.prestiges[1]+4,9):9)) {
+  if (player.prestiges[0]<Math.min(player.prestiges[1]+4,player.upgrades.includes(16)?Math.max(player.prestiges[1]+4,9):9)) {
 	  updateElement('prestige1Gen',Math.max(player.prestiges[0]*10-70,10)+' Tier '+ROMAN_NUMERALS[Math.min(player.prestiges[0]+1,9)])
 	  hideElement('maxout')
 	  showElement('abletoprestige','inline')
@@ -345,6 +372,23 @@ function gameTick() {
 	  updateElement('upgradereq','Unlocks at 3 I.P. changes')
   } else {
 	  showElement('upgcate1','inline')
+	  updateElement('upg1button','Cost: '+format(1e4))
+	  updateElement('upg2button','Cost: '+format(1e10))
+	  updateElement('upg3button','Cost: '+format(1e20))
+	  updateElement('upg4button','Cost: 100 TI comps & '+format(1e35))
+	  updateElement('upg5button','Cost: 100 TII comps & '+format(1e40))
+	  updateElement('upg6button','Cost: 100 TIII comps & '+format(1e50))
+	  updateElement('upg7button','Cost: 100 TIV comps & '+format(1e65))
+	  updateElement('upg8button','Cost: 100 TV comps & '+format(1e75))
+	  updateElement('upg9button','Cost: 100 TVI comps & '+format(1e85))
+	  updateElement('upg10button','Cost: 100 TVII comps & '+format(1e100))
+	  updateElement('upg11button','Cost: 100 TVIII comps & '+format(1e115))
+	  updateElement('upg12button','Cost: 100 TIX comps & '+format(1e125))
+	  updateElement('upg13button','Cost: 110 comps each & FCI-FCIX & '+format(1e140))
+	  for (i=1;i<14;i++) {
+		  if (player.upgrades.includes(i)) updateClass('upg'+i+'button','boughtUpgrade')
+		  else updateClass('upg'+i+'button','')
+	  }
 	  updateElement('upgradereq','Next at 5 I.P. changes')
   }
   if (player.prestiges[1]<5) {
@@ -357,6 +401,10 @@ function gameTick() {
 	  updateElement('prestige2Type','Internet boost')
 	  hideElement('upgradereq')
 	  showElement('upgcate2','inline')
+	  for (i=14;i<17;i++) {
+		  if (player.upgrades.includes(i)) updateClass('upg'+i+'button','boughtUpgrade')
+		  else updateClass('upg'+i+'button','')
+	  }
   }
   updateElement('prestige3Req',player.prestiges[2]*40+80)
   updateElement('netMulti',(5+player.prestiges[2])/2)
@@ -404,68 +452,72 @@ function save() {
 
 function load(savefile) {
   try {
-	  player=JSON.parse(atob(savefile));
+	  savefile=JSON.parse(atob(savefile));
+	  //To prevent to trying to load a save file with glitches.
 
 	  //when adding a new player variable, PLEASE ADD A NEW LINE!!
-	  if (player.version == undefined) player.version = 0;
-	  if (player.build == undefined) player.build = 0;
-	  if (player.version <= 0) {
-		  if (player.build < 1) {
+	  if (savefile.version == undefined) savefile.version = 0;
+	  if (savefile.build == undefined) savefile.build = 0;
+	  if (savefile.version <= 0) {
+		  if (savefile.build < 1) {
 			for (let i=0;i<9;i++) {
-				player.compCost[i] = parseint(player.compCost[i])
-				player.compPow[i] = parseint(player.compPow[i])
+				savefile.compCost[i] = parseint(savefile.compCost[i])
+				savefile.compPow[i] = parseint(savefile.compPow[i])
 			}
 		  }
-		  if (player.build < 2) {
-			player.time=new Date().getTime()
+		  if (savefile.build < 2) {
+			savefile.time=new Date().getTime()
 		  }
-		  if (player.build < 3) {
-			player.prestiges=[player.prestige1,player.prestige2,0]
-			player.timeUpgrades=0
-			delete player.prestige1
-			delete player.prestige2
+		  if (savefile.build < 3) {
+			savefile.prestiges=[savefile.prestige1,savefile.prestige2,0]
+			savefile.timeUpgrades=0
+			delete savefile.prestige1
+			delete savefile.prestige2
 		  }
-		  if (player.build < 4) {
-			player.playtime=0
-			player.totalErrors=0
+		  if (savefile.build < 4) {
+			savefile.playtime=0
+			savefile.totalErrors=0
 		  }
-		  if (player.build < 5) {
-			player.boost=1
-			delete player.timeUpgrades
+		  if (savefile.build < 5) {
+			savefile.boost=1
+			delete savefile.timeUpgrades
 		  }
-		  if (player.build<6) {
-			player.genUpgradeCost=1000
+		  if (savefile.build<6) {
+			savefile.genUpgradeCost=1000
 		  }
-		  if (player.build<7) {
-			player.story-=1
+		  if (savefile.build<7) {
+			savefile.story-=1
 		  }
-		  if (player.build<8) {
-			player.notation=0
+		  if (savefile.build<8) {
+			savefile.notation=0
 		  }
-		  if (player.build<10) {
-			player.boostPower=Math.floor(Decimal.log10(player.boost)/Math.log10(2))
-			if (isNaN(player.boost)) player.boostPower=0
-			delete player.compCost
-			delete player.compPow
-			delete player.boost
-			delete player.genUpgradeCost
+		  if (savefile.build<10) {
+			savefile.boostPower=Math.floor(Decimal.log10(savefile.boost)/Math.log10(2))
+			if (isNaN(savefile.boost)) savefile.boostPower=0
+			delete savefile.compCost
+			delete savefile.compPow
+			delete savefile.boost
+			delete savefile.genUpgradeCost
 		  }
-		player.build = 0
+		savefile.build = 0
 	  }
-	  if (player.version <= 1) {
-	    if (player.build < 1) {
-			player.upgrades=[]
+	  if (savefile.version <= 1) {
+	    if (savefile.build < 1) {
+			savefile.upgrades=[]
 		}
-	    if (player.build < 2) {
-			if (player.upgrades.includes(1)) player.upgrades=[3]
+	    if (savefile.build < 2) {
+			if (savefile.upgrades.includes(1)) savefile.upgrades=[3]
 		}
 	  }
-	  player.version = 1
-	  player.build = 5
+	  savefile.version = player.version
+	  savefile.build = player.build
 	  
 	  //if the value is a Decimal, set it to be a Decimal here.
-	  player.errors = new Decimal(player.errors)
-	  player.totalErrors = new Decimal(player.totalErrors)
+	  savefile.errors = new Decimal(savefile.errors)
+	  savefile.totalErrors = new Decimal(savefile.totalErrors)
+	  
+	  player=savefile
+	  //And then safety put the save file to player!
 	  
       updateCosts()
 	  updateStory()

@@ -35,3 +35,7 @@ table.storybox tr {
     display: table;
     table-layout: fixed;
 }
+
+.boughtUpgrade {
+	background-color:#00e500
+}

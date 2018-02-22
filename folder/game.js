@@ -593,3 +593,4 @@ function gameInit() {
 	},0)
 	setInterval(save,10000);
 }
+

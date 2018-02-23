@@ -39,3 +39,9 @@ table.storybox tr {
 .boughtUpgrade {
 	background-color:#00e500
 }
+.cantBuyComputer {
+	background-color:#505050
+}
+.cantBuyUpgrade {
+	background-color:#505050
+}

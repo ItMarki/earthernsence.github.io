@@ -5,14 +5,14 @@ player = {
   totalErrors: new Decimal(0), //total errors that display in stats
   compAmount: [0,0,0,0,0,0,0,0,0], //amounts that are shown on computer button
   boostPower:0, //
-  prestiges: [0,0,0], //amount of prestiges where [X,0,0] is X UC, [0,X,0] is X networks...? and [0,0,X] is X I.P changes, i think. Someone can update me if im wrong.
+  prestiges: [0,0,0], //amount of prestiges where [X,0,0] is X UCs, [0,X,0] is X I.P. changes/internet boosts and [0,0,X] is X networks
   story: -1, //amount of story.
   upgrades: [], //see lines 261-274
   playtime: 0, //total time spent online ingame
   time: 0, //total time displayed in stats
   notation: 0, //notation setting, see options
   version: 1, //very important
-  build: 9 //used for us to communicate commits, helps a lot
+  build: 10 //used for us to communicate commits, helps a lot
 }
 tab='computers'
 oldtab=tab
@@ -319,30 +319,49 @@ function getEPS() {
   return ret;
 }
 
-function buyUpg(id) {
-	if (player.upgrades.includes(id)) return
+function checkIfAffordable(id) {
+	if (player.upgrades.includes(id)) return false
 	switch (id) {
-		case 1: if (player.errors.lt(1e4)) {return} else {player.errors=player.errors.sub(1e4)}; break
-		case 2: if (player.errors.lt(1e10)) {return} else {player.errors=player.errors.sub(1e10)}; break
-		case 3: if (player.errors.lt(1e20)) {return} else {player.errors=player.errors.sub(1e20)}; break
-		case 4: if (player.errors.lt(1e35)&&player.compAmount[0]<100) {return} else {player.errors=player.errors.sub(1e35)}; break
-		case 5: if (player.errors.lt(1e40)&&player.compAmount[1]<100) {return} else {player.errors=player.errors.sub(1e40)}; break
-		case 6: if (player.errors.lt(1e50)&&player.compAmount[2]<100) {return} else {player.errors=player.errors.sub(1e50)}; break
-		case 7: if (player.errors.lt(1e65)&&player.compAmount[3]<100) {return} else {player.errors=player.errors.sub(1e65)}; break
-		case 8: if (player.errors.lt(1e75)&&player.compAmount[4]<100) {return} else {player.errors=player.errors.sub(1e75)}; break
-		case 9: if (player.errors.lt(1e85)&&player.compAmount[5]<100) {return} else {player.errors=player.errors.sub(1e85)}; break
-		case 10: if (player.errors.lt(1e100)&&player.compAmount[6]<100) {return} else {player.errors=player.errors.sub(1e100)}; break
-		case 11: if (player.errors.lt(1e115)&&player.compAmount[7]<100) {return} else {player.errors=player.errors.sub(1e115)}; break
-		case 12: if (player.errors.lt(1e125)&&player.compAmount[8]<100) {return} else {player.errors=player.errors.sub(1e125)}; break
-		case 13: if (player.errors.lt(1e140)) return
+		case 1: if (player.errors.lt(1e4)) {return false}; return true
+		case 2: if (player.errors.lt(1e10)) {return false}; return true
+		case 3: if (player.errors.lt(1e20)) {return false}; return true
+		case 4: if (player.errors.lt(1e35)&&player.compAmount[0]<100) {return false}; return true
+		case 5: if (player.errors.lt(1e40)&&player.compAmount[1]<100) {return false}; return true
+		case 6: if (player.errors.lt(1e50)&&player.compAmount[2]<100) {return false}; return true
+		case 7: if (player.errors.lt(1e65)&&player.compAmount[3]<100) {return false}; return true
+		case 8: if (player.errors.lt(1e75)&&player.compAmount[4]<100) {return false}; return true
+		case 9: if (player.errors.lt(1e85)&&player.compAmount[5]<100) {return false}; return true
+		case 10: if (player.errors.lt(1e100)&&player.compAmount[6]<100) {return false}; return true
+		case 11: if (player.errors.lt(1e115)&&player.compAmount[7]<100) {return false}; return true
+		case 12: if (player.errors.lt(1e125)&&player.compAmount[8]<100) {return false}; return true
+		case 13: if (player.errors.lt(1e140)) return false
 			for (check=4;check<13;check++) {
-				if (!player.upgrades.includes(check)&&player.compAmount[check-4]<110) return
+				if (!player.upgrades.includes(check)&&player.compAmount[check-4]<110) return false
 			}
-			player.errors=player.errors.sub(1e140)
-			break
-		case 14: if (player.prestiges[0]<9) {return}; break
-		case 15: if (player.prestiges[1]<5) {return}; break
-		case 16: if (player.prestiges[1]<7) {return}; break
+			return true
+		case 14: if (player.prestiges[0]<9) {return false}; return true
+		case 15: if (player.prestiges[1]<5) {return false}; return true
+		case 16: if (player.prestiges[1]<7) {return false}; return true
+	}
+	return false
+}
+
+function buyUpg(id) {
+	if (!checkIfAffordable(id)) return
+	switch (id) {
+		case 1: player.errors=player.errors.sub(1e4); break
+		case 2: player.errors=player.errors.sub(1e10); break
+		case 3: player.errors=player.errors.sub(1e20); break
+		case 4: player.errors=player.errors.sub(1e35); break
+		case 5: player.errors=player.errors.sub(1e40); break
+		case 6: player.errors=player.errors.sub(1e50); break
+		case 7: player.errors=player.errors.sub(1e65); break
+		case 8: player.errors=player.errors.sub(1e75); break
+		case 9: player.errors=player.errors.sub(1e85); break
+		case 10: player.errors=player.errors.sub(1e100); break
+		case 11: player.errors=player.errors.sub(1e115); break
+		case 12: player.errors=player.errors.sub(1e125); break
+		case 13: player.errors=player.errors.sub(1e140); break
 	}
 	player.upgrades.push(id)
 }
@@ -362,6 +381,8 @@ function gameTick() {
 	  updateElement('genIncrease',(4+player.prestiges[2])/2);
 	  updateElement('genIncreaseCost','Cost: ' + format(costs.boost));
 	  updateElement('genBoost',format(Decimal.pow(2+0.5*player.prestiges[2],player.boostPower)));
+	  if (player.errors.lt(costs.boost)) updateClass('genIncreaseCost','cantBuy')
+	  else updateClass('genIncreaseCost','')
   } else {
 	  hideElement('genUpgrade')
   }
@@ -408,7 +429,8 @@ function gameTick() {
 	  }
 	  for (i=1;i<14;i++) {
 		  if (player.upgrades.includes(i)) updateClass('upg'+i+'button','boughtUpgrade')
-		  else updateClass('upg'+i+'button','')
+		  else if (checkIfAffordable(i)) updateClass('upg'+i+'button','')
+		  else updateClass('upg'+i+'button','cantBuy')
 	  }
 	  updateElement('upgradereq','Next at 5 I.P. changes')
   }
@@ -424,13 +446,18 @@ function gameTick() {
 	  showElement('upgcate2','inline')
 	  for (i=14;i<17;i++) {
 		  if (player.upgrades.includes(i)) updateClass('upg'+i+'button','boughtUpgrade')
-		  else updateClass('upg'+i+'button','')
+		  else if (checkIfAffordable(i)) updateClass('upg'+i+'button','')
+		  else updateClass('upg'+i+'button','cantBuy')
 	  }
   }
   updateElement('prestige3Req',player.prestiges[2]*40+80)
   updateElement('netMulti',(5+player.prestiges[2])/2)
   if (tab=='computers') {
-	  for (let i=0;i<Math.min(player.prestiges[1]+4,9);i++) updateElement("cop"+(i+1),"Cost: " + format(costs.comp[i]) + " (" + player.compAmount[i] + ")")
+	  for (let i=0;i<Math.min(player.prestiges[1]+4,9);i++) {
+		  updateElement("cop"+(i+1),"Cost: " + format(costs.comp[i]) + " (" + player.compAmount[i] + ")")
+		  if (player.errors.lt(costs.comp[i])) updateClass("cop"+(i+1),'cantBuy')
+		  else updateClass("cop"+(i+1),'')
+	  }
 	  for (i=0;i<5;i++) {
 		  if (player.prestiges[1]>i) {
 			showElement(TIER_NAMES[i+4]+'Comp','block')

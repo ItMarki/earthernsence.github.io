@@ -1,5 +1,6 @@
   //game.js and only game.js
-
+var shiftDown=false;
+var controlDown=false;
 player = {
   errors: new Decimal(10), //current errors
   totalErrors: new Decimal(0), //total errors that display in stats
@@ -12,7 +13,7 @@ player = {
   time: 0, //total time displayed in stats
   notation: 0, //notation setting, see options
   version: 1, //very important
-  build: 10 //used for us to communicate commits, helps a lot
+  build: 11 //used for us to communicate commits, helps a lot
 }
 tab='computers'
 oldtab=tab
@@ -287,8 +288,7 @@ function prestige(tier) {
   updateCosts()
 }
 
-function getMultTier(tier) {
-  let ret = new Decimal.pow(10,tier-1)
+function getMultTier(tier) {  let ret = new Decimal.pow(10,tier-1)
   ret = ret.mul(Decimal.pow(Math.pow(1.05,tier),player.compAmount[tier-1]))
   ret = ret.mul(Decimal.pow(2+0.5*player.prestiges[2],player.boostPower))
   if (player.prestiges[0]>=tier) ret = ret.mul(player.upgrades.includes(14)?2.5:2)
@@ -325,15 +325,15 @@ function checkIfAffordable(id) {
 		case 1: if (player.errors.lt(1e4)) {return false}; return true
 		case 2: if (player.errors.lt(1e10)) {return false}; return true
 		case 3: if (player.errors.lt(1e20)) {return false}; return true
-		case 4: if (player.errors.lt(1e35)&&player.compAmount[0]<100) {return false}; return true
-		case 5: if (player.errors.lt(1e40)&&player.compAmount[1]<100) {return false}; return true
-		case 6: if (player.errors.lt(1e50)&&player.compAmount[2]<100) {return false}; return true
-		case 7: if (player.errors.lt(1e65)&&player.compAmount[3]<100) {return false}; return true
-		case 8: if (player.errors.lt(1e75)&&player.compAmount[4]<100) {return false}; return true
-		case 9: if (player.errors.lt(1e85)&&player.compAmount[5]<100) {return false}; return true
-		case 10: if (player.errors.lt(1e100)&&player.compAmount[6]<100) {return false}; return true
-		case 11: if (player.errors.lt(1e115)&&player.compAmount[7]<100) {return false}; return true
-		case 12: if (player.errors.lt(1e125)&&player.compAmount[8]<100) {return false}; return true
+		case 4: if (player.errors.lt(1e35)&&player.compAmount[0]>100) {return false}; return true
+		case 5: if (player.errors.lt(1e40)&&player.compAmount[1]>100) {return false}; return true
+		case 6: if (player.errors.lt(1e50)&&player.compAmount[2]>100) {return false}; return true
+		case 7: if (player.errors.lt(1e65)&&player.compAmount[3]>100) {return false}; return true
+		case 8: if (player.errors.lt(1e75)&&player.compAmount[4]>100) {return false}; return true
+		case 9: if (player.errors.lt(1e85)&&player.compAmount[5]>100) {return false}; return true
+		case 10: if (player.errors.lt(1e100)&&player.compAmount[6]>100) {return false}; return true
+		case 11: if (player.errors.lt(1e115)&&player.compAmount[7]>100) {return false}; return true
+		case 12: if (player.errors.lt(1e125)&&player.compAmount[8]>100) {return false}; return true
 		case 13: if (player.errors.lt(1e140)) return false
 			for (check=4;check<13;check++) {
 				if (!player.upgrades.includes(check)&&player.compAmount[check-4]<110) return false
@@ -616,7 +616,25 @@ function updateStory() {
 		row.innerHTML='<td>'+storyMessages[i]+'</td>'
     }
 }
+window.addEventListener('keydown', function(event) {
+    if (event.keyCode == 17) controlDown = true;
+    if (event.keyCode == 16) shiftDown = true;
+}, false);
 
+
+window.addEventListener('keydown', function(event) {
+    const tmp = event.keyCode;
+    switch (tmp) {
+        case 77: // M
+            document.getElementById("maxAll").onclick()
+        break;
+		    
+        case 84: // T
+		    if (shiftDown) buyGenUpgrade(); 
+        else  maxGenUpgrade();
+        break;
+    }    
+}, false);
 
 
 function gameInit() {

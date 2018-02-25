@@ -11,9 +11,12 @@ player = {
   upgrades: [], //see lines 261-274
   playtime: 0, //total time spent online ingame
   time: 0, //total time displayed in stats
-  notation: 0, //notation setting, see options
   version: 1, //very important
-  build: 11.1 //used for us to communicate commits, helps a lot
+  build: 12 //used for us to communicate commits, helps a lot
+	options: {
+		hotkeys:true, //whether or not hotkeys are enabled (on by default)
+		notation: 0, //notation setting, see options
+	}
 }
 tab='computers'
 oldtab=tab
@@ -95,12 +98,12 @@ function format(num,decimalPoints=0,offset=0) {
 			mantissa=mantissa/1000
 			abbid+=1
 		}
-		if (player.notation==0||(player.notation==5&&abbid<5)) return mantissa+abbreviate(abbid-1)
-		if (player.notation==1) return (num.div(Decimal.pow(10,num.e)).toFixed((abbid>0&&decimalPoints<2)?2:decimalPoints))+"e"+num.e
-		if (player.notation==2) return mantissa+"e"+(abbid*3)
-		if (player.notation==3) return "e"+Math.round(1000*num.log10())/1000
-		if (player.notation==4) return mantissa+letter(abbid)
-		if (player.notation==5&&abbid>4) return mantissa+letter(abbid+22)
+		if (player.options.notation==0||(player.options.notation==5&&abbid<5)) return mantissa+abbreviate(abbid-1)
+		if (player.options.notation==1) return (num.div(Decimal.pow(10,num.e)).toFixed((abbid>0&&decimalPoints<2)?2:decimalPoints))+"e"+num.e
+		if (player.options.notation==2) return mantissa+"e"+(abbid*3)
+		if (player.options.notation==3) return "e"+Math.round(1000*num.log10())/1000
+		if (player.options.notation==4) return mantissa+letter(abbid)
+		if (player.options.notation==5&&abbid>4) return mantissa+letter(abbid+22)
 	}
 }
 
@@ -136,9 +139,14 @@ function formatTime(s) {
 }
 
 function switchNotation() {
-	player.notation++
-	if(player.notation>notationArray.length-1) player.notation=0
-	updateElement("notationID",notationArray[player.notation])
+	player.options.notation++
+	if(player.options.notation>notationArray.length-1) player.options.notation=0
+	updateElement("notationID",notationArray[player.options.notation])
+}
+
+function toggleHotkeys() {
+	if (player.options.hotkeys==true)player.options.hotkeys=false;
+	else if (player.options.hotkeys==false)player.options.hotkeys=true;
 }
 
 function switchTab(tabid) {
@@ -556,6 +564,11 @@ function load(savefile) {
 	    if (savefile.build < 2) {
 			if (savefile.upgrades.includes(1)) savefile.upgrades=[3]
 		}
+	    if (savefile.build < 12) {
+			savefile.options={hotkeys:true,
+				notation:savefile.notation}
+			delete savefile.notation
+		}
 	  }
 	  savefile.version = player.version
 	  savefile.build = player.build
@@ -569,7 +582,7 @@ function load(savefile) {
 	  
       updateCosts()
 	  updateStory()
-	  updateElement("notationID",notationArray[player.notation])
+	  updateElement("notationID",notationArray[player.options.notation])
 	  console.log('Game loaded!')
   } catch (e) {
 	  console.log('Your save failed to load:\n'+e)
@@ -623,6 +636,7 @@ window.addEventListener('keydown', function(event) {
 
 
 window.addEventListener('keydown', function(event) {
+	if (!player.options.hotkeys) return;
     const tmp = event.keyCode;
     switch (tmp) {
         case 77: // M

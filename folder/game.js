@@ -12,7 +12,7 @@ player = {
   playtime: 0, //total time spent online ingame
   time: 0, //total time displayed in stats
   version: 1, //very important
-  build: 12 //used for us to communicate commits, helps a lot
+  build: 13 //used for us to communicate commits, helps a lot
 	options: {
 		hotkeys:true, //whether or not hotkeys are enabled (on by default)
 		notation: 0, //notation setting, see options

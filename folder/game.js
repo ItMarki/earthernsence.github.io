@@ -1,5 +1,6 @@
   //game.js and only game.js
-
+var shiftDown=false;
+var controlDown=false;
 player = {
   errors: new Decimal(10), //current errors
   totalErrors: new Decimal(0), //total errors that display in stats
@@ -12,7 +13,7 @@ player = {
   time: 0, //total time displayed in stats
   notation: 0, //notation setting, see options
   version: 1, //very important
-  build: 10 //used for us to communicate commits, helps a lot
+  build: 10.1 //used for us to communicate commits, helps a lot
 }
 tab='computers'
 oldtab=tab
@@ -616,7 +617,25 @@ function updateStory() {
 		row.innerHTML='<td>'+storyMessages[i]+'</td>'
     }
 }
+window.addEventListener('keydown', function(event) {
+    if (event.keyCode == 17) controlDown = true;
+    if (event.keyCode == 16) shiftDown = true;
+}, false);
 
+
+window.addEventListener('keydown', function(event) {
+    const tmp = event.keyCode;
+    switch (tmp) {
+        case 77: // M
+            document.getElementById("maxAll").onclick()
+        break;
+		    
+        case 84: // T
+		    if (shiftDown) buyGenUpgrade(); 
+        else  maxGenUpgrades();
+        break;
+    }    
+}, false);
 
 
 function gameInit() {

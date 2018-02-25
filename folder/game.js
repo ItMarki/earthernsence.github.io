@@ -13,7 +13,10 @@ player = {
   time: 0, //total time displayed in stats
   notation: 0, //notation setting, see options
   version: 1, //very important
-  build: 11.2 //used for us to communicate commits, helps a lot
+  build: 12 //used for us to communicate commits, helps a lot
+options: {
+		hotkeys:true, //whether or not hotkeys are enabled (on by default)
+		notation: 0, //notation setting, see options
 }
 tab='computers'
 oldtab=tab

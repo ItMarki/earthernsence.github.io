@@ -2,6 +2,12 @@ table.prestiges tr {
 	height:0%;
 	vertical-align:0
 }
+table.prestiges {
+	display: table;
+	width: 100%;
+	background-color: blue;
+	font-size: 15px;
+}
 table.sidebar tr {
     height:0%;
 	vertical-align:0

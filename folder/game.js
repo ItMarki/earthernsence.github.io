@@ -12,7 +12,7 @@ player = {
   playtime: 0, //total time spent online ingame
   time: 0, //total time displayed in stats
   version: 1, //very important
-  build: 13.1, //used for us to communicate commits, helps a lot
+  build: 14, //used for us to communicate commits, helps a lot
   options: {
 	  hotkeys:true, //whether or not hotkeys are enabled (on by default)
 	  notation:0 //notation setting, see options
@@ -649,6 +649,21 @@ window.addEventListener('keydown', function(event) {
         break;
     }    
 }, false);
+
+function move() {
+    var elem = document.getElementById("percentToWarningBar"); 
+    var width = 10;
+    var id = setInterval(frame, 10);
+    function frame() {
+        if (width >= 100) {
+            clearInterval(id);
+        } else {
+            width++; 
+            elem.style.width = width + '%'; 
+            elem.innerHTML = width * 1 + '%';
+        }
+    }
+} 
 
 
 function gameInit() {

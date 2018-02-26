@@ -99,7 +99,12 @@
 	  </tr></td>
 	    <table class='prestiges' align=left style='position:fixed; height:100%; top:0px; right:15px; width:20%'>
 		    <tr><td>
-		  <b style='font-size:32px'>Prestiges</b>
+			    <table class="prestiges">
+			  <thead><tr><th style='font-size:32px'>Prestiges</th></tr></thead>
+			  <tbody></tbody>
+		  </table>
+	  </tr></td>
+		  <tr><td>
 		  <div>Upgrade Computers: <text id='abletoprestige'>Requires <text id='prestige1Gen'>10 Tier IV</text> Computers <button id="upgradeComputers" onClick='prestige(1)'>Reset back to beginning of run, but gain a small boost.</button></text><text id='maxout' style='display:none'>Maxed out!</text></div>
 		  <div><text id='prestige2Type'>I.P. Change</text>: Requires <text id='prestige2Gen'>20 Tier IV</text> Computers <button id="ipChange" onClick='prestige(2)'></button></div>
 		  <div>Network: Requires <text id='prestige3Req'>60</text> Tier IX Computers <button id="network" onclick='prestige(3)'>Reset everything, but gain a Production Boost upgrade (x<text id='netMulti'>X</text>).</button></div>

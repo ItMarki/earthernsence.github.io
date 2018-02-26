@@ -12,7 +12,7 @@ player = {
   playtime: 0, //total time spent online ingame
   time: 0, //total time displayed in stats
   version: 1, //very important
-  build: 13.1, //used for us to communicate commits, helps a lot
+  build: 14, //used for us to communicate commits, helps a lot
   options: {
 	  hotkeys:true, //whether or not hotkeys are enabled (on by default)
 	  notation:0 //notation setting, see options
@@ -20,6 +20,7 @@ player = {
 }
 tab='computers'
 oldtab=tab
+percentage=0
 const story = ['','','','','']
 const TIER_NAMES = ['first','second','third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 'ninth']; // can add more if more gens/story elements, cuz that uses this too
 const ROMAN_NUMERALS=[]
@@ -378,10 +379,11 @@ function buyUpg(id) {
 
 function gameTick() {
   if (player.time>0) {
-	  var s=(new Date().getTime()-player.time)/1000 // number of seconds since last tick
+	  s=(new Date().getTime()-player.time)/1000 // number of seconds since last tick
 	  player.errors = player.errors.add(getEPS().mul(s));
 	  player.totalErrors = player.totalErrors.add(getEPS().mul(s));
 	  player.playtime+=s
+	  move()
   }
   player.time = new Date().getTime()
   updateElement('errors',format(player.errors)) //this is the base, except in the parentheses add the HTML tag of the thing you're changing
@@ -654,11 +656,19 @@ window.addEventListener('keydown', function(event) {
     }    
 }, false);
 
+function move() {
+	var realPercentage=Math.min(player.errors.add(1).log10()*0.32440704,100)
+	var diff=Math.abs(percentage-realPercentage)
+	percentage=realPercentage*(1-Math.pow(Math.min(Math.pow(1-diff/100,3),0.001),s))+percentage*(Math.pow(Math.min(Math.pow(1-diff/100,3),0.001),s))
+	document.getElementById("percentToWarningBar").style.width=percentage+'%'
+    updateElement('percentToWarningProgress',realPercentage.toFixed(2)+'%')
+} 
 
 function gameInit() {
 	setupRoman()
 	load(localStorage.getItem('errorSave'))
 	var tickspeed=0
+	var s=0
 	updated=true
 	setInterval(function(){
 		if (updated) {
@@ -668,7 +678,8 @@ function gameInit() {
 				try {
 				    gameTick()
 				} catch (e) {
-					console.log('A game error has been occured: '+e)
+					console.log('A game error has occured:')
+					console.error(e)
 				}
 				tickspeed=(new Date().getTime()-startTime)*0.2+tickspeed*0.8
 				updated=true

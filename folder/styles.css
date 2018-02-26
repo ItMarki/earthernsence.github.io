@@ -1,3 +1,7 @@
+table.prestiges tr {
+	height:0%;
+	vertical-align:0
+}
 table.sidebar tr {
     height:0%;
 	vertical-align:0
@@ -57,3 +61,12 @@ table.storybox tr {
         text-align:left;
     }
 
+#percentToWarningBar {
+    width: 10%;
+    height: 30px;
+    background-color: #4CAF50;
+    color: black; 
+} 
+#percentToWarningProgress {
+	font-size:25px
+} 

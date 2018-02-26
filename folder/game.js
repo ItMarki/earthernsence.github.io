@@ -147,6 +147,10 @@ function switchNotation() {
 function toggleHotkeys() {
 	if (player.options.hotkeys==true)player.options.hotkeys=false;
 	else if (player.options.hotkeys==false)player.options.hotkeys=true;
+	let enabled = "enabled";
+	if (!player.options.hotkeys) enabled="disabled";
+	else if (player.options.hotkeys) enabled="enabled";
+	updateElement('hotkeysbtn',"Hotkeys: "+enabled)
 }
 
 function switchTab(tabid) {

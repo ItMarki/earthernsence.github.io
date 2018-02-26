@@ -38,6 +38,8 @@ function updateElement(elementID,value) {
 function updateClass(elementID,value) {
 	document.getElementById(elementID).className=value
 }
+
+
 	
 function showElement(elementID,style) {
 	document.getElementById(elementID).style.display=style
@@ -466,7 +468,9 @@ function gameTick() {
 	  for (let i=0;i<Math.min(player.prestiges[1]+4,9);i++) {
 		  updateElement("cop"+(i+1),"Cost: " + format(costs.comp[i]) + " (" + player.compAmount[i] + ")")
 		  if (player.errors.lt(costs.comp[i])) updateClass("cop"+(i+1),'cantBuy')
-		  else updateClass("cop"+(i+1),'')
+		  else {
+		      updateClass("cop"+(i+1),'')
+		  }
 	  }
 	  for (i=0;i<5;i++) {
 		  if (player.prestiges[1]>i) {

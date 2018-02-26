@@ -1,3 +1,7 @@
+table.prestiges tr {
+	height:0%;
+	vertical-align:0
+}
 table.sidebar tr {
     height:0%;
 	vertical-align:0
@@ -42,6 +46,21 @@ table.storybox tr {
 .cantBuy {
 	background-color:#bfbfbf
 }
+
+.comp {
+    width:15%;
+    text-align:left;
+    align-items:center;
+}
+
+    .comp td {
+        width: 50%;
+    }
+    .comp td button {
+        width: 100%;
+        text-align:left;
+    }
+
 #percentToWarningBar {
     width: 10%;
     height: 30px;

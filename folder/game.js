@@ -12,7 +12,7 @@ player = {
   playtime: 0, //total time spent online ingame
   time: 0, //total time displayed in stats
   version: 1, //very important
-  build: 14, //used for us to communicate commits, helps a lot
+  build: 15, //used for us to communicate commits, helps a lot
   options: {
 	  hotkeys:true, //whether or not hotkeys are enabled (on by default)
 	  notation:0 //notation setting, see options
@@ -150,6 +150,10 @@ function switchNotation() {
 function toggleHotkeys() {
 	if (player.options.hotkeys==true)player.options.hotkeys=false;
 	else if (player.options.hotkeys==false)player.options.hotkeys=true;
+	let enabled = "enabled";
+	if (!player.options.hotkeys) enabled="disabled";
+	else if (player.options.hotkeys) enabled="enabled";
+	updateElement('hotkeysbtn',"Hotkeys: "+enabled)
 }
 
 function switchTab(tabid) {
@@ -474,7 +478,7 @@ function gameTick() {
 	  }
 	  for (i=0;i<5;i++) {
 		  if (player.prestiges[1]>i) {
-			showElement(TIER_NAMES[i+4]+'Comp','block')
+			showElement(TIER_NAMES[i+4]+'Comp','table-row')
 		  } else {
 			hideElement(TIER_NAMES[i+4]+'Comp')
 		  }

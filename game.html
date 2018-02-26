@@ -41,11 +41,11 @@
           <tr><td>Tier II Computer:</td><td><button id="cop2" onClick='buyGen(1)'> (<text id="secondAmt">x</text>)</button></td></tr>
           <tr><td>Tier III Computer:</td><td><button id="cop3" onClick='buyGen(2)'> (<text id="thirdAmt">x</text>)</button></td></tr>
           <tr><td>Tier IV Computer:</td><td><button id="cop4" onClick='buyGen(3)'> (<text id="forthAmt">x</text>)</button></td></tr>
-          <tr><td><div  id='fifthComp' style='display:none'>Tier V Computer:<button id="cop5" onClick='buyGen(4)'> (<text id="fifthAmt">x</text>)</button></div></td></tr>
-          <tr><td><div  id='sixthComp' style='display:none'>Tier VI Computer:<button id="cop6" onClick='buyGen(5)'> (<text id="sixthAmt">x</text>)</button></div></td></tr>
-          <tr><td><div  id='seventhComp' style='display:none'>Tier VII Computer:<button id="cop7" onClick='buyGen(6)'> (<text id="seventhAmt">x</text>)</button></div></td></tr>
-          <tr><td><div  id='eighthComp' style='display:none'>Tier VIII Computer:<button id="cop8" onClick='buyGen(7)'> (<text id="eighthAmt">x</text>)</button></div></td></tr>
-          <tr><td><div  id='ninthComp' style='display:none'>Tier IX Computer:<button id="cop9" onClick='buyGen(8)'> (<text id="ninthAmt">x</text>)</button></div></td></tr>
+          <tr id='fifthComp' style='display:none'><td>Tier V Computer:</td><td><button id="cop5" onClick='buyGen(4)'> (<text id="fifthAmt">x</text>)</button></div></td></tr>
+          <tr id='sixthComp' style='display:none'><td>Tier VI Computer:</td><td><button id="cop6" onClick='buyGen(5)'> (<text id="sixthAmt">x</text>)</button></div></td></tr>
+          <tr id='seventhComp' style='display:none'><td>Tier VII Computer:</td><td><button id="cop7" onClick='buyGen(6)'> (<text id="seventhAmt">x</text>)</button></div></td></tr>
+          <tr id='eighthComp' style='display:none'><td>Tier VIII Computer:</td><td><button id="cop8" onClick='buyGen(7)'> (<text id="eighthAmt">x</text>)</button></div></td></tr>
+          <tr id='ninthComp' style='display:none'><td>Tier IX Computer:</td><td><button id="cop9" onClick='buyGen(8)'> (<text id="ninthAmt">x</text>)</button></div></td></tr>
       </table>
   </div>
   <div id='optionsTab' style='display:none'>
@@ -100,24 +100,20 @@
 		  </div>
 		  <div id='upgradereq'>Unlocks at 3 I.P. Changes</div>
 	  </tr></td>
-	    <table class='prestiges' align=left style='position:fixed; height:100%; top:0px; right:15px; width:20%'>
-		    <tr><td>
-			    <table class="prestiges">
-			  <thead><tr><th style='font-size:32px'>Prestiges</th></tr></thead>
-			  <tbody></tbody>
-		  </table>
-	  </tr></td>
-		  <tr><td>
-		  <div>Upgrade Computers: <text id='abletoprestige'>Requires <text id='prestige1Gen'>10 Tier IV</text> Computers <button id="upgradeComputers" onClick='prestige(1)'>Reset back to beginning of run, but gain a small boost.</button></text><text id='maxout' style='display:none'>Maxed out!</text></div>
-		  <div><text id='prestige2Type'>I.P. Change</text>: Requires <text id='prestige2Gen'>20 Tier IV</text> Computers <button id="ipChange" onClick='prestige(2)'></button></div>
-		  <div>Network: Requires <text id='prestige3Req'>60</text> Tier IX Computers <button id="network" onclick='prestige(3)'>Reset everything, but gain a Production Boost upgrade (x<text id='netMulti'>X</text>).</button></div>
-	  </tr></td>
+  </table>
+  <table class='prestiges' align=left style='position:fixed; height:100%; top:0px; left:15px; width:20%'>
+  <thead><tr><th style='font-size:32px'>Prestiges</th></tr></thead>
+  <tbody><tr><td>
+    <div>Upgrade Computers: <text id='abletoprestige'>Requires <text id='prestige1Gen'>10 Tier IV</text> Computers <button id="upgradeComputers" onClick='prestige(1)'>Reset back to beginning of run, but gain a small boost.</button></text><text id='maxout' style='display:none'>Maxed out!</text></div>
+    <div><text id='prestige2Type'>I.P. Change</text>: Requires <text id='prestige2Gen'>20 Tier IV</text> Computers <button id="ipChange" onClick='prestige(2)'></button></div>
+    <div>Network: Requires <text id='prestige3Req'>60</text> Tier IX Computers <button id="network" onclick='prestige(3)'>Reset everything, but gain a Production Boost upgrade (x<text id='netMulti'>X</text>).</button></div>
+  </td></tr></tbody>
+  </table>
 	<div style='background-color: #999999; position: fixed; bottom: 0; width: 100%; color: #191919'>| <a href="https://discord.gg/23JnYTY" target="_newtab">Discord</a> | <a href="howto.html" target="_newtab">How to Play CEG</a> | <a href="index.html" target="_newtab"> Back to Main Menu </a></div> 
 	<div id="percentToWarning" style='position:absolute;width:100%;bottom:24px'>
 	  <div id="percentToWarningBar"></div>
 	  <div id="percentToWarningProgress" style='position:absolute;width:100%;height:100%;left:0;top:0;text-align:center'></div>
 	</div>
-  </table>
 </div>
 </body>
 </html>

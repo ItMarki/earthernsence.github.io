@@ -2,6 +2,32 @@ table.prestiges tr {
 	height:0%;
 	vertical-align:0
 }
+table.prestiges tr {
+	width: 100%;
+	display: table;
+	table-layout: fixed;
+}
+table.prestiges {
+	display: table;
+	width: 100%;
+	font-size: 15px
+}
+table.prestiges thead,
+table.prestiges tbody {
+	width: 100%
+}
+table.prestiges thead
+text-align:center;
+display: table;
+table-layout: fixed;
+width: calc(100% - 16px); /*for scrollbar i guess */
+}
+table.prestiges tbody {
+    text-align: center;
+    overflow: auto;
+    height: 125px;
+    display: block;
+}
 table.sidebar tr {
     height:0%;
 	vertical-align:0

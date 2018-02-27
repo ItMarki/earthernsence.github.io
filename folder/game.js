@@ -5,18 +5,20 @@ player = {
   errors: new Decimal(10), //current errors
   totalErrors: new Decimal(0), //total errors that display in stats
   compAmount: [0,0,0,0,0,0,0,0,0], //amounts that are shown on computer button
-  boostPower:0, //
-  prestiges: [0,0,0], //amount of prestiges where [X,0,0] is X UCs, [0,X,0] is X I.P. changes/internet boosts and [0,0,X] is X networks
+  boostPower:0, //prodBoost
+  prestiges: [0,0,0,0], //amount of prestiges where [X,0,0] is X UCs, [0,X,0] is X I.P. changes/internet boosts and [0,0,X] is X networks, and [0,0,0,X] is warnings.
   story: -1, //amount of story.
   upgrades: [], //see lines 261-274
   playtime: 0, //total time spent online ingame
   time: 0, //total time displayed in stats
   version: 1, //very important
-  build: 15, //used for us to communicate commits, helps a lot
+  build: 22, //used for us to communicate commits, helps a lot
+hotfix: 1 //another way to use commits
   options: {
 	  hotkeys:true, //whether or not hotkeys are enabled (on by default)
 	  notation:0 //notation setting, see options
   }
+warnings: new Decimal(0)
 }
 tab='computers'
 oldtab=tab
@@ -28,7 +30,7 @@ const costMult=[2,2.5,3,4,5,6,8,10,12]
 
 var costs={comp:[new Decimal(10),new Decimal(100),new Decimal(1e3),new Decimal(1e4),new Decimal(1e6),new Decimal(1e8),new Decimal(1e10),new Decimal(1e13),new Decimal(1e16)],boost:new Decimal(0),upgs:[new Decimal(0)]}
 var storyMessages=["Pancakes is ready!","Wakey wakey! Aw, c'mon, you still got the rest of the day to sleep. Get up baby, get up!","Nice! A Tier III Computer. Well deserved.","A Tier IV Computer is great, isn't it?","Computers are waking up...","Ah, here we are. Awake and operational.","Network is being horrible. These upgrades don't do anything. What I'd give for an ethernet cord.","I still haven't introduced myself? I'm your first ever Tier I computer. I can't believe you've finally had the care to upgrade me.","Trust me. I stay through it all. Keep getting these I.P. Changes and we'll be set in no time.","Errors? Still? You can do better than that!",
-	"Atta boy! Keep getting em. Also, Tier VI Computers are my best friends. Get more!","Tier VII computers are bullies. Get through them NOW.","Tier VIII! Soon, everybody, soon.","The Internet Boosts are in sight. Get 35 Tier IX computers to buy one.","I got a boost? Good job, you get a <i>small</i> prize.","Networks was found, but all are private for me. :(","The PC found a network! This seems legit. Let's hop on.","Computer: Connecting network. Please wait, this may take a few minutes.","Aw, really? I hate these things.","Computer: Connected.",
+	"Atta boy! Keep getting em. Also, Tier VI Computers are my best friends. Get more!","Tier VII computers are bullies. Get through them NOW.","Tier VIII! Soon, everybody, soon.","The Internet Boosts are in sight. Get 20 Tier IX computers to buy one.","I got a boost? Good job, you get a <i>small</i> prize.","Networks was found, but all are private for me. :(","The PC found a network! This seems legit. Let's hop on.","Computer: Connecting network. Please wait, this may take a few minutes.","Aw, really? I hate these things.","Computer: Connected.",
 	"Finally! Can't wait to test this bad boy out.","Hey, we're off! Got a I.P. Change as well. The end is near.","Another network? I find out your new network was better so I installed it.","A third network? I am getting notifications for that..."]
 	
 function updateElement(elementID,value) {
@@ -208,7 +210,7 @@ function buyGen(tier,bulk=1) {
 }
 
 function maxGen() {
-	for (tier=0;tier<Math.min(player.prestiges[1]+4,9);tier++) {
+for (tier=0;tier<Math.min(player.prestiges[1]+4,9);tier++) {
 		if (player.errors.gte(costs.comp[tier])) {
 			var bulk=Math.max(Math.floor(player.errors.div(costs.comp[tier]).times(costMult[tier]-1).add(1).log10()/Math.log10(costMult[tier])),0)
 			console.log(bulk)
@@ -218,7 +220,6 @@ function maxGen() {
 		}
 	}
 }
-
 function buyGenUpgrade() {
   if (player.errors.gte(costs.boost)) {
     player.errors=player.errors.sub(costs.boost)
@@ -240,6 +241,7 @@ function prestige(tier) {
     case 1: if (player.compAmount[Math.min(player.prestiges[0],8)]<Math.max(player.prestiges[0]*10-70,10)) return; break;
     case 2: if (player.compAmount[Math.min(player.prestiges[1]+3,8)]<Math.max(player.prestiges[1]*15-40,20)) return; break;
     case 3: if (player.compAmount[8]<player.prestiges[2]*40+80) return; break;
+	  //case 4: if (player.errors=1.8e308) return; break;
     case Infinity: if (!confirm('Are you really sure to reset? You will lose everything you have!')) return; break;
   }
   if (tier==Infinity) {
@@ -254,6 +256,12 @@ function prestige(tier) {
 	//Tier 3 - Networks
 	player.upgrades=[]
   }
+	//if (tier>3) {
+	//Tier 4 - Warning
+		//player.prestiges=[0,0,0]
+		//player.upgrades=[]
+		//player.errors=new Decimal(10)
+	//}
   
   player.errors = new Decimal(10); //current errors
   player.compAmount=[0,0,0,0,0,0,0,0,0]

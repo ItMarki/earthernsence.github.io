@@ -92,6 +92,7 @@ table.storybox tr {
     height: 30px;
     background-color: #4CAF50;
     color: black; 
+	position: fixed;
 } 
 #percentToWarningProgress {
 	font-size:25px

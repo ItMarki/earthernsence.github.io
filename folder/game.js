@@ -18,7 +18,6 @@ hotfix: 1 //another way to use commits
 	  hotkeys:true, //whether or not hotkeys are enabled (on by default)
 	  notation:0 //notation setting, see options
   }
-warnings: new Decimal(0)
 }
 tab='computers'
 oldtab=tab
@@ -241,7 +240,6 @@ function prestige(tier) {
     case 1: if (player.compAmount[Math.min(player.prestiges[0],8)]<Math.max(player.prestiges[0]*10-70,10)) return; break;
     case 2: if (player.compAmount[Math.min(player.prestiges[1]+3,8)]<Math.max(player.prestiges[1]*15-40,20)) return; break;
     case 3: if (player.compAmount[8]<player.prestiges[2]*40+80) return; break;
-	  //case 4: if (player.errors=1.8e308) return; break;
     case Infinity: if (!confirm('Are you really sure to reset? You will lose everything you have!')) return; break;
   }
   if (tier==Infinity) {
@@ -256,12 +254,6 @@ function prestige(tier) {
 	//Tier 3 - Networks
 	player.upgrades=[]
   }
-	//if (tier>3) {
-	//Tier 4 - Warning
-		//player.prestiges=[0,0,0]
-		//player.upgrades=[]
-		//player.errors=new Decimal(10)
-	//}
   
   player.errors = new Decimal(10); //current errors
   player.compAmount=[0,0,0,0,0,0,0,0,0]

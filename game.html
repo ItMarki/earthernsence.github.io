@@ -5,24 +5,31 @@
 	<link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
 	<style>
 		body {
+			background-color: #999999;
 			margin:0;
 			font-family:Montserrat
 		}
-		body {background-color: #999999; margin:0px}
-		button {background-color: #e5e5e5; margin-left:5px; border:none}
+		button {background-color: #e5e5e5; font-family:Montserrat; margin-left:5px; border:none}
 		.optionButton {
 			height:48px;
 			width:72px;
 		}
 		.commonButton {
-			height:24px;
-			width:96px
+background-color: black; 
+border: solid; 
+border-width: 2px;
+color: white; 
+padding: 7.5px 16px; 
+text-align: center; 
+text-decoration: none; 
+display: inline-block; 
+font-size: 14px; 
 		}
 	</style>
     <link rel="stylesheet" type="text/css" href="folder/styles.css" />
 	<script type="text/javascript" src="break_infinity.min.js"> </script>
 	<script type="text/javascript" src="folder/game.js"> </script>
-	<title>CEG: The One and Only Console Error Game</title>
+	<title id='title'>CEG</title>
 </head>
 <body style="text-align:center" onload='gameInit()'>
 <div id="game" style='text-align:center'>
@@ -42,7 +49,7 @@
           <tr><td>Tier III Computer:</td><td><button id="cop3" onClick='buyGen(2)'> (<text id="thirdAmt">x</text>)</button></td></tr>
           <tr><td>Tier IV Computer:</td><td><button id="cop4" onClick='buyGen(3)'> (<text id="forthAmt">x</text>)</button></td></tr>
           <tr id='fifthComp' style='display:none'><td>Tier V Computer:</td><td><button id="cop5" onClick='buyGen(4)'> (<text id="fifthAmt">x</text>)</button></div></td></tr>
-          <tr id='sixthComp' style='display:none'><td>Tier VI Computer:</td><td><button id="cop6" onClick='buyGen(5)'> (<text id="sixthAmt">x</text>)</button></div></td></tr>
+	<tr id='sixthComp' style='display:none'><td>Tier VI Computer:</td><td><button id="cop6" onClick='buyGen(5)'> (<text id="sixthAmt">x</text>)</button></div></td></tr>
           <tr id='seventhComp' style='display:none'><td>Tier VII Computer:</td><td><button id="cop7" onClick='buyGen(6)'> (<text id="seventhAmt">x</text>)</button></div></td></tr>
           <tr id='eighthComp' style='display:none'><td>Tier VIII Computer:</td><td><button id="cop8" onClick='buyGen(7)'> (<text id="eighthAmt">x</text>)</button></div></td></tr>
           <tr id='ninthComp' style='display:none'><td>Tier IX Computer:</td><td><button id="cop9" onClick='buyGen(8)'> (<text id="ninthAmt">x</text>)</button></div></td></tr>
@@ -62,7 +69,8 @@
 	  <div id='statsPlaytime'>You have played for X.</div>
 	  <div id='statsPrestige1'>You upgraded your computers, X times.</div>
 	  <div id='statsPrestige2'>You have X new computers.</div>
-<div id='statsPrestige3'>You have X networks.</div>
+	  <div id='statsPrestige3'>You have X networks.</div>
+	  <div id='statsPrestige4'><br><div id='statsP4times'></div><div id='statsP4totalWarnings'></div></div>
   </div>
   <div id='achievementsTab' style='display:none'>
       <h1 id="soon™"> Soon™</h1>
@@ -110,10 +118,11 @@
   </td></tr></tbody>
   </table>
 	<div style='background-color: #999999; position: fixed; bottom: 0; width: 100%; color: #191919'>| <a href="https://discord.gg/23JnYTY" target="_newtab">Discord</a> | <a href="howto.html" target="_newtab">How to Play CEG</a> | <a href="index.html" target="_newtab"> Back to Main Menu </a></div> 
-	<div id="percentToWarning" style='position:absolute;width:100%;bottom:24px'>
+	<div id="percentToWarning">
 	  <div id="percentToWarningBar"></div>
-	  <div id="percentToWarningProgress" style='position:absolute;width:100%;height:100%;left:0;top:0;text-align:center'></div>
+	  <div id="percentToWarningProgress"></div>
 	</div>
+	<div id='warnings'>You have 0 warnings.</div>
 </div>
 </body>
 </html>

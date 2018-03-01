@@ -5,14 +5,17 @@ player = {
   errors: new Decimal(10), //current errors
   totalErrors: new Decimal(0), //total errors that display in stats
   compAmount: [0,0,0,0,0,0,0,0,0], //amounts that are shown on computer button
-  boostPower:0, //
-  prestiges: [0,0,0], //amount of prestiges where [X,0,0] is X UCs, [0,X,0] is X I.P. changes/internet boosts and [0,0,X] is X networks
+  boostPower:0, //prodBoost
+  prestiges: [0,0,0,0], //amount of prestiges where [X,0,0] is X UCs, [0,X,0] is X I.P. changes/internet boosts and [0,0,X] is X networks, and [0,0,0,X] is warnings.
   story: -1, //amount of story.
   upgrades: [], //see lines 261-274
+  warnings: new Decimal(0),
+  totalWarnings: new Decimal(0),
   playtime: 0, //total time spent online ingame
   time: 0, //total time displayed in stats
-  version: 1, //very important
-  build: 15, //used for us to communicate commits, helps a lot
+  version: 1.5, //very important
+  build: 1, //used for us to communicate commits, helps a lot
+  hotfix: 1, //another way to use commits
   options: {
 	  hotkeys:true, //whether or not hotkeys are enabled (on by default)
 	  notation:0 //notation setting, see options
@@ -21,6 +24,7 @@ player = {
 tab='computers'
 oldtab=tab
 percentage=0
+realPercentage=0
 const story = ['','','','','']
 const TIER_NAMES = ['first','second','third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 'ninth']; // can add more if more gens/story elements, cuz that uses this too
 const ROMAN_NUMERALS=[]
@@ -28,7 +32,7 @@ const costMult=[2,2.5,3,4,5,6,8,10,12]
 
 var costs={comp:[new Decimal(10),new Decimal(100),new Decimal(1e3),new Decimal(1e4),new Decimal(1e6),new Decimal(1e8),new Decimal(1e10),new Decimal(1e13),new Decimal(1e16)],boost:new Decimal(0),upgs:[new Decimal(0)]}
 var storyMessages=["Pancakes is ready!","Wakey wakey! Aw, c'mon, you still got the rest of the day to sleep. Get up baby, get up!","Nice! A Tier III Computer. Well deserved.","A Tier IV Computer is great, isn't it?","Computers are waking up...","Ah, here we are. Awake and operational.","Network is being horrible. These upgrades don't do anything. What I'd give for an ethernet cord.","I still haven't introduced myself? I'm your first ever Tier I computer. I can't believe you've finally had the care to upgrade me.","Trust me. I stay through it all. Keep getting these I.P. Changes and we'll be set in no time.","Errors? Still? You can do better than that!",
-	"Atta boy! Keep getting em. Also, Tier VI Computers are my best friends. Get more!","Tier VII computers are bullies. Get through them NOW.","Tier VIII! Soon, everybody, soon.","The Internet Boosts are in sight. Get 35 Tier IX computers to buy one.","I got a boost? Good job, you get a <i>small</i> prize.","Networks was found, but all are private for me. :(","The PC found a network! This seems legit. Let's hop on.","Computer: Connecting network. Please wait, this may take a few minutes.","Aw, really? I hate these things.","Computer: Connected.",
+	"Atta boy! Keep getting em. Also, Tier VI Computers are my best friends. Get more!","Tier VII computers are bullies. Get through them NOW.","Tier VIII! Soon, everybody, soon.","The Internet Boosts are in sight. Get 20 Tier IX computers to buy one.","I got a boost? Good job, you get a <i>small</i> prize.","Networks was found, but all are private for me. :(","The PC found a network! This seems legit. Let's hop on.","Computer: Connecting network. Please wait, this may take a few minutes.","Aw, really? I hate these things.","Computer: Connected.",
 	"Finally! Can't wait to test this bad boy out.","Hey, we're off! Got a I.P. Change as well. The end is near.","Another network? I find out your new network was better so I installed it.","A third network? I am getting notifications for that..."]
 	
 function updateElement(elementID,value) {
@@ -208,17 +212,15 @@ function buyGen(tier,bulk=1) {
 }
 
 function maxGen() {
-	for (tier=0;tier<Math.min(player.prestiges[1]+4,9);tier++) {
+for (tier=0;tier<Math.min(player.prestiges[1]+4,9);tier++) {
 		if (player.errors.gte(costs.comp[tier])) {
 			var bulk=Math.max(Math.floor(player.errors.div(costs.comp[tier]).times(costMult[tier]-1).add(1).log10()/Math.log10(costMult[tier])),0)
-			console.log(bulk)
 			player.errors=player.errors.sub(Decimal.pow(costMult[tier],bulk).sub(1).div(costMult[tier]-1).times(costs.comp[tier]))
 			player.compAmount[tier]+=bulk
 			updateCosts()
 		}
 	}
 }
-
 function buyGenUpgrade() {
   if (player.errors.gte(costs.boost)) {
     player.errors=player.errors.sub(costs.boost)
@@ -240,6 +242,7 @@ function prestige(tier) {
     case 1: if (player.compAmount[Math.min(player.prestiges[0],8)]<Math.max(player.prestiges[0]*10-70,10)) return; break;
     case 2: if (player.compAmount[Math.min(player.prestiges[1]+3,8)]<Math.max(player.prestiges[1]*15-40,20)) return; break;
     case 3: if (player.compAmount[8]<player.prestiges[2]*40+80) return; break;
+    case 4: if (player.errors.lt(Number.MAX_VALUE)) return; break;
     case Infinity: if (!confirm('Are you really sure to reset? You will lose everything you have!')) return; break;
   }
   if (tier==Infinity) {
@@ -249,6 +252,12 @@ function prestige(tier) {
 	player.totalErrors=new Decimal(0)
 	player.story=-1
 	updateStory()
+  }
+  if (tier>3) {
+	//Tier 4 - Warnings
+	var warningGain=1
+	player.warnings=player.warnings.add(warningGain)
+	player.totalWarnings=player.totalWarnings.add(warningGain)
   }
   if (tier>2) {
 	//Tier 3 - Networks
@@ -276,29 +285,38 @@ function prestige(tier) {
     }    
   } else {
     player.prestiges[0] = 0
-    if (tier==2) {
-      player.prestiges[1]++
-      switch(player.prestiges[1]) {
-        case 1: newStory(8); break;
-        case 2: newStory(10); break;
-        case 3: newStory(11); break;
-        case 4: newStory(12); break;
-        case 5: newStory(13); break;
-        case 6: newStory(14); break;
-        case 8: newStory(15); break;
-      }
-      if (player.prestiges[2]==1) newStory(21);
-    } else {
-      player.prestiges[1] = 0
-      if (tier==3) {
-        player.prestiges[2]++;
-        switch(player.prestiges[2]) {
-          case 1: newStory(17); break;
-          case 2: newStory(22); break;
-          case 3: newStory(23); break;
-        }
-      }
+  }
+  if (tier==2) {
+    player.prestiges[1]++
+    switch(player.prestiges[1]) {
+      case 1: newStory(8); break;
+      case 2: newStory(10); break;
+      case 3: newStory(11); break;
+      case 4: newStory(12); break;
+      case 5: newStory(13); break;
+      case 6: newStory(14); break;
+      case 8: newStory(15); break;
     }
+    if (player.prestiges[2]==1) newStory(21);
+  } else if (tier>2) {
+    player.prestiges[1] = 0
+  }
+  if (tier==3) {
+    player.prestiges[2]++;
+    switch(player.prestiges[2]) {
+      case 1: newStory(17); break;
+      case 2: newStory(22); break;
+      case 3: newStory(23); break;
+    }
+  } else if (tier>3) {
+    player.prestiges[2] = 0
+  }
+  if (tier==4) {
+    player.prestiges[3]++;
+    switch(player.prestiges[3]) {
+    }
+  } else if (tier>4) {
+    player.prestiges[3] = 0
   }
   updateCosts()
 }
@@ -415,7 +433,7 @@ function gameTick() {
 	  hideElement('abletoprestige')
 	  showElement('maxout','inline')
   }
-  updateElement('prestige2Gen',format(Math.max(player.prestiges[1]*15-40,20),0,1)+' Tier '+ROMAN_NUMERALS[Math.min(player.prestiges[1]+4,9)])
+  updateElement('prestige2Gen',Math.max(player.prestiges[1]*15-40,20)+' Tier '+ROMAN_NUMERALS[Math.min(player.prestiges[1]+4,9)])
   if (player.prestiges[1]<3) {
 	  hideElement('upgcate1')
 	  updateElement('upgradereq','Unlocks at 3 I.P. changes')
@@ -468,6 +486,14 @@ function gameTick() {
   }
   updateElement('prestige3Req',player.prestiges[2]*40+80)
   updateElement('netMulti',(5+player.prestiges[2])/2)
+  if (player.prestiges[3]>0||player.warnings.gt(0)) {
+	document.getElementById("percentToWarning").style.width='calc(100% - 180px)'
+    showElement('warnings','block')
+    updateElement('warnings','You have '+format(player.warnings)+' warnings.')
+  } else {
+	document.getElementById("percentToWarning").style.width='100%'
+    hideElement('warnings','block')
+  }
   if (tab=='computers') {
 	  for (let i=0;i<Math.min(player.prestiges[1]+4,9);i++) {
 		  updateElement("cop"+(i+1),"Cost: " + format(costs.comp[i]) + " (" + player.compAmount[i] + ")")
@@ -508,6 +534,18 @@ function gameTick() {
 		  updateElement('statsPrestige3','You have '+format(player.prestiges[2],0,1)+' networks.')
 	  } else {
 		  hideElement('statsPrestige3')
+	  }
+	  if (player.prestiges[3]>0||player.totalWarnings.gt(0)) {
+		  showElement('statsPrestige4','block')
+		  if (player.prestiges[3]>0) {
+			  showElement('statsP4times','block')
+			  updateElement('statsP4times','You have warned '+format(player.prestiges[3],0,1)+' times.')
+		  } else {
+			  hideElement('statsP4times')
+		  }
+		  updateElement('statsP4totalWarnings','You have gained a total of '+format(player.totalWarnings)+' warnings.')
+	  } else {
+		  hideElement('statsPrestige4')
 	  }
   }
 }
@@ -580,15 +618,28 @@ function load(savefile) {
 			delete savefile.notation
 		}
 	  }
+	  if (savefile.version <= 1.5) {
+	    if (savefile.build < 1) {
+			savefile.prestiges[3]=0
+			savefile.warnings=0
+			savefile.totalWarnings=0
+		}
+	  }
 	  savefile.version = player.version
 	  savefile.build = player.build
 	  
 	  //if the value is a Decimal, set it to be a Decimal here.
 	  savefile.errors = new Decimal(savefile.errors)
 	  savefile.totalErrors = new Decimal(savefile.totalErrors)
+	  savefile.warnings = new Decimal(savefile.warnings)
+	  savefile.totalWarnings = new Decimal(savefile.totalWarnings)
 	  
 	  player=savefile
 	  //And then safety put the save file to player!
+	  
+	  percentage=Math.min(player.errors.add(1).log10()*0.32440704,100)
+	  realPercentage=percentage
+	  updateElement('title','CEG: '+realPercentage.toFixed(2)+'%')
 	  
       updateCosts()
 	  updateStory()
@@ -661,10 +712,26 @@ window.addEventListener('keydown', function(event) {
 }, false);
 
 function move() {
-	var realPercentage=Math.min(player.errors.add(1).log10()*0.32440704,100)
+	realPercentage=Math.min(player.errors.add(1).log10()*0.32440704,100)
 	var diff=Math.abs(percentage-realPercentage)
 	percentage=realPercentage*(1-Math.pow(Math.min(Math.pow(1-diff/100,3),0.001),s))+percentage*(Math.pow(Math.min(Math.pow(1-diff/100,3),0.001),s))
+	if (realPercentage<24.995) {
+		document.getElementById("percentToWarningBar").style['background-color']='#00e500'
+	} else if (realPercentage<49.995) {
+		document.getElementById("percentToWarningBar").style['background-color']='#e5e500'
+	} else if (realPercentage<74.995) {
+		document.getElementById("percentToWarningBar").style['background-color']='#e57200'
+	} else if (realPercentage<99.995) {
+		document.getElementById("percentToWarningBar").style['background-color']='#e50000'
+	} else {
+		document.getElementById("percentToWarningBar").style['background-color']='#191919'
+	}
 	document.getElementById("percentToWarningBar").style.width=percentage+'%'
+	if (realPercentage<99.995) {
+		document.getElementById('percentToWarningProgress').style.color='#191919'
+	} else {
+		document.getElementById('percentToWarningProgress').style.color='#e5e5e5'
+	}
     updateElement('percentToWarningProgress',realPercentage.toFixed(2)+'%')
 } 
 
@@ -690,6 +757,9 @@ function gameInit() {
 			},tickspeed)
 		}
 	},0)
+	setInterval(function(){
+		updateElement('title','CEG: '+realPercentage.toFixed(2)+'%')
+	},1000)
 	setInterval(save,10000);
 }
 

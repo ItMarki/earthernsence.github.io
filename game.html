@@ -7,12 +7,13 @@
 		body {
 			background-color: #999999;
 			margin:0;
-			font-family:Montserrat
+			font-family:Montserrat;
 		}
 		button {background-color: #e5e5e5; font-family:Montserrat; margin-left:5px; border:none}
 		.optionButton {
 			height:48px;
 			width:72px;
+			font-family:Montserrat;
 		}
 		.commonButton {
 background-color: black; 
@@ -24,6 +25,7 @@ text-align: center;
 text-decoration: none; 
 display: inline-block; 
 font-size: 14px; 
+			font-family:Montserrat;
 		}
 			
 	</style>
@@ -40,7 +42,7 @@ font-size: 14px;
   <div id='genUpgrade'>Increase the boost by <text id='genIncrease'>2</text>x.<br>
   <button id="genIncreaseCost" onclick="buyGenUpgrade()">Cost: 1000</button><button id="buyMax" onclick="maxGenUpgrade()">Buy Max</button><br>
   Production boost: <text id='genBoost'>1</text>x</div><br>
-  <div><button onclick='switchTab("computers")'>Computers</button><button onclick='switchTab("options")'>Options</button><button onclick='switchTab("stats")'>Stats</button><button onclick='switchTab("achievements")'>Achievements</button><button onclick='switchTab("warning")'>Warning</button>--></div>
+  <div><button onclick='switchTab("computers")' id="tabButton">Computers</button><button onclick='switchTab("options")' id="tabButton">Options</button><button onclick='switchTab("stats")' id="tabButton">Stats</button><button onclick='switchTab("achievements")' id="tabButton">Achievements</button><button onclick='switchTab("warning")' id="tabButton">Warning</button></div>
   <br>
   <div id='computersTab' style="text-align:center">
       <button id='maxAll' class='commonButton' onClick='maxGen();maxGenUpgrade();'>Max All</button>

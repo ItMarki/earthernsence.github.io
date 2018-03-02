@@ -37,7 +37,6 @@ table.sidebar tr {
 table.storybox {
     display: table;
     width: 100%;
-    background-color: gray;
     font-size: 15px;
 }
 table.storybox thead,
@@ -85,6 +84,14 @@ table.storybox tr {
     .comp td button {
         width: 100%;
         text-align:left;
+	    background-color: darkgray; 
+	border: solid; 
+	border-width: 2px;
+	color: red;  
+	text-align: center; 
+	text-decoration: none; 
+	display: inline-block; 
+	font-size: 14px; 
     }
 #warnings {
 	position:fixed;

@@ -92,6 +92,8 @@ text-decoration: none;
 display: inline-block; 
 font-size: 14px
     }
+.tabButton {
+	background-color: #898989;
 #warnings {
 	position:fixed;
     width:180px;

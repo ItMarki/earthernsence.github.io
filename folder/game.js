@@ -258,6 +258,10 @@ function prestige(tier) {
 	var warningGain=1
 	player.warnings=player.warnings.add(warningGain)
 	player.totalWarnings=player.totalWarnings.add(warningGain)
+	  player.upgrades=[]
+	  player.errors= new Decimal(10)
+	  player.compAmount=[0,0,0,0,0,0,0,0,0]
+	  player.prestiges=[0,0,0,1]
   }
   if (tier>2) {
 	//Tier 3 - Networks

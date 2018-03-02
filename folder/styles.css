@@ -93,6 +93,8 @@ display: inline-block;
 font-size: 14px
     }
 .tabButton {
+	  width: 100%;
+	text-align: left;
 	background-color: #898989;
 	 border: none;
     color: white;

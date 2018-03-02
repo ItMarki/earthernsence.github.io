@@ -76,13 +76,6 @@ width: 100%;
     width:40%;
     text-align:left;
     align-items:center;
-background-color: darkgray; 
-border: solid; 
-border-width: 2px;
-color: red;   
-text-decoration: none; 
-display: inline-block; 
-font-size: 14px; 
 }
 
     .comp td {
@@ -90,7 +83,14 @@ font-size: 14px;
     }
     .comp td button
         width: 100%;
-        text-align:left;
+        text-align: left;
+background-color: darkgray; 
+border: solid; 
+border-width: 2px;
+color: red;   
+text-decoration: none; 
+display: inline-block; 
+font-size: 14px; 
     }
 #warnings {
 	position:fixed;

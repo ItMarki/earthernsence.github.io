@@ -212,7 +212,7 @@ function buyGen(tier,bulk=1) {
 }
 
 function maxGen() {
-for (tier=player.prestiges[1]+4;tier>=0;tier--) {
+for (tier=0;tier<Math.min(player.prestiges[1]+4,9);tier++) {
 		if (player.errors.gte(costs.comp[tier])) {
 			var bulk=Math.max(Math.floor(player.errors.div(costs.comp[tier]).times(costMult[tier]-1).add(1).log10()/Math.log10(costMult[tier])),0)
 			player.errors=player.errors.sub(Decimal.pow(costMult[tier],bulk).sub(1).div(costMult[tier]-1).times(costs.comp[tier]))

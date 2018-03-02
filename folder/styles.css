@@ -93,16 +93,14 @@ display: inline-block;
 font-size: 14px
     }
 .tabButton {
-	  width: 100%;
-	text-align: left;
-	background-color: #898989;
-	 border: none;
-    color: white;
-    padding: 15px 32px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
+    border: none; /* Remove borders */
+    color: white; /* Add a text color */
+    padding: 14px 28px; /* Add some padding */
+    cursor: pointer; /* Add a pointer cursor on mouse-over */
+    background-color: darkgray; /* should be obvious */
+}
+.tabButton:hover {
+	background-color: lightgray;
 }
 #warnings {
 	position:fixed;

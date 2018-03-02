@@ -94,6 +94,13 @@ font-size: 14px
     }
 .tabButton {
 	background-color: #898989;
+	 border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
 }
 #warnings {
 	position:fixed;

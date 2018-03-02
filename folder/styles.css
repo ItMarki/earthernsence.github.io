@@ -76,23 +76,21 @@ width: 100%;
     width:40%;
     text-align:left;
     align-items:center;
+background-color: darkgray; 
+border: solid; 
+border-width: 2px;
+color: red;   
+text-decoration: none; 
+display: inline-block; 
+font-size: 14px; 
 }
 
     .comp td {
         width: 50%;
     }
     .comp td button
-     .compButton {
         width: 100%;
         text-align:left;
-	    background-color: darkgray; 
-	border: solid; 
-	border-width: 2px;
-	color: red;  
-	text-align: center; 
-	text-decoration: none; 
-	display: inline-block; 
-	font-size: 14px; 
     }
 #warnings {
 	position:fixed;

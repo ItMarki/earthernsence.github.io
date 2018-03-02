@@ -60,7 +60,7 @@ table.storybox tbody {
 }
 
 table.storybox tr {
-    width: 100%;
+width: 100%;
     display: table;
     table-layout: fixed;
 }
@@ -81,7 +81,8 @@ table.storybox tr {
     .comp td {
         width: 50%;
     }
-    .comp td button {
+    .comp td button
+     .compButton {
         width: 100%;
         text-align:left;
 	    background-color: darkgray; 

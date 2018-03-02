@@ -40,7 +40,7 @@ font-size: 14px;
   <div id='genUpgrade'>Increase the boost by <text id='genIncrease'>2</text>x.<br>
   <button id="genIncreaseCost" onclick="buyGenUpgrade()">Cost: 1000</button><button id="buyMax" onclick="maxGenUpgrade()">Buy Max</button><br>
   Production boost: <text id='genBoost'>1</text>x</div><br>
-  <div><button onclick='switchTab("computers")'>Computers</button><button onclick='switchTab("options")'>Options</button><button onclick='switchTab("stats")'>Stats</button><button onclick='switchTab("achievements")'>Achievements</button><!--<button onclick='switchTab("warning")'>Warning</button>--></div><!--I added the warning tab for later.-->
+  <div><button onclick='switchTab("computers")'>Computers</button><button onclick='switchTab("options")'>Options</button><button onclick='switchTab("stats")'>Stats</button><button onclick='switchTab("achievements")'>Achievements</button><button onclick='switchTab("warning")'>Warning</button>--></div>
   <br>
   <div id='computersTab' style="text-align:center">
       <button id='maxAll' class='commonButton' onClick='maxGen();maxGenUpgrade();'>Max All</button>
@@ -76,6 +76,9 @@ font-size: 14px;
   <div id='achievementsTab' style='display:none'>
       <h1 id="soon™"> Soon™</h1>
   </div>
+<div id="warningTab" style="display:none">
+	<h1 id="soon™"> Soon™</h1>
+</div>
   <table class='sidebar' align=right style='position:absolute; height:100%; top:0px; right:15px; width:20%'>
 	  <tr><td>
 		  <table class="storybox">

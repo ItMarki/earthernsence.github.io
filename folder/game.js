@@ -14,8 +14,8 @@ player = {
   playtime: 0, //total time spent online ingame
   time: 0, //total time displayed in stats
   version: 1.5, //very important
-  build: 1, //used for us to communicate commits, helps a lot
-  hotfix: 1, //another way to use commits
+  build: 2, //used for us to communicate commits, helps a lot
+  hotfix: 2, //another way to use commits
   options: {
 	  hotkeys:true, //whether or not hotkeys are enabled (on by default)
 	  notation:0 //notation setting, see options
@@ -212,7 +212,7 @@ function buyGen(tier,bulk=1) {
 }
 
 function maxGen() {
-	for (tier=player.prestiges[1]+4;tier>=0;tier--) {
+	for (tier=Math.min(player.prestiges[1]+4,9);tier>=0;tier--) {
 		if (player.errors.gte(costs.comp[tier])) {
 			var bulk=Math.max(Math.floor(player.errors.div(costs.comp[tier]).times(costMult[tier]-1).add(1).log10()/Math.log10(costMult[tier])),0)
 			console.log(bulk)
@@ -634,7 +634,9 @@ function load(savefile) {
 	  savefile.build = player.build
 	  
 	  //if the value is a Decimal, set it to be a Decimal here.
-	  savefile.errors = new Decimal(savefile.errors)
+	  if (savefile.errors=='NaN') savefile.errors = new Decimal(10)
+	  else savefile.errors = new Decimal(savefile.errors)
+  
 	  savefile.totalErrors = new Decimal(savefile.totalErrors)
 	  savefile.warnings = new Decimal(savefile.warnings)
 	  savefile.totalWarnings = new Decimal(savefile.totalWarnings)

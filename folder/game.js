@@ -15,7 +15,7 @@ player = {
   time: 0, //total time displayed in stats
   version: 1.5, //very important
   build: 2, //used for us to communicate commits, helps a lot
-  hotfix: 2, //another way to use commits
+  hotfix: 3, //another way to use commits
   options: {
 	  hotkeys:true, //whether or not hotkeys are enabled (on by default)
 	  notation:0 //notation setting, see options
@@ -212,13 +212,21 @@ function buyGen(tier,bulk=1) {
 }
 
 function maxGen() {
-	for (tier=Math.min(player.prestiges[1]+4,9);tier>=0;tier--) {
+	for (tier=Math.min(player.prestiges[1]+3,8);tier>-1;tier--) {
 		if (player.errors.gte(costs.comp[tier])) {
 			var bulk=Math.max(Math.floor(player.errors.div(costs.comp[tier]).times(costMult[tier]-1).add(1).log10()/Math.log10(costMult[tier])),0)
 			console.log(bulk)
 			player.errors=player.errors.sub(Decimal.pow(costMult[tier],bulk).sub(1).div(costMult[tier]-1).times(costs.comp[tier]))
 			player.compAmount[tier]+=bulk
 			updateCosts()
+
+			switch (tier) {
+			  case 0: newStory(0); break;
+			  case 1: newStory(1); break;
+			  case 2: newStory(2); break;
+			  case 3: newStory(3); break;
+			  case 4: newStory(9); break;
+			}
 		}
 	}
 }

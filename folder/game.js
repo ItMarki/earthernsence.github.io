@@ -414,6 +414,8 @@ function gameTick() {
 	  player.errors = player.errors.add(getEPS().mul(s));
 	  player.totalErrors = player.totalErrors.add(getEPS().mul(s));
 	  player.playtime+=s
+	  if (player.errors.gte(Number.MAX_VALUE)) prestige(4)
+		  
 	  move()
   }
   player.time = new Date().getTime()

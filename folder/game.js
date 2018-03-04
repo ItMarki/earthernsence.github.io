@@ -348,9 +348,9 @@ function checkIfAffordable(id) {
 		case 1: if (player.errors.lt(1e4)) {return false}; return true
 		case 2: if (player.errors.lt(1e10)) {return false}; return true
 		case 3: if (player.errors.lt(1e20)) {return false}; return true
-		case 14: if (player.errors.lt(1e30)) {return false}; return true
-		case 15: if (player.errors.lt(1e35)) {return false}; return true
-		case 16: if (player.errors.lt(1e40)) {return false}; return true
+		case 17: if (player.errors.lt(1e30)) {return false}; return true
+		case 18: if (player.errors.lt(1e35)) {return false}; return true
+		case 19: if (player.errors.lt(1e40)) {return false}; return true
 		case 4: if (player.errors.lt(1e35)||player.compAmount[0]<100) {return false}; return true
 		case 5: if (player.errors.lt(1e40)||player.compAmount[1]<100) {return false}; return true
 		case 6: if (player.errors.lt(1e50)||player.compAmount[2]<100) {return false}; return true

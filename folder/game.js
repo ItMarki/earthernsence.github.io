@@ -16,7 +16,6 @@ player = {
   version: 1.5, //very important
   build: 3, //used for us to communicate commits, helps a lot
   hotfix: 1, //another way to use commits
->>>>>>> master
   options: {
 	  hotkeys:true, //whether or not hotkeys are enabled (on by default)
 	  notation:0 //notation setting, see options

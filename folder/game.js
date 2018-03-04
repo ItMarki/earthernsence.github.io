@@ -15,7 +15,7 @@ player = {
   time: 0, //total time displayed in stats
   version: 1.5, //very important
   build: 3, //used for us to communicate commits, helps a lot
-  hotfix: 1, //another way to use commits
+  hotfix: 2, //another way to use commits
   options: {
 	  hotkeys:true, //whether or not hotkeys are enabled (on by default)
 	  notation:0 //notation setting, see options
@@ -339,9 +339,9 @@ function getMultTier(tier) {  let ret = new Decimal.pow(10,tier-1)
   if (player.upgrades.includes(1)) ret = ret.mul(2)
   if (player.upgrades.includes(2)) ret = ret.mul(5)
   if (player.upgrades.includes(3)) ret = ret.mul(10)
-			    if (player.upgrades.includes(15)) ret = ret.mul(100)
-			    if (player.upgrades.includes(16)) ret = ret.mul(1000)
-			    if (player.upgrades.includes(17)) ret = ret.mul(10000)
+  if (player.upgrades.includes(17)) ret = ret.mul(100)
+  if (player.upgrades.includes(18)) ret = ret.mul(1000)
+  if (player.upgrades.includes(19)) ret = ret.mul(10000)
   if (player.upgrades.includes(4)&&tier==1) ret = ret.mul(Math.pow(1.15,Math.sqrt(player.compAmount[0])))
   if (player.upgrades.includes(5)&&tier==2) ret = ret.mul(Math.pow(1.15,Math.sqrt(player.compAmount[1])))
   if (player.upgrades.includes(6)&&tier==3) ret = ret.mul(Math.pow(1.15,Math.sqrt(player.compAmount[2])))
@@ -390,6 +390,7 @@ function checkIfAffordable(id) {
 		case 14: if (player.prestiges[0]<9) {return false}; return true
 		case 15: if (player.prestiges[1]<5) {return false}; return true
 		case 16: if (player.prestiges[1]<7) {return false}; return true
+		case 20: if (player.prestiges[2]<1) {return false}; return true
 	}
 	return false
 }

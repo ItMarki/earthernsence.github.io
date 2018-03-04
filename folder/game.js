@@ -14,8 +14,9 @@ player = {
   playtime: 0, //total time spent online ingame
   time: 0, //total time displayed in stats
   version: 1.5, //very important
-  build: 2, //used for us to communicate commits, helps a lot
-  hotfix: 4, //another way to use commits
+  build: 3, //used for us to communicate commits, helps a lot
+  hotfix: 1, //another way to use commits
+>>>>>>> master
   options: {
 	  hotkeys:true, //whether or not hotkeys are enabled (on by default)
 	  notation:0 //notation setting, see options
@@ -339,6 +340,9 @@ function getMultTier(tier) {  let ret = new Decimal.pow(10,tier-1)
   if (player.upgrades.includes(1)) ret = ret.mul(2)
   if (player.upgrades.includes(2)) ret = ret.mul(5)
   if (player.upgrades.includes(3)) ret = ret.mul(10)
+			    if (player.upgrades.includes(15)) ret = ret.mul(100)
+			    if (player.upgrades.includes(16)) ret = ret.mul(1000)
+			    if (player.upgrades.includes(17)) ret = ret.mul(10000)
   if (player.upgrades.includes(4)&&tier==1) ret = ret.mul(Math.pow(1.15,Math.sqrt(player.compAmount[0])))
   if (player.upgrades.includes(5)&&tier==2) ret = ret.mul(Math.pow(1.15,Math.sqrt(player.compAmount[1])))
   if (player.upgrades.includes(6)&&tier==3) ret = ret.mul(Math.pow(1.15,Math.sqrt(player.compAmount[2])))
@@ -367,6 +371,9 @@ function checkIfAffordable(id) {
 		case 1: if (player.errors.lt(1e4)) {return false}; return true
 		case 2: if (player.errors.lt(1e10)) {return false}; return true
 		case 3: if (player.errors.lt(1e20)) {return false}; return true
+		case 17: if (player.errors.lt(1e30)) {return false}; return true
+		case 18: if (player.errors.lt(1e35)) {return false}; return true
+		case 19: if (player.errors.lt(1e40)) {return false}; return true
 		case 4: if (player.errors.lt(1e35)||player.compAmount[0]<100) {return false}; return true
 		case 5: if (player.errors.lt(1e40)||player.compAmount[1]<100) {return false}; return true
 		case 6: if (player.errors.lt(1e50)||player.compAmount[2]<100) {return false}; return true
@@ -394,6 +401,9 @@ function buyUpg(id) {
 		case 1: player.errors=player.errors.sub(1e4); break
 		case 2: player.errors=player.errors.sub(1e10); break
 		case 3: player.errors=player.errors.sub(1e20); break
+		case 17: player.errors=player.errors.sub(1e30); break
+		case 18: player.errors=player.errors.sub(1e35); break
+		case 19: player.errors=player.errors.sub(1e40); break
 		case 4: player.errors=player.errors.sub(1e35); break
 		case 5: player.errors=player.errors.sub(1e40); break
 		case 6: player.errors=player.errors.sub(1e50); break
@@ -462,6 +472,9 @@ function gameTick() {
 	  updateElement('upg10button','Cost: 100 TVII comps & '+format(1e100))
 	  updateElement('upg11button','Cost: 100 TVIII comps & '+format(1e115))
 	  updateElement('upg12button','Cost: 100 TIX comps & '+format(1e125))
+	  updateElement('upg17button','Cost: '+format(1e30))
+	  updateElement('upg18button','Cost: '+format(1e35))
+	  updateElement('upg19button','Cost: '+format(1e40))
 	  var check=0
 	  for (i=4;i<13;i++) {
 		  if (player.upgrades.includes(i)) check++
@@ -473,6 +486,11 @@ function gameTick() {
 		  hideElement('upg13')
 	  }
 	  for (i=1;i<14;i++) {
+		  if (player.upgrades.includes(i)) updateClass('upg'+i+'button','boughtUpgrade')
+		  else if (checkIfAffordable(i)) updateClass('upg'+i+'button','')
+		  else updateClass('upg'+i+'button','cantBuy')
+	  }
+	  for (i=17;i<20;i++) {
 		  if (player.upgrades.includes(i)) updateClass('upg'+i+'button','boughtUpgrade')
 		  else if (checkIfAffordable(i)) updateClass('upg'+i+'button','')
 		  else updateClass('upg'+i+'button','cantBuy')

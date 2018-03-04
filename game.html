@@ -44,19 +44,16 @@ font-size: 14px;
   Production boost: <text id='genBoost'>1</text>x</div><br>
   <div><button onclick='switchTab("computers")' id="tabButton">Computers</button><button onclick='switchTab("options")' id="tabButton">Options</button><button onclick='switchTab("stats")' id="tabButton">Stats</button><button onclick='switchTab("achievements")' id="tabButton">Achievements</button><button onclick='switchTab("warning")' id="tabButton">Warning</button></div>
   <br>
-  <div id='computersTab' style="text-align:center">
-      <button id='maxAll' class='commonButton' onClick='maxGenUpgrade();maxGen()'>Max All</button>
-      <table align="center" class="comp">
-          <tr><td>Tier I Computer:</td><td><button class="compButton" id="cop1" onClick='buyGen(0)'> (<text id="firstAmt">x</text>)</button></td></tr>
-          <tr><td>Tier II Computer:</td><td><button class="compButton" id="cop2" onClick='buyGen(1)'> (<text id="secondAmt">x</text>)</button></td></tr>
-          <tr><td>Tier III Computer:</td><td><button class="compButton" id="cop3" onClick='buyGen(2)'> (<text id="thirdAmt">x</text>)</button></td></tr>
-          <tr><td>Tier IV Computer:</td><td><button class="compButton" id="cop4" onClick='buyGen(3)'> (<text id="forthAmt">x</text>)</button></td></tr>
-          <tr id='fifthComp' style='display:none'><td>Tier V Computer:</td><td><button class="compButton" id="cop5" onClick='buyGen(4)'> (<text id="fifthAmt">x</text>)</button></div></td></tr>
-		  <tr id='sixthComp' style='display:none'><td>Tier VI Computer:</td><td><button class="compButton" id="cop6" onClick='buyGen(5)'> (<text id="sixthAmt">x</text>)</button></div></td></tr>
-          <tr id='seventhComp' style='display:none'><td>Tier VII Computer:</td><td><button class="compButton" id="cop7" onClick='buyGen(6)'> (<text id="seventhAmt">x</text>)</button></div></td></tr>
-          <tr id='eighthComp' style='display:none'><td>Tier VIII Computer:</td><td><button class="compButton" id="cop8" onClick='buyGen(7)'> (<text id="eighthAmt">x</text>)</button></div></td></tr>
-          <tr id='ninthComp' style='display:none'><td>Tier IX Computer:</td><td><button class="compButton" id="cop9" onClick='buyGen(8)'> (<text id="ninthAmt">x</text>)</button></div></td></tr>
-      </table>
+  <div id='computersTab'>
+	  <td style='width:96px'><button id='maxAll' class='commonButton' onClick='maxGenUpgrade();maxGen();'>Max All</button></td>	  <div>Tier I Computer:<button id="cop1" onClick='buyGen(0)'> (<text id="firstAmt">x</text>)</button></div>
+	  <div>Tier II Computer:<button id="cop2" onClick='buyGen(1)'> (<text id="secondAmt">x</text>)</button></div>
+	  <div>Tier III Computer:<button id="cop3" onClick='buyGen(2)'> (<text id="thirdAmt">x</text>)</button></div>
+	  <div>Tier IV Computer:<button id="cop4"  onClick='buyGen(3)'> (<text id="forthAmt">x</text>)</button></div>
+	  <div id='fifthComp' style='display:none'>Tier V Computer:<button id="cop5"  onClick='buyGen(4)'> (<text id="fifthAmt">x</text>)</button></div>
+	  <div id='sixthComp' style='display:none'>Tier VI Computer:<button id="cop6"  onClick='buyGen(5)'> (<text id="sixthAmt">x</text>)</button></div>
+	  <div id='seventhComp' style='display:none'>Tier VII Computer:<button id="cop7"  onClick='buyGen(6)'> (<text id="seventhAmt">x</text>)</button></div>
+	  <div id='eighthComp' style='display:none'>Tier VIII Computer:<button id="cop8"  onClick='buyGen(7)'> (<text id="eighthAmt">x</text>)</button></div>
+	  <div id='ninthComp' style='display:none'>Tier IX Computer:<button id="cop9"  onClick='buyGen(8)'> (<text id="ninthAmt">x</text>)</button></div>
   </div>
   <div id='optionsTab' style='display:none'>
 	  <table align=center><tr><td><button class='optionButton' onClick='save()'>Save</button></td>
@@ -95,6 +92,9 @@ font-size: 14px;
 		  <div><b>Smaller transistors</b>: 2x faster computers<br><button id="upg1button" onClick='buyUpg(1)'>Cost: 1e4</button></div>
 		  <div><b>Effective CPUs</b>: 5x faster computers<br><button id="upg2button" onClick='buyUpg(2)'>Cost: 1e10</button></div>
 		  <div><b>Powerful computers</b>: 10x faster computers<br><button id="upg3button" onClick='buyUpg(3)'>Cost: 1e20</button></div>
+		  <div><b>Cooling System</b>: 100x faster computers<br><button id="upg17button" onClick='buyUpg(17)'>Cost: 1e30</button></div>
+		  <div><b>Faster Graphical Card</b>: 1000x faster computers<br><button id="upg18button" onclick='buyUpg(18)'>Cost: 1e35</button></div>
+		  <div><b>144hz Monitor & Faster Reboot/Startup times</b>: 10000x faster computers<br><button id="upg19button" onclick='buyUpg(19)'>Cost: 1e40</button></div>
 		  <div><b>Faster computers I</b>: Production for Tier I computers increase based on the amount<br><button id="upg4button" onClick='buyUpg(4)'>Cost: 100 TI comps & 1e35</button></div>
 		  <div><b>Faster computers II</b>: Production for Tier II computers increase based on the amount<br><button id="upg5button" onClick='buyUpg(5)'>Cost: 100 TII comps & 1e40</button></div>
 		  <div><b>Faster computers III</b>: Production for Tier III computers increase based on the amount<br><button id="upg6button" onClick='buyUpg(6)'>Cost: 100 TIII comps & 1e50</button></div>

@@ -12,7 +12,7 @@ player = {
   playtime: 0, //total time spent online ingame
   time: 0, //total time displayed in stats
   version: 1, //very important
-  build: 13.2, //used for us to communicate commits, helps a lot
+  build: 14, //used for us to communicate commits, helps a lot
   options: {
 	  hotkeys:true, //whether or not hotkeys are enabled (on by default)
 	  notation:0 //notation setting, see options
@@ -378,6 +378,9 @@ function buyUpg(id) {
 		case 1: player.errors=player.errors.sub(1e4); break
 		case 2: player.errors=player.errors.sub(1e10); break
 		case 3: player.errors=player.errors.sub(1e20); break
+		case 17: player.errors=player.errors.sub(1e30); break
+		case 18: player.errors=player.errors.sub(1e35); break
+		case 19: player.errors=player.errors.sub(1e40); break
 		case 4: player.errors=player.errors.sub(1e35); break
 		case 5: player.errors=player.errors.sub(1e40); break
 		case 6: player.errors=player.errors.sub(1e50); break
@@ -443,6 +446,9 @@ function gameTick() {
 	  updateElement('upg10button','Cost: 100 TVII comps & '+format(1e100))
 	  updateElement('upg11button','Cost: 100 TVIII comps & '+format(1e115))
 	  updateElement('upg12button','Cost: 100 TIX comps & '+format(1e125))
+	  updateElement('upg17button','Cost: '+format(1e30))
+	  updateElement('upg18button','Cost: '+format(1e35))
+	  updateElement('upg19button','Cost: '+format(1e40))
 	  var check=0
 	  for (i=4;i<13;i++) {
 		  if (player.upgrades.includes(i)) check++
@@ -454,6 +460,11 @@ function gameTick() {
 		  hideElement('upg13')
 	  }
 	  for (i=1;i<14;i++) {
+		  if (player.upgrades.includes(i)) updateClass('upg'+i+'button','boughtUpgrade')
+		  else if (checkIfAffordable(i)) updateClass('upg'+i+'button','')
+		  else updateClass('upg'+i+'button','cantBuy')
+	  }
+	  for (i=17;i<20;i++) {
 		  if (player.upgrades.includes(i)) updateClass('upg'+i+'button','boughtUpgrade')
 		  else if (checkIfAffordable(i)) updateClass('upg'+i+'button','')
 		  else updateClass('upg'+i+'button','cantBuy')

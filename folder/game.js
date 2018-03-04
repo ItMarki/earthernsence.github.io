@@ -15,7 +15,7 @@ player = {
   time: 0, //total time displayed in stats
   version: 1.5, //very important
   build: 2, //used for us to communicate commits, helps a lot
-  hotfix: 3, //another way to use commits
+  hotfix: 4, //another way to use commits
   options: {
 	  hotkeys:true, //whether or not hotkeys are enabled (on by default)
 	  notation:0 //notation setting, see options
@@ -265,12 +265,8 @@ function prestige(tier) {
   if (tier>3) {
 	//Tier 4 - Warnings
 	var warningGain=1
-	player.warnings=player.warnings.add(warningGain)
-	player.totalWarnings=player.totalWarnings.add(warningGain)
-	  player.upgrades=[]
-	  player.errors= new Decimal(10)
-	  player.compAmount=[0,0,0,0,0,0,0,0,0]
-	  player.prestiges=[0,0,0,1]
+	player.warnings=(tier==4)?player.warnings.add(warningGain):new Decimal(0)
+	player.totalWarnings=(tier==Infinity)?new Decimal(0):player.totalWarnings.add(warningGain)
   }
   if (tier>2) {
 	//Tier 3 - Networks

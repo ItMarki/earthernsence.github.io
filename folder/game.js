@@ -352,7 +352,7 @@ function checkIfAffordable(id) {
 		case 17: if (player.errors.lt(1e30)) {return false}; return true
 		case 18: if (player.errors.lt(1e35)) {return false}; return true
 		case 19: if (player.errors.lt(1e40)) {return false}; return true
-		case 21: if (player.errors.lt(1e50)) {return false}; return true
+		case 20: if (player.errors.lt(1e50)) {return false}; return true
 		case 4: if (player.errors.lt(1e35)||player.compAmount[0]<100) {return false}; return true
 		case 5: if (player.errors.lt(1e40)||player.compAmount[1]<100) {return false}; return true
 		case 6: if (player.errors.lt(1e50)||player.compAmount[2]<100) {return false}; return true
@@ -370,7 +370,6 @@ function checkIfAffordable(id) {
 		case 14: if (player.prestiges[0]<9) {return false}; return true
 		case 15: if (player.prestiges[1]<5) {return false}; return true
 		case 16: if (player.prestiges[1]<7) {return false}; return true
-		case 20: if (player.prestiges[2]<1) {return false}; return true
 	}
 	return false
 }
@@ -384,7 +383,7 @@ function buyUpg(id) {
 		case 17: player.errors=player.errors.sub(1e30); break
 		case 18: player.errors=player.errors.sub(1e35); break
 		case 19: player.errors=player.errors.sub(1e40); break
-		case 21: player.errors=player.errors.sub(1e50); break
+		case 20: player.errors=player.errors.sub(1e50); break
 		case 4: player.errors=player.errors.sub(1e35); break
 		case 5: player.errors=player.errors.sub(1e40); break
 		case 6: player.errors=player.errors.sub(1e50); break

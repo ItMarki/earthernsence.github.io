@@ -320,7 +320,8 @@ function getMultTier(tier) {  let ret = new Decimal.pow(10,tier-1)
   if (player.upgrades.includes(17)) ret = ret.mul(100)
   if (player.upgrades.includes(18)) ret = ret.mul(1000)
   if (player.upgrades.includes(19)) ret = ret.mul(10000)
-  if (player.upgrades.includes(4)&&tier==1) ret = ret.mul(Math.pow(1.15,Math.sqrt(player.compAmount[0])))
+if (player.upgrades.includes(20)) ret = ret.mul(100000)
+if (player.upgrades.includes(4)&&tier==1) ret = ret.mul(Math.pow(1.15,Math.sqrt(player.compAmount[0])))
   if (player.upgrades.includes(5)&&tier==2) ret = ret.mul(Math.pow(1.15,Math.sqrt(player.compAmount[1])))
   if (player.upgrades.includes(6)&&tier==3) ret = ret.mul(Math.pow(1.15,Math.sqrt(player.compAmount[2])))
   if (player.upgrades.includes(7)&&tier==4) ret = ret.mul(Math.pow(1.15,Math.sqrt(player.compAmount[3])))
@@ -351,6 +352,7 @@ function checkIfAffordable(id) {
 		case 17: if (player.errors.lt(1e30)) {return false}; return true
 		case 18: if (player.errors.lt(1e35)) {return false}; return true
 		case 19: if (player.errors.lt(1e40)) {return false}; return true
+		case 21: if (player.errors.lt(1e50)) {return false}; return true
 		case 4: if (player.errors.lt(1e35)||player.compAmount[0]<100) {return false}; return true
 		case 5: if (player.errors.lt(1e40)||player.compAmount[1]<100) {return false}; return true
 		case 6: if (player.errors.lt(1e50)||player.compAmount[2]<100) {return false}; return true
@@ -382,6 +384,7 @@ function buyUpg(id) {
 		case 17: player.errors=player.errors.sub(1e30); break
 		case 18: player.errors=player.errors.sub(1e35); break
 		case 19: player.errors=player.errors.sub(1e40); break
+		case 21: player.errors=player.errors.sub(1e50); break
 		case 4: player.errors=player.errors.sub(1e35); break
 		case 5: player.errors=player.errors.sub(1e40); break
 		case 6: player.errors=player.errors.sub(1e50); break

@@ -388,6 +388,7 @@ function checkIfAffordable(id) {
 		case 11: if (player.errors.lt(1e115)||player.compAmount[7]<100) {return false}; return true
 		case 12: if (player.errors.lt(1e125)||player.compAmount[8]<100) {return false}; return true
 		case 13: if (player.errors.lt(1e140)) return false
+		case 17: if (player.warnings.lt(1)) {return false}; return true
 			for (check=4;check<13;check++) {
 				if (!player.upgrades.includes(check)||player.compAmount[check-4]<110) return false
 			}
@@ -421,6 +422,12 @@ function buyUpg(id) {
 		case 13: player.errors=player.errors.sub(1e140); break
 	}
 	player.upgrades.push(id)
+}
+function buyWarUpg(id) {
+	is (!checkIfAffordable(id)) return
+	switch (id) {
+		case 1: player.warnings=player.warnings.sub(1); break
+	}
 }
 
 function gameTick() {

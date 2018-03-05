@@ -355,7 +355,6 @@ if (player.upgrades.includes(4)&&tier==1) ret = ret.mul(Math.pow(1.15,Math.sqrt(
   if (player.upgrades.includes(12)&&tier==9) ret = ret.mul(Math.pow(1.15,Math.sqrt(player.compAmount[8])))
   if (player.upgrades.includes(13)) ret = ret.mul(Math.pow(1.05,Math.sqrt(player.compAmount[0]+player.compAmount[1]+player.compAmount[2]+player.compAmount[3]+player.compAmount[4]+player.compAmount[5]+player.compAmount[6]+player.compAmount[7]+player.compAmount[8])))
   if (player.upgrades.includes(14)&&tier<5) ret = ret.mul(10)
-  if (player.warningUpgrades.includes(1)) ret = Math.pow(player.playtime/3600,0.196293863:0.218104292)+1
 
   return ret
 }
@@ -388,7 +387,6 @@ function checkIfAffordable(id) {
 		case 11: if (player.errors.lt(1e115)||player.compAmount[7]<100) {return false}; return true
 		case 12: if (player.errors.lt(1e125)||player.compAmount[8]<100) {return false}; return true
 		case 13: if (player.errors.lt(1e140)) return false
-		case 17: if (player.warnings.lt(1)) {return false}; return true
 			for (check=4;check<13;check++) {
 				if (!player.upgrades.includes(check)||player.compAmount[check-4]<110) return false
 			}
@@ -422,12 +420,6 @@ function buyUpg(id) {
 		case 13: player.errors=player.errors.sub(1e140); break
 	}
 	player.upgrades.push(id)
-}
-function buyWarUpg(id) {
-	is (!checkIfAffordable(id)) return
-	switch (id) {
-		case 1: player.warnings=player.warnings.sub(1); break
-	}
 }
 
 function gameTick() {

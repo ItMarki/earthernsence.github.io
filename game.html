@@ -59,7 +59,7 @@ font-size: 14px;
 	  <table align=center><tr><td><button class='optionButton' onClick='save()'>Save</button></td>
 	  <td><button class='optionButton' onClick='exportSave()'>Export</button></td>
 	  <td><button class='optionButton' onClick='importSave()'>Import</button></td>
-		<td><button class='optionButton' id='hotkeysbtn' onclick='toggleHotkeys()'>Hotkeys: enabled</button></td>
+<td><button class='optionButton' id='hotkeysbtn' onclick='toggleHotkeys()'>Hotkeys: enabled</button></td>
 	  <td><button class='optionButton' onclick='switchNotation()'>Notation: <div id="notationID">Standard</div></button></td>
 	  <td><button class='optionButton' onClick='prestige(Infinity)'>Reset</button></td></tr></table>
 	  <div id='exportSave' style='display:none'> Here is your export save. The dev recommends putting it in a safe spot. <input id='exportText' style='width: 480px'></input></div>
@@ -76,9 +76,14 @@ font-size: 14px;
       <h1 id="soon™"> Soon™</h1>
   </div>
 <div id="warningTab" style="display:none">
+	<div><button onclick='switchTab("wUpgrades")' id="commonButton">Upgrades</button><button onclick='switchTab("wScanner")' id="commonButton">Network Scanner</button></div>
+	<div id='wUpgradesTab' style='display:none'>
 	<h1 id="warningHeader"> Warning Upgrades </h1>
 	<td><button class='warningUpgrade' onClick='buyWarUpg(1)'>Production boost over total time. Currently <div id="w1Multi">X</div>x.</button></td>
-</div>
+<div id='wScannerTab' style='display:none'>
+	<h1 id="warningHeader"> Network Scanner </h1>
+	</div>
+	
   <table class='sidebar' align=right style='position:absolute; height:100%; top:0px; right:15px; width:20%'>
 	  <tr><td>
 		  <table class="storybox">

@@ -9,6 +9,7 @@ player = {
   prestiges: [0,0,0,0], //amount of prestiges where [X,0,0] is X UCs, [0,X,0] is X I.P. changes/internet boosts and [0,0,X] is X networks, and [0,0,0,X] is warnings.
   story: -1, //amount of story.
   upgrades: [], //see lines 261-274
+  warningUpgrades: [],
   warnings: new Decimal(0),
   totalWarnings: new Decimal(0),
   playtime: 0, //total time spent online ingame
@@ -314,7 +315,7 @@ function prestige(tier) {
     player.prestiges[2]++;
     switch(player.prestiges[2]) {
       case 1: newStory(17); break;
-      case 2: newStory(22); break;
+case 2: newStory(22); break;
       case 3: newStory(23); break;
     }
   } else if (tier>3) {
@@ -354,6 +355,8 @@ if (player.upgrades.includes(4)&&tier==1) ret = ret.mul(Math.pow(1.15,Math.sqrt(
   if (player.upgrades.includes(12)&&tier==9) ret = ret.mul(Math.pow(1.15,Math.sqrt(player.compAmount[8])))
   if (player.upgrades.includes(13)) ret = ret.mul(Math.pow(1.05,Math.sqrt(player.compAmount[0]+player.compAmount[1]+player.compAmount[2]+player.compAmount[3]+player.compAmount[4]+player.compAmount[5]+player.compAmount[6]+player.compAmount[7]+player.compAmount[8])))
   if (player.upgrades.includes(14)&&tier<5) ret = ret.mul(10)
+  if (player.warningUpgrades.includes(1)) ret = Math.pow(player.playtime/3600,0.196293863:0.218104292)+1
+
   return ret
 }
 

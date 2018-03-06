@@ -1,4 +1,4 @@
-  //game.js and only game.js
+//game.js and only game.js
 var shiftDown=false;
 var controlDown=false;
 player = {
@@ -13,6 +13,7 @@ player = {
   time: 0, //total time displayed in stats
   version: 1, //very important
   build: 15, //used for us to communicate commits, helps a lot
+  hotfix: 2 //another way
   options: {
 	  hotkeys:true, //whether or not hotkeys are enabled (on by default)
 	  notation:0 //notation setting, see options
@@ -333,6 +334,7 @@ function getMultTier(tier) {  let ret = new Decimal.pow(10,tier-1)
   if (player.upgrades.includes(12)&&tier==9) ret = ret.mul(Math.pow(1.15,Math.sqrt(player.compAmount[8])))
   if (player.upgrades.includes(13)) ret = ret.mul(Math.pow(1.05,Math.sqrt(player.compAmount[0]+player.compAmount[1]+player.compAmount[2]+player.compAmount[3]+player.compAmount[4]+player.compAmount[5]+player.compAmount[6]+player.compAmount[7]+player.compAmount[8])))
   if (player.upgrades.includes(14)&&tier<5) ret = ret.mul(10)
+  if (player.upgrades.includes(22)) ret = ret.mul(1000000)
   return ret
 }
 
@@ -372,6 +374,7 @@ function checkIfAffordable(id) {
 		case 14: if (player.prestiges[0]<9) {return false}; return true
 		case 15: if (player.prestiges[1]<5) {return false}; return true
 		case 16: if (player.prestiges[1]<7) {return false}; return true
+		case 22: if (player.prestiges[2]<1)||player.errors.lt(1e3)) {return false}; return true
 	}
 	return false
 }
@@ -457,6 +460,7 @@ function gameTick() {
 	  updateElement('upg19button','Cost: '+format(1e40))
 	  updateElement('upg20button','Cost: '+format(1e50))
 	  updateElement('upg21button','Cost: '+format(1e65))
+	  updateElement('upg22button','Cost: N1 & '+format(1e3))
 	  var check=0
 	  for (i=4;i<13;i++) {
 		  if (player.upgrades.includes(i)) check++

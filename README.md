@@ -9,3 +9,16 @@ Have fun! Game is at https://frostbite5.github.io/frostbite-ceg/ .
 ## Purpose of The Game
 
 I designed this game for fun. I like doing JS, HTML, and a small amount of CSS, no matter how bad I may be.
+
+
+
+
+
+
+
+
+
+
+
+
+(also this has to be outside of the md folder bc it wont display on front page without it)

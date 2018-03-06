@@ -486,7 +486,7 @@ function gameTick() {
 	  updateElement('upg19button','Cost: '+format(1e40))
 	  updateElement('upg20button','Cost: '+format(1e50))
 	  updateElement('upg21button','Cost: '+format(1e65))
-	  updateElement('upg22button','Cost: N1 '+format(1e3))
+	  updateElement('upg22button','Cost: N1 & '+format(1e3))
 	  var check=0
 	  for (i=4;i<13;i++) {
 		  if (player.upgrades.includes(i)) check++

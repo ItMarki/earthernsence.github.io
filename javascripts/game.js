@@ -13,7 +13,7 @@ player = {
   time: 0, //total time displayed in stats
   version: 1, //very important
   build: 15, //used for us to communicate commits, helps a lot
-  hotfix: 2 //another way
+  hotfix: 3, //another way
   options: {
 	  hotkeys:true, //whether or not hotkeys are enabled (on by default)
 	  notation:0 //notation setting, see options
@@ -374,7 +374,7 @@ function checkIfAffordable(id) {
 		case 14: if (player.prestiges[0]<9) {return false}; return true
 		case 15: if (player.prestiges[1]<5) {return false}; return true
 		case 16: if (player.prestiges[1]<7) {return false}; return true
-		case 22: if (player.prestiges[2]<1)||player.errors.lt(1e3)) {return false}; return true
+		case 22: if (player.prestiges[2]<1||player.errors.lt(1e3)) {return false}; return true
 	}
 	return false
 }

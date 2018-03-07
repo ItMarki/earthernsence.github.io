@@ -1,4 +1,4 @@
-  //game.js and only game.js
+//game.js and only game.js
 var shiftDown=false;
 var controlDown=false;
 player = {
@@ -15,8 +15,8 @@ player = {
   playtime: 0, //total time spent online ingame
   time: 0, //total time displayed in stats
   version: 1.5, //very important
-  build: 3, //used for us to communicate commits, helps a lot
-  hotfix: 2, //another way to use commits
+  build: 4, //used for us to communicate commits, helps a lot
+  hotfix: 1, //another way to use commits
   options: {
 	  hotkeys:true, //whether or not hotkeys are enabled (on by default)
 	  notation:0 //notation setting, see options
@@ -343,9 +343,9 @@ function getMultTier(tier) {  let ret = new Decimal.pow(10,tier-1)
   if (player.upgrades.includes(17)) ret = ret.mul(100)
   if (player.upgrades.includes(18)) ret = ret.mul(1000)
   if (player.upgrades.includes(19)) ret = ret.mul(10000)
-if (player.upgrades.includes(20)) ret = ret.mul(100000)
-			    if (player.upgrades.includes(21)) ret = ret.mul(1000000)
-if (player.upgrades.includes(4)&&tier==1) ret = ret.mul(Math.pow(1.15,Math.sqrt(player.compAmount[0])))
+  if (player.upgrades.includes(20)) ret = ret.mul(100000)
+  if (player.upgrades.includes(21)) ret = ret.mul(1000000)
+  if (player.upgrades.includes(4)&&tier==1) ret = ret.mul(Math.pow(1.15,Math.sqrt(player.compAmount[0])))
   if (player.upgrades.includes(5)&&tier==2) ret = ret.mul(Math.pow(1.15,Math.sqrt(player.compAmount[1])))
   if (player.upgrades.includes(6)&&tier==3) ret = ret.mul(Math.pow(1.15,Math.sqrt(player.compAmount[2])))
   if (player.upgrades.includes(7)&&tier==4) ret = ret.mul(Math.pow(1.15,Math.sqrt(player.compAmount[3])))
@@ -356,8 +356,7 @@ if (player.upgrades.includes(4)&&tier==1) ret = ret.mul(Math.pow(1.15,Math.sqrt(
   if (player.upgrades.includes(12)&&tier==9) ret = ret.mul(Math.pow(1.15,Math.sqrt(player.compAmount[8])))
   if (player.upgrades.includes(13)) ret = ret.mul(Math.pow(1.05,Math.sqrt(player.compAmount[0]+player.compAmount[1]+player.compAmount[2]+player.compAmount[3]+player.compAmount[4]+player.compAmount[5]+player.compAmount[6]+player.compAmount[7]+player.compAmount[8])))
   if (player.upgrades.includes(14)&&tier<5) ret = ret.mul(10)
-			    if (player.upgrades.includes(22)) ret = ret.mul(1000000)
-
+  if (player.upgrades.includes(22)) ret = ret.mul(1000000)
   return ret
 }
 

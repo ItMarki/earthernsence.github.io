@@ -1,4 +1,4 @@
-  //game.js and only game.js
+//game.js and only game.js
 var shiftDown=false;
 var controlDown=false;
 player = {
@@ -12,7 +12,8 @@ player = {
   playtime: 0, //total time spent online ingame
   time: 0, //total time displayed in stats
   version: 1, //very important
-  build: 13.1, //used for us to communicate commits, helps a lot
+  build: 15, //used for us to communicate commits, helps a lot
+  hotfix: 3, //another way
   options: {
 	  hotkeys:true, //whether or not hotkeys are enabled (on by default)
 	  notation:0 //notation setting, see options
@@ -205,13 +206,21 @@ function buyGen(tier,bulk=1) {
 }
 
 function maxGen() {
-	for (tier=player.prestiges[1]+4;tier>=0;tier--) {
+	for (tier=Math.min(player.prestiges[1]+3,8);tier>-1;tier--) {
 		if (player.errors.gte(costs.comp[tier])) {
 			var bulk=Math.max(Math.floor(player.errors.div(costs.comp[tier]).times(costMult[tier]-1).add(1).log10()/Math.log10(costMult[tier])),0)
 			console.log(bulk)
 			player.errors=player.errors.sub(Decimal.pow(costMult[tier],bulk).sub(1).div(costMult[tier]-1).times(costs.comp[tier]))
 			player.compAmount[tier]+=bulk
 			updateCosts()
+
+			switch (tier) {
+			  case 0: newStory(0); break;
+			  case 1: newStory(1); break;
+			  case 2: newStory(2); break;
+			  case 3: newStory(3); break;
+			  case 4: newStory(9); break;
+			}
 		}
 	}
 }
@@ -278,7 +287,7 @@ function prestige(tier) {
       switch(player.prestiges[1]) {
         case 1: newStory(8); break;
         case 2: newStory(10); break;
-        case 3: newStory(11); break;
+case 3: newStory(11); break;
         case 4: newStory(12); break;
         case 5: newStory(13); break;
         case 6: newStory(14); break;
@@ -309,6 +318,11 @@ function getMultTier(tier) {  let ret = new Decimal.pow(10,tier-1)
   if (player.upgrades.includes(1)) ret = ret.mul(2)
   if (player.upgrades.includes(2)) ret = ret.mul(5)
   if (player.upgrades.includes(3)) ret = ret.mul(10)
+  if (player.upgrades.includes(17)) ret = ret.mul(100)
+  if (player.upgrades.includes(18)) ret = ret.mul(1000)
+  if (player.upgrades.includes(19)) ret = ret.mul(10000)
+  if (player.upgrades.includes(20)) ret = ret.mul(100000)
+  if (player.upgrades.includes(21)) ret = ret.mul(1000000)
   if (player.upgrades.includes(4)&&tier==1) ret = ret.mul(Math.pow(1.15,Math.sqrt(player.compAmount[0])))
   if (player.upgrades.includes(5)&&tier==2) ret = ret.mul(Math.pow(1.15,Math.sqrt(player.compAmount[1])))
   if (player.upgrades.includes(6)&&tier==3) ret = ret.mul(Math.pow(1.15,Math.sqrt(player.compAmount[2])))
@@ -320,6 +334,7 @@ function getMultTier(tier) {  let ret = new Decimal.pow(10,tier-1)
   if (player.upgrades.includes(12)&&tier==9) ret = ret.mul(Math.pow(1.15,Math.sqrt(player.compAmount[8])))
   if (player.upgrades.includes(13)) ret = ret.mul(Math.pow(1.05,Math.sqrt(player.compAmount[0]+player.compAmount[1]+player.compAmount[2]+player.compAmount[3]+player.compAmount[4]+player.compAmount[5]+player.compAmount[6]+player.compAmount[7]+player.compAmount[8])))
   if (player.upgrades.includes(14)&&tier<5) ret = ret.mul(10)
+  if (player.upgrades.includes(22)) ret = ret.mul(1000000)
   return ret
 }
 
@@ -337,6 +352,11 @@ function checkIfAffordable(id) {
 		case 1: if (player.errors.lt(1e4)) {return false}; return true
 		case 2: if (player.errors.lt(1e10)) {return false}; return true
 		case 3: if (player.errors.lt(1e20)) {return false}; return true
+		case 17: if (player.errors.lt(1e30)) {return false}; return true
+		case 18: if (player.errors.lt(1e35)) {return false}; return true
+		case 19: if (player.errors.lt(1e40)) {return false}; return true
+		case 20: if (player.errors.lt(1e50)) {return false}; return true
+		case 21: if (player.errors.lt(1e65)) {return false}; return true
 		case 4: if (player.errors.lt(1e35)||player.compAmount[0]<100) {return false}; return true
 		case 5: if (player.errors.lt(1e40)||player.compAmount[1]<100) {return false}; return true
 		case 6: if (player.errors.lt(1e50)||player.compAmount[2]<100) {return false}; return true
@@ -354,6 +374,7 @@ function checkIfAffordable(id) {
 		case 14: if (player.prestiges[0]<9) {return false}; return true
 		case 15: if (player.prestiges[1]<5) {return false}; return true
 		case 16: if (player.prestiges[1]<7) {return false}; return true
+		case 22: if (player.prestiges[2]<1||player.errors.lt(1e3)) {return false}; return true
 	}
 	return false
 }
@@ -364,6 +385,11 @@ function buyUpg(id) {
 		case 1: player.errors=player.errors.sub(1e4); break
 		case 2: player.errors=player.errors.sub(1e10); break
 		case 3: player.errors=player.errors.sub(1e20); break
+		case 17: player.errors=player.errors.sub(1e30); break
+		case 18: player.errors=player.errors.sub(1e35); break
+		case 19: player.errors=player.errors.sub(1e40); break
+		case 20: player.errors=player.errors.sub(1e50); break
+		case 21: player.errors=player.errors.sub(1e65); break
 		case 4: player.errors=player.errors.sub(1e35); break
 		case 5: player.errors=player.errors.sub(1e40); break
 		case 6: player.errors=player.errors.sub(1e50); break
@@ -429,6 +455,12 @@ function gameTick() {
 	  updateElement('upg10button','Cost: 100 TVII comps & '+format(1e100))
 	  updateElement('upg11button','Cost: 100 TVIII comps & '+format(1e115))
 	  updateElement('upg12button','Cost: 100 TIX comps & '+format(1e125))
+	  updateElement('upg17button','Cost: '+format(1e30))
+	  updateElement('upg18button','Cost: '+format(1e35))
+	  updateElement('upg19button','Cost: '+format(1e40))
+	  updateElement('upg20button','Cost: '+format(1e50))
+	  updateElement('upg21button','Cost: '+format(1e65))
+	  updateElement('upg22button','Cost: N1 & '+format(1e3))
 	  var check=0
 	  for (i=4;i<13;i++) {
 		  if (player.upgrades.includes(i)) check++
@@ -440,6 +472,11 @@ function gameTick() {
 		  hideElement('upg13')
 	  }
 	  for (i=1;i<14;i++) {
+		  if (player.upgrades.includes(i)) updateClass('upg'+i+'button','boughtUpgrade')
+		  else if (checkIfAffordable(i)) updateClass('upg'+i+'button','')
+		  else updateClass('upg'+i+'button','cantBuy')
+	  }
+	  for (i=17;i<20;i++) {
 		  if (player.upgrades.includes(i)) updateClass('upg'+i+'button','boughtUpgrade')
 		  else if (checkIfAffordable(i)) updateClass('upg'+i+'button','')
 		  else updateClass('upg'+i+'button','cantBuy')
@@ -578,7 +615,8 @@ function load(savefile) {
 	  savefile.build = player.build
 	  
 	  //if the value is a Decimal, set it to be a Decimal here.
-	  savefile.errors = new Decimal(savefile.errors)
+	  if (savefile.errors=='NaN') savefile.errors=new Decimal(10)
+	  else savefile.errors = new Decimal(savefile.errors)
 	  savefile.totalErrors = new Decimal(savefile.totalErrors)
 	  
 	  player=savefile

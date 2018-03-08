@@ -9,9 +9,8 @@ player = {
   prestiges: [0,0,0,0], //amount of prestiges where [X,0,0] is X UCs, [0,X,0] is X I.P. changes/internet boosts and [0,0,X] is X networks, and [0,0,0,X] is warnings.
   story: -1, //amount of story.
   upgrades: [], //see lines 261-274
-  warningUpgrades: [],
-  warnings: new Decimal(0),
-  totalWarnings: new Decimal(0),
+  warnings: new Decimal(0), //displayed on the bottom bar
+  totalWarnings: new Decimal(0), //displayed in stats
   playtime: 0, //total time spent online ingame
   time: 0, //total time displayed in stats
   version: 1.5, //very important

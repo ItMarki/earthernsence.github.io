@@ -1,33 +1,3 @@
-table.prestiges tr {
-	height:0%;
-	vertical-align:0
-}
-table.prestiges tr {
-	width: 100%;
-	display: table;
-	table-layout: fixed;
-}
-table.prestiges {
-	display: table;
-	width: 100%;
-	font-size: 15px
-}
-table.prestiges thead,
-table.prestiges tbody {
-	width: 100%
-}
-table.prestiges thead
-text-align:center;
-display: table;
-table-layout: fixed;
-width: calc(100% - 16px); /*for scrollbar i guess */
-}
-table.prestiges tbody {
-    text-align: center;
-    overflow: auto;
-    height: 125px;
-    display: block;
-}
 table.sidebar tr {
     height:0%;
 	vertical-align:0
@@ -37,6 +7,7 @@ table.sidebar tr {
 table.storybox {
     display: table;
     width: 100%;
+    background-color: gray;
     font-size: 15px;
 }
 table.storybox thead,
@@ -60,7 +31,7 @@ table.storybox tbody {
 }
 
 table.storybox tr {
-width: 100%;
+    width: 100%;
     display: table;
     table-layout: fixed;
 }
@@ -69,68 +40,5 @@ width: 100%;
 	background-color:#00e500
 }
 .cantBuy {
-	background-color:#424242
+	background-color:#bfbfbf
 }
-
-.comp {
-    width:40%;
-    text-align:left;
-    align-items:center;
-}
-
-    .comp td {
-        width: 50%;
-    }
-    .comp td button {
-        width: 100%;
-        text-align: left;
-	    background-color: darkgray; 
-border: solid; 
-border-width: 2px;
-color: red;   
-text-decoration: none; 
-display: inline-block; 
-font-size: 14px
-    }
-.tabButton {
-    border: none; /* Remove borders */
-    color: white; /* Add a text color */
-    padding: 14px 28px; /* Add some padding */
-    cursor: pointer; /* Add a pointer cursor on mouse-over */
-    background-color: darkgray; /* should be obvious */
-}
-.tabButton:hover {
-	background-color: lightgray;
-}
-#warnings {
-	position:fixed;
-    width:180px;
-    height:24px;
-	left:0;
-	bottom:24px;
-	padding-top:6px;
-	background-color:#e5e500;
-}
-#percentToWarning {
-	position: fixed;
-    width:100%;
-    height:30px;
-	right:0;
-	bottom:24px;
-	background-color:#999999;
-}
-#percentToWarningBar {
-    width: 0%;
-    height: 30px;
-		z-index: -1;
-} 
-#percentToWarningProgress {
-	position:absolute;
-	width:100%;
-	height:100%;
-	top:0;
-	left:0;
-	text-align:center;
-	font-size:25px
-} 
-

@@ -1,7 +1,7 @@
 //game.js and only game.js-v1.5 edits
 var shiftDown=false;
 var controlDown=false;
-player = {
+defaultPlayer = {
   errors: new Decimal(10), //current errors
   totalErrors: new Decimal(0), //total errors that display in stats
   compAmount: [0,0,0,0,0,0,0,0,0], //amounts that are shown on computer button
@@ -21,6 +21,7 @@ player = {
 	  notation:0 //notation setting, see options
   }
 }
+player = defaultPlayer
 tab='computers'
 oldtab=tab
 percentage=0
@@ -253,9 +254,7 @@ function prestige(tier) {
   if (tier==Infinity) {
 	//Highest tier - Hard reset
 	localStorage.clear('errorSave')
-	player.playtime=0
-	player.totalErrors=new Decimal(0)
-	player.story=-1
+	player = defaultPlayer
 	updateStory()
   }
   if (tier>3) {
@@ -436,7 +435,7 @@ function gameTick() {
   player.time = new Date().getTime()
   updateElement('errors',format(player.errors)) //this is the base, except in the parentheses add the HTML tag of the thing you're changing
   updateElement('eps',format(getEPS()))
-  if (player.compAmount[2]>0) {
+  if (player.compAmount.slice(2,9).reduce((a, b) => a + b, 0) > 0) {
 	  showElement('genUpgrade','block');
 	  updateElement('genIncrease',(4+player.prestiges[2])/2);
 	  updateElement('genIncreaseCost','Cost: ' + format(costs.boost));

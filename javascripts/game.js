@@ -264,7 +264,7 @@ function prestige(tier) {
   }
   if (tier>3) {
 	//Tier 4 - Warnings
-	if (player.totalWarning == 0) newStory(24)
+	newStory(24)
 	var warningGain=1
 	player.warnings=(tier==4)?player.warnings.add(warningGain):new Decimal(0)
 	player.totalWarnings=(tier==Infinity)?new Decimal(0):player.totalWarnings.add(warningGain)

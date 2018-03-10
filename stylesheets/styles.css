@@ -113,9 +113,9 @@ font-size: 14px
 }
 #percentToWarning {
 	position: fixed;
-    width:100%;
-    height:30px;
-	right:0;
+        width:50%;
+	left:25%;
+        height:30px;
 	bottom:24px;
 	background-color:#999999;
 }

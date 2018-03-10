@@ -714,6 +714,6 @@ function gameInit() {
 			},tickspeed)
 		}
 	},0)
-	setInterval(save,10000);
+	setInterval(save,1000);
 }
 

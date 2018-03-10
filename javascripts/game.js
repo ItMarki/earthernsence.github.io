@@ -264,7 +264,7 @@ function prestige(tier) {
   }
   if (tier>3) {
 	//Tier 4 - Warnings
-	newStory(24)
+	newStory(25)
 	var warningGain=1
 	player.warnings=(tier==4)?player.warnings.add(warningGain):new Decimal(0)
 	player.totalWarnings=(tier==Infinity)?new Decimal(0):player.totalWarnings.add(warningGain)
@@ -588,7 +588,7 @@ function gameTick() {
 		  hideElement('statsPrestige4')
 	  }
   }
-  if player.errors.gte(Number.MAX_VALUE) newStory(23)
+  if player.errors.gte(Number.MAX_VALUE) newStory(24)
 }
 
 function save() {

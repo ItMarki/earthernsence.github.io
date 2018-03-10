@@ -544,7 +544,7 @@ function gameTick() {
 	  }
 	  for (i=0;i<5;i++) {
 		  if (player.prestiges[1]>i) {
-			showElement(TIER_NAMES[i+4]+'Comp','table-row')
+			showElement(TIER_NAMES[i+4]+'Comp','block')
 		  } else {
 			hideElement(TIER_NAMES[i+4]+'Comp')
 		  }
@@ -742,13 +742,65 @@ window.addEventListener('keydown', function(event) {
 	if (!player.options.hotkeys) return;
     const tmp = event.keyCode;
     switch (tmp) {
+        case 49: // 1
+            buyGen(0);
+        break;
+		    
+        case 50: // 2
+            buyGen(1);
+        break;
+		    
+        case 51: // 3
+            buyGen(2);
+        break;
+		    
+        case 52: // 4
+            buyGen(3);
+        break;
+		    
+        case 53: // 5
+            buyGen(4);
+        break;
+		    
+        case 54: // 6
+            buyGen(5);
+        break;
+		    
+        case 55: // 7
+            buyGen(6);
+        break;
+		    
+        case 56: // 8
+            buyGen(7);
+        break;
+		    
+        case 57: // 9
+            buyGen(8);
+        break;
+		    
         case 77: // M
             document.getElementById("maxAll").onclick()
         break;
 		    
-        case 84: // T
+        case 80: // P
 		    if (shiftDown) buyGenUpgrade(); 
         else  maxGenUpgrade();
+        break;
+		    
+        case 85: // U
+            prestige(1);
+        break;
+		    
+        case 73: // I
+            prestige(2);
+        break;
+		    
+        case 78: // N
+            prestige(3);
+        break;
+		    
+        case 87: // W
+            prestige(4);
         break;
     }    
 }, false);

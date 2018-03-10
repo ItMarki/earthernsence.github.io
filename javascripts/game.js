@@ -475,7 +475,7 @@ function gameTick() {
 		  else if (checkIfAffordable(i)) updateClass('upg'+i+'button','')
 		  else updateClass('upg'+i+'button','cantBuy')
 	  }
-	  for (i=17;i<22;i++) {
+	  for (i=17;i<=22;i++) {
 		  if (player.upgrades.includes(i)) updateClass('upg'+i+'button','boughtUpgrade')
 		  else if (checkIfAffordable(i)) updateClass('upg'+i+'button','')
 		  else updateClass('upg'+i+'button','cantBuy')

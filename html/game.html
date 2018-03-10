@@ -26,8 +26,7 @@ text-decoration: none;
 display: inline-block; 
 font-size: 14px; 
 			font-family:Montserrat;
-		}
-			
+		}			
 	</style>
     <link rel="stylesheet" type="text/css" href="../stylesheets/styles.css" />
 	<script type="text/javascript" src="../javascripts/break_infinity.min.js"> </script>
@@ -63,7 +62,8 @@ font-size: 14px;
 	  <td><button class='optionButton' onclick='switchNotation()'>Notation: <div id="notationID">Standard</div></button></td>
 	  <td><button class='optionButton' onClick='prestige(Infinity)'>Reset</button></td></tr></table>
 	  <div id='exportSave' style='display:none'> Here is your export save. The dev recommends putting it in a safe spot. <input id='exportText' style='width: 480px'></input></div>
-  </div>
+	<div id='hotkeyText'>P=Max production boost, U=upgrade cmputers, I=IP change and Internet boost, N=network.</div>
+	</div>
   <div id='statsTab' style='display:none'>
 	  <div id='statsTotal'>You have gained a total of X errors.</div>
 	  <div id='statsPlaytime'>You have played for X.</div>
@@ -77,7 +77,7 @@ font-size: 14px;
   </div>
 <div id="warningTab" style="display:none">
 	<h1 id="warningHeader"> Warning Upgrades </h1>
-	<td><button class='warningUpgrade' onClick='buyWarUpg(1)'>Production boost over total time. Currently <div id="w1Multi">X</div>x.</button></td>
+	<table align=center><tr><td><button class='warningUpgrade' onClick='buyWarUpg(1)'>Production boost over total time.<br>Currently <text id="w1Multi">X</text>x.</button></td></tr></table>
 	</div>
 	
   <table class='sidebar' align=right style='position:absolute; height:100%; top:0px; right:15px; width:20%'>
@@ -95,11 +95,12 @@ font-size: 14px;
 		  <div><b>Effective CPUs</b>: 5x faster computers<br><button id="upg2button" onClick='buyUpg(2)'>Cost: 1e10</button></div>
 		  <div><b>Powerful computers</b>: 10x faster computers<br><button id="upg3button" onClick='buyUpg(3)'>Cost: 1e20</button></div>
 		  <div><b>Cooling System</b>: 100x faster computers<br><button id="upg17button" onClick='buyUpg(17)'>Cost: 1e30</button></div>
-		  <div><b>Faster Graphical Card</b>: 1,000x faster computers<br><button id="upg18button" onclick='buyUpg(18)'>Cost: 1e35</button></div>
-		  <div><b>144hz Monitor & Faster Reboot/Startup times</b>: 10,000x faster computers<br><button id="upg19button" onclick='buyUpg(19)'>Cost: 1e40</button></div>
-		  <div><b>Included Mic & Maximum RAM</b>: 100,000x faster computers<br><button id="upg20button" onClick="buyUpg(20)">Cost: 1e50</button></div>
-		  <div><b>Quantum.</b>: 1,000,000x faster computers.<br><button id="upg21button" onClick="buyUpg(21)">Cost: 1e65</button></div>
-		  <div><b>Faster computers I</b>: Production for Tier I computers increase based on the amount<br><button id="upg4button" onClick='buyUpg(4)'>Cost: 100 TI comps & 1e35</button></div>
+		  <div><b>Faster Graphical Card</b>: 750x faster computers<br><button id="upg18button" onclick='buyUpg(18)'>Cost: 1e35</button></div>
+		  <div><b>144hz Monitor & Faster Reboot/Startup times</b>: 7,500x faster computers<br><button id="upg19button" onclick='buyUpg(19)'>Cost: 1e40</button></div>
+		  <div><b>Included Mic & Maximum RAM</b>: 75,000x faster computers<br><button id="upg20button" onClick="buyUpg(20)">Cost: 1e50</button></div>
+		  <div><b>Quantum I</b>: 750,000x faster computers.<br><button id="upg21button" onClick="buyUpg(21)">Cost: 1e65</button></div>
+	          <div<b>Quantum II</b>: 750,000x faster computers.<br><button id="upg23button" onClick="buyUpg(23)">Cost: 1e75</button></div>
+	          <div><b>Faster computers I</b>: Production for Tier I computers increase based on the amount<br><button id="upg4button" onClick='buyUpg(4)'>Cost: 100 TI comps & 1e35</button></div>
 		  <div><b>Faster computers II</b>: Production for Tier II computers increase based on the amount<br><button id="upg5button" onClick='buyUpg(5)'>Cost: 100 TII comps & 1e40</button></div>
 		  <div><b>Faster computers III</b>: Production for Tier III computers increase based on the amount<br><button id="upg6button" onClick='buyUpg(6)'>Cost: 100 TIII comps & 1e50</button></div>
 		  <div><b>Faster computers IV</b>: Production for Tier IV computers increase based on the amount<br><button id="upg7button" onClick='buyUpg(7)'>Cost: 100 TIV comps & 1e65</button></div>
@@ -128,7 +129,7 @@ font-size: 14px;
     <div>Network: Requires <text id='prestige3Req'>60</text> Tier IX Computers <button id="network" onclick='prestige(3)'>Reset everything, but gain a Production Boost upgrade (x<text id='netMulti'>X</text>).</button></div>
   </td></tr></tbody>
   </table>
-	<div style='background-color: #999999; position: fixed; bottom: 0; width: 100%; color: #191919; z-index: -1'>| <a href="https://discord.gg/23JnYTY" target="_newtab">Discord</a> | <a href="html/howto.html" target="_newtab">How to Play CEG</a> | <a href="index.html" target="_newtab"> Back to Main Menu </a>| <a href="html/changlog.html" target="_newtab">Changelog</a></div> 
+	<div style='background-color: #999999; position: fixed; bottom: 0; width: 100%; color: #191919; z-index: -1'>| <a href="https://discord.gg/23JnYTY" target="_newtab">Discord</a> | <a href="html/howto.html" target="_newtab">How to Play CEG</a> | <a href="index.html" target="_newtab"> Back to Main Menu </a>| <a href="html/changelog.html" target="_newtab">Changelog</a>|<a href="md/me_ranting.md" target="_newtab">Fun Place</a>|</div> 
 	<div id="percentToWarning">
 	  <div id="percentToWarningBar"></div>
 	  <div id="percentToWarningProgress"></div>

@@ -1,7 +1,7 @@
 //game.js and only game.js-v1.5 edits
 var shiftDown=false;
 var controlDown=false;
-player = {
+defaultPlayer = {
   errors: new Decimal(10), //current errors
   totalErrors: new Decimal(0), //total errors that display in stats
   compAmount: [0,0,0,0,0,0,0,0,0], //amounts that are shown on computer button
@@ -11,16 +11,18 @@ player = {
   upgrades: [], //see lines 261-274
   warnings: new Decimal(0), //displayed on the bottom bar
   totalWarnings: new Decimal(0), //displayed in stats
+  warningUpgrades: [],
   playtime: 0, //total time spent online ingame
   time: 0, //total time displayed in stats
   version: 1.5, //very important
-  build: 5, //used for us to communicate commits, helps a lot
-  hotfix: 3, //another way to use commits
+  build: 6, //used for us to communicate commits, helps a lot
+  hotfix: 1, //another way to use commits
   options: {
 	  hotkeys:true, //whether or not hotkeys are enabled (on by default)
 	  notation:0 //notation setting, see options
   }
 }
+player = defaultPlayer
 tab='computers'
 oldtab=tab
 percentage=0
@@ -253,9 +255,7 @@ function prestige(tier) {
   if (tier==Infinity) {
 	//Highest tier - Hard reset
 	localStorage.clear('errorSave')
-	player.playtime=0
-	player.totalErrors=new Decimal(0)
-	player.story=-1
+	player = defaultPlayer
 	updateStory()
   }
   if (tier>3) {
@@ -297,7 +297,7 @@ switch(player.prestiges[1]) {
       case 1: newStory(8); break;
       case 2: newStory(10); break;
       case 3: newStory(11); break;
-      case 4: newStory(12); break;
+	case 4: newStory(12); break;
       case 5: newStory(13); break;
       case 6: newStory(14); break;
       case 8: newStory(15); break;
@@ -329,7 +329,7 @@ switch(player.prestiges[1]) {
 }
 
 function getMultTier(tier) {  let ret = new Decimal.pow(10,tier-1)
-  ret = ret.mul(Decimal.pow(Math.pow(1.05,tier),player.compAmount[tier-1]))
+  ret = ret.mul(Decimal.pow(Math.pow(1.05 + Math.max((tier-4)/100,0),tier),player.compAmount[tier-1]))
   ret = ret.mul(Decimal.pow(2+0.5*player.prestiges[2],player.boostPower))
   if (player.prestiges[0]>=tier) ret = ret.mul(player.upgrades.includes(14)?2.5:2)
   if (player.prestiges[0]>9&&tier==9) ret = ret.mul(Decimal.pow(player.upgrades.includes(14)?2.5:2,player.prestiges[0]-9))
@@ -337,11 +337,12 @@ function getMultTier(tier) {  let ret = new Decimal.pow(10,tier-1)
   if (player.upgrades.includes(1)) ret = ret.mul(2)
   if (player.upgrades.includes(2)) ret = ret.mul(5)
   if (player.upgrades.includes(3)) ret = ret.mul(10)
-  if (player.upgrades.includes(17)) ret = ret.mul(100)
-  if (player.upgrades.includes(18)) ret = ret.mul(1000)
-  if (player.upgrades.includes(19)) ret = ret.mul(10000)
-  if (player.upgrades.includes(20)) ret = ret.mul(100000)
-  if (player.upgrades.includes(21)) ret = ret.mul(1000000)
+  if (player.upgrades.includes(17)) ret = ret.mul(75)
+  if (player.upgrades.includes(18)) ret = ret.mul(750)
+  if (player.upgrades.includes(19)) ret = ret.mul(7500)
+  if (player.upgrades.includes(20)) ret = ret.mul(75000)
+  if (player.upgrades.includes(21)) ret = ret.mul(750000)
+  if (player.upgrades.includes(23)) ret = ret.mul(750000)
   if (player.upgrades.includes(4)&&tier==1) ret = ret.mul(Math.pow(1.15,Math.sqrt(player.compAmount[0])))
   if (player.upgrades.includes(5)&&tier==2) ret = ret.mul(Math.pow(1.15,Math.sqrt(player.compAmount[1])))
   if (player.upgrades.includes(6)&&tier==3) ret = ret.mul(Math.pow(1.15,Math.sqrt(player.compAmount[2])))
@@ -354,6 +355,8 @@ function getMultTier(tier) {  let ret = new Decimal.pow(10,tier-1)
   if (player.upgrades.includes(13)) ret = ret.mul(Math.pow(1.05,Math.sqrt(player.compAmount[0]+player.compAmount[1]+player.compAmount[2]+player.compAmount[3]+player.compAmount[4]+player.compAmount[5]+player.compAmount[6]+player.compAmount[7]+player.compAmount[8])))
   if (player.upgrades.includes(14)&&tier<5) ret = ret.mul(10)
   if (player.upgrades.includes(22)) ret = ret.mul(1000000)
+	  
+  if (player.warningUpgrades.includes(1)) ret = ret.mul(getUpgradeMultiplier(1))
   return ret
 }
 
@@ -376,6 +379,7 @@ function checkIfAffordable(id) {
 		case 19: if (player.errors.lt(1e40)) {return false}; return true
 		case 20: if (player.errors.lt(1e50)) {return false}; return true
 		case 21: if (player.errors.lt(1e65)) {return false}; return true
+		case 23: if (player.errors.lt(1e75)) {return false}; return true	
 		case 4: if (player.errors.lt(1e35)||player.compAmount[0]<100) {return false}; return true
 		case 5: if (player.errors.lt(1e40)||player.compAmount[1]<100) {return false}; return true
 		case 6: if (player.errors.lt(1e50)||player.compAmount[2]<100) {return false}; return true
@@ -409,6 +413,7 @@ function buyUpg(id) {
 		case 19: player.errors=player.errors.sub(1e40); break
 		case 20: player.errors=player.errors.sub(1e50); break
 		case 21: player.errors=player.errors.sub(1e65); break
+		case 23: player.errors=player.errors.sub(1e75); break
 		case 4: player.errors=player.errors.sub(1e35); break
 		case 5: player.errors=player.errors.sub(1e40); break
 		case 6: player.errors=player.errors.sub(1e50); break
@@ -421,6 +426,24 @@ function buyUpg(id) {
 		case 13: player.errors=player.errors.sub(1e140); break
 	}
 	player.upgrades.push(id)
+}
+
+function getUpgradeMultiplier(id) {
+	if (id==1) return Math.sqrt((player.playtime+1)/86400*2)
+}
+
+function buyWarUpg(id) {
+	if (!player.warningUpgrades.includes(id)) {
+		var warnCost
+		switch (id) {
+			case 1: warnCost=1; break
+		}
+		console.log(warnCost)
+		if (player.warnings.gte(warnCost)) {
+			player.warnings=player.warnings.sub(warnCost)
+			player.warningUpgrades.push(id)
+		}
+	}
 }
 
 function gameTick() {
@@ -436,7 +459,7 @@ function gameTick() {
   player.time = new Date().getTime()
   updateElement('errors',format(player.errors)) //this is the base, except in the parentheses add the HTML tag of the thing you're changing
   updateElement('eps',format(getEPS()))
-  if (player.compAmount[2]>0) {
+  if (player.compAmount.slice(2,9).reduce((a, b) => a + b, 0) > 0) {
 	  showElement('genUpgrade','block');
 	  updateElement('genIncrease',(4+player.prestiges[2])/2);
 	  updateElement('genIncreaseCost','Cost: ' + format(costs.boost));
@@ -483,6 +506,7 @@ function gameTick() {
 	  updateElement('upg20button','Cost: '+format(1e50))
 	  updateElement('upg21button','Cost: '+format(1e65))
 	  updateElement('upg22button','Cost: N1 & '+format(1e3))
+	  updateElement('upg23button','Cost: '+format(1e75))
 	  var check=0
 	  for (i=4;i<13;i++) {
 		  if (player.upgrades.includes(i)) check++
@@ -527,11 +551,9 @@ function gameTick() {
   updateElement('prestige3Req',player.prestiges[2]*40+80)
   updateElement('netMulti',(5+player.prestiges[2])/2)
   if (player.prestiges[3]>0||player.warnings.gt(0)) {
-	document.getElementById("percentToWarning").style.width='calc(100% - 180px)'
     showElement('warnings','block')
     updateElement('warnings','You have '+format(player.warnings)+' warnings.')
   } else {
-	document.getElementById("percentToWarning").style.width='100%'
     hideElement('warnings','block')
   }
   if (tab=='computers') {
@@ -549,6 +571,9 @@ function gameTick() {
 			hideElement(TIER_NAMES[i+4]+'Comp')
 		  }
 	  }
+  }
+  if (tab=='warning') {
+	  updateElement("w1Multi",getUpgradeMultiplier(1).toFixed(2))
   }
   if (tab=='stats') {
 	  updateElement('statsTotal','You have gained a total of '+format(player.totalErrors)+' errors.')
@@ -663,6 +688,9 @@ function load(savefile) {
 			savefile.prestiges[3]=0
 			savefile.warnings=0
 			savefile.totalWarnings=0
+		}
+	    if (savefile.build < 6) {
+			savefile.warningUpgrades=[]
 		}
 	  }
 	  savefile.version = player.version

@@ -13,7 +13,7 @@ player = {
   time: 0, //total time displayed in stats
   version: 1, //very important
   build: 15, //used for us to communicate commits, helps a lot
-  hotfix: 4, //another way
+  hotfix: 5, //another way
   options: {
 	  hotkeys:true, //whether or not hotkeys are enabled (on by default)
 	  notation:0 //notation setting, see options
@@ -406,8 +406,9 @@ function buyUpg(id) {
 function gameTick() {
   if (player.time>0) {
 	  var s=(new Date().getTime()-player.time)/1000 // number of seconds since last tick
-	  player.errors = player.errors.add(getEPS().mul(s));
-	  player.totalErrors = player.totalErrors.add(getEPS().mul(s));
+	  var maximumAdd = getEPS().mul(s).min(Decimal.sub(Number.MAX_VALUE,player.errors))
+	  player.errors = player.errors.add(maximumAdd);
+	  player.totalErrors = player.totalErrors.add(maximumAdd);
 	  player.playtime+=s
   }
   player.time = new Date().getTime()

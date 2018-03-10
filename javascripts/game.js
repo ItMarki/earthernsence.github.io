@@ -15,7 +15,7 @@ player = {
   time: 0, //total time displayed in stats
   version: 1.5, //very important
   build: 5, //used for us to communicate commits, helps a lot
-  hotfix: 1, //another way to use commits
+  hotfix: 2, //another way to use commits
   options: {
 	  hotkeys:true, //whether or not hotkeys are enabled (on by default)
 	  notation:0 //notation setting, see options
@@ -213,7 +213,6 @@ function maxGen() {
 	for (tier=Math.min(player.prestiges[1]+3,8);tier>-1;tier--) {
 		if (player.errors.gte(costs.comp[tier])) {
 			var bulk=Math.max(Math.floor(player.errors.div(costs.comp[tier]).times(costMult[tier]-1).add(1).log10()/Math.log10(costMult[tier])),0)
-			console.log(bulk)
 			player.errors=player.errors.sub(Decimal.pow(costMult[tier],bulk).sub(1).div(costMult[tier]-1).times(costs.comp[tier]))
 			player.compAmount[tier]+=bulk
 			updateCosts()
@@ -272,8 +271,6 @@ function prestige(tier) {
 	var warningGain=1
 	player.warnings=(tier==4)?player.warnings.add(warningGain):new Decimal(0)
 	player.totalWarnings=(tier==Infinity)?new Decimal(0):player.totalWarnings.add(warningGain)
-	  case 0: newStory(23); break;
-	  case 1: newStory(24); break;
   }
   if (tier>2) {
 	//Tier 3 - Networks
@@ -321,7 +318,7 @@ switch(player.prestiges[1]) {
     player.prestiges[2]++;
     switch(player.prestiges[2]) {
       case 1: newStory(17); break;
-case 2: newStory(22); break;
+	  case 2: newStory(22); break;
       case 3: newStory(23); break;
     }
   } else if (tier>3) {
@@ -330,6 +327,8 @@ case 2: newStory(22); break;
   if (tier==4) {
     player.prestiges[3]++;
     switch(player.prestiges[3]) {
+      case 1: newStory(24); break;
+      case 2: newStory(25); break;
     }
   } else if (tier>4) {
     player.prestiges[3] = 0
@@ -507,7 +506,7 @@ function gameTick() {
 		  else if (checkIfAffordable(i)) updateClass('upg'+i+'button','')
 		  else updateClass('upg'+i+'button','cantBuy')
 	  }
-	  for (i=17;i<20;i++) {
+	  for (i=17;i<22;i++) {
 		  if (player.upgrades.includes(i)) updateClass('upg'+i+'button','boughtUpgrade')
 		  else if (checkIfAffordable(i)) updateClass('upg'+i+'button','')
 		  else updateClass('upg'+i+'button','cantBuy')
@@ -529,6 +528,9 @@ function gameTick() {
 		  else if (checkIfAffordable(i)) updateClass('upg'+i+'button','')
 		  else updateClass('upg'+i+'button','cantBuy')
 	  }
+	  if (player.upgrades.includes(22)) updateClass('upg'+22+'button','boughtUpgrade')
+	  else if (checkIfAffordable(22)) updateClass('upg'+22+'button','')
+	  else updateClass('upg'+22+'button','cantBuy')
   }
   updateElement('prestige3Req',player.prestiges[2]*40+80)
   updateElement('netMulti',(5+player.prestiges[2])/2)

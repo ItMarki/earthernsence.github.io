@@ -14,7 +14,7 @@ player = {
   playtime: 0, //total time spent online ingame
   time: 0, //total time displayed in stats
   version: 1.5, //very important
-  build: 4, //used for us to communicate commits, helps a lot
+  build: 5, //used for us to communicate commits, helps a lot
   hotfix: 1, //another way to use commits
   options: {
 	  hotkeys:true, //whether or not hotkeys are enabled (on by default)
@@ -42,8 +42,6 @@ function updateElement(elementID,value) {
 function updateClass(elementID,value) {
 	document.getElementById(elementID).className=value
 }
-
-
 	
 function showElement(elementID,style) {
 	document.getElementById(elementID).style.display=style
@@ -230,6 +228,7 @@ function maxGen() {
 		}
 	}
 }
+
 function buyGenUpgrade() {
   if (player.errors.gte(costs.boost)) {
     player.errors=player.errors.sub(costs.boost)
@@ -254,12 +253,18 @@ function prestige(tier) {
     case 4: if (player.errors.lt(Number.MAX_VALUE)) return; break;
     case Infinity: if (!confirm('Are you really sure to reset? You will lose everything you have!')) return; break;
   }
+    if (player.compAmount[Math.min(player.prestiges[0],8)]<Math.max(player.prestiges[0]*10-70,10) && tier == 1) return;
+    else if (player.compAmount[Math.min(player.prestiges[1]+3,8)]<Math.max(player.prestiges[1]*15-40,20) && tier == 2) return;
+    else if (player.compAmount[8]<player.prestiges[2]*40+80 && tier == 3) return;
+    else if (player.errors.lt(Number.MAX_VALUE) && tier == 4) return;
+    else if (tier == Infinity && !confirm('Are you really sure to reset? You will lose everything you have!')) return;
   if (tier==Infinity) {
 	//Highest tier - Hard reset
 	localStorage.clear('errorSave')
 	player.playtime=0
 	player.totalErrors=new Decimal(0)
 	player.story=-1
+	  player.prestiges=[0,0,0]
 	updateStory()
   }
   if (tier>3) {
@@ -803,6 +808,6 @@ function gameInit() {
 	setInterval(function(){
 		updateElement('title','CEG: '+realPercentage.toFixed(2)+'%')
 	},1000)
-	setInterval(save,10000);
+	setInterval(save,1000);
 }
 

@@ -242,12 +242,10 @@ function maxGenUpgrade() {
 }
 
 function prestige(tier) {
-  switch(tier) { //don't allow prestiging until you match reqs
-    case 1: if (player.compAmount[Math.min(player.prestiges[0],8)]<Math.max(player.prestiges[0]*10-70,10)) return; 
-    case 2: if (player.compAmount[Math.min(player.prestiges[1]+3,8)]<Math.max(player.prestiges[1]*15-40,20)) return; 
-    case 3: if (player.compAmount[8]<player.prestiges[2]*40+80) return; 
-    case Infinity: if (!confirm('Are you really sure to reset? You will lose everything you have!')) return; 
-  }
+    if (player.compAmount[Math.min(player.prestiges[0],8)]<Math.max(player.prestiges[0]*10-70,10) && tier == 1) return;
+    if (player.compAmount[Math.min(player.prestiges[1]+3,8)]<Math.max(player.prestiges[1]*15-40,20) && tier == 2) return;
+    if (player.compAmount[8]<player.prestiges[2]*40+80 && tier == 3) return;
+    if (!confirm('Are you really sure to reset? You will lose everything you have!') && tier == Infinity) return;
   if (tier==Infinity) {
 	//Highest tier - Hard reset
 	localStorage.clear('errorSave')
@@ -288,7 +286,7 @@ function prestige(tier) {
       switch(player.prestiges[1]) {
         case 1: newStory(8); break;
         case 2: newStory(10); break;
-case 3: newStory(11); break;
+	case 3: newStory(11); break;
         case 4: newStory(12); break;
         case 5: newStory(13); break;
         case 6: newStory(14); break;

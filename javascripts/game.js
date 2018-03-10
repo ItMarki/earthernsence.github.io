@@ -526,11 +526,9 @@ function gameTick() {
   updateElement('prestige3Req',player.prestiges[2]*40+80)
   updateElement('netMulti',(5+player.prestiges[2])/2)
   if (player.prestiges[3]>0||player.warnings.gt(0)) {
-	document.getElementById("percentToWarning").style.width='calc(100% - 180px)'
     showElement('warnings','block')
     updateElement('warnings','You have '+format(player.warnings)+' warnings.')
   } else {
-	document.getElementById("percentToWarning").style.width='100%'
     hideElement('warnings','block')
   }
   if (tab=='computers') {

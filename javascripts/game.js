@@ -243,10 +243,10 @@ function maxGenUpgrade() {
 
 function prestige(tier) {
   switch(tier) { //don't allow prestiging until you match reqs
-    case 1: if (player.compAmount[Math.min(player.prestiges[0],8)]<Math.max(player.prestiges[0]*10-70,10)) return; break;
-    case 2: if (player.compAmount[Math.min(player.prestiges[1]+3,8)]<Math.max(player.prestiges[1]*15-40,20)) return; break;
-    case 3: if (player.compAmount[8]<player.prestiges[2]*40+80) return; break;
-    case Infinity: if (!confirm('Are you really sure to reset? You will lose everything you have!')) return; break;
+    case 1: if (player.compAmount[Math.min(player.prestiges[0],8)]<Math.max(player.prestiges[0]*10-70,10)) return; 
+    case 2: if (player.compAmount[Math.min(player.prestiges[1]+3,8)]<Math.max(player.prestiges[1]*15-40,20)) return; 
+    case 3: if (player.compAmount[8]<player.prestiges[2]*40+80) return; 
+    case Infinity: if (!confirm('Are you really sure to reset? You will lose everything you have!')) return; 
   }
   if (tier==Infinity) {
 	//Highest tier - Hard reset

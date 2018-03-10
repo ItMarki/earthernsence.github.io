@@ -13,7 +13,7 @@ player = {
   time: 0, //total time displayed in stats
   version: 1, //very important
   build: 15, //used for us to communicate commits, helps a lot
-  hotfix: 3, //another way
+  hotfix: 4, //another way
   options: {
 	  hotkeys:true, //whether or not hotkeys are enabled (on by default)
 	  notation:0 //notation setting, see options
@@ -254,6 +254,7 @@ function prestige(tier) {
 	player.playtime=0
 	player.totalErrors=new Decimal(0)
 	player.story=-1
+	  player.prestiges=[0,0,0]
 	updateStory()
   }
   if (tier>2) {

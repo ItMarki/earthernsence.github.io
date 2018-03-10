@@ -544,7 +544,7 @@ function gameTick() {
 	  }
 	  for (i=0;i<5;i++) {
 		  if (player.prestiges[1]>i) {
-			showElement(TIER_NAMES[i+4]+'Comp','table-row')
+			showElement(TIER_NAMES[i+4]+'Comp','block')
 		  } else {
 			hideElement(TIER_NAMES[i+4]+'Comp')
 		  }

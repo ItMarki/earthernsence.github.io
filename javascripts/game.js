@@ -15,7 +15,7 @@ player = {
   time: 0, //total time displayed in stats
   version: 1.5, //very important
   build: 5, //used for us to communicate commits, helps a lot
-  hotfix: 2, //another way to use commits
+  hotfix: 3, //another way to use commits
   options: {
 	  hotkeys:true, //whether or not hotkeys are enabled (on by default)
 	  notation:0 //notation setting, see options
@@ -245,13 +245,6 @@ function maxGenUpgrade() {
 }
 
 function prestige(tier) {
-  switch(tier) { //don't allow prestiging until you match reqs
-    case 1: if (player.compAmount[Math.min(player.prestiges[0],8)]<Math.max(player.prestiges[0]*10-70,10)) return; break;
-    case 2: if (player.compAmount[Math.min(player.prestiges[1]+3,8)]<Math.max(player.prestiges[1]*15-40,20)) return; break;
-    case 3: if (player.compAmount[8]<player.prestiges[2]*40+80) return; break;
-    case 4: if (player.errors.lt(Number.MAX_VALUE)) return; break;
-    case Infinity: if (!confirm('Are you really sure to reset? You will lose everything you have!')) return; break;
-  }
     if (player.compAmount[Math.min(player.prestiges[0],8)]<Math.max(player.prestiges[0]*10-70,10) && tier == 1) return;
     else if (player.compAmount[Math.min(player.prestiges[1]+3,8)]<Math.max(player.prestiges[1]*15-40,20) && tier == 2) return;
     else if (player.compAmount[8]<player.prestiges[2]*40+80 && tier == 3) return;
@@ -263,12 +256,10 @@ function prestige(tier) {
 	player.playtime=0
 	player.totalErrors=new Decimal(0)
 	player.story=-1
-	  player.prestiges=[0,0,0]
 	updateStory()
   }
   if (tier>3) {
 	//Tier 4 - Warnings
-	newStory(25)
 	var warningGain=1
 	player.warnings=(tier==4)?player.warnings.add(warningGain):new Decimal(0)
 	player.totalWarnings=(tier==Infinity)?new Decimal(0):player.totalWarnings.add(warningGain)
@@ -597,7 +588,6 @@ function gameTick() {
 		  hideElement('statsPrestige4')
 	  }
   }
-  if player.errors.gte(Number.MAX_VALUE) newStory(24)
 }
 
 function save() {

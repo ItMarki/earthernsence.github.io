@@ -267,8 +267,8 @@ function prestige(tier) {
 	var warningGain=1
 	player.warnings=(tier==4)?player.warnings.add(warningGain):new Decimal(0)
 	player.totalWarnings=(tier==Infinity)?new Decimal(0):player.totalWarnings.add(warningGain)
-	  case 0: newStory(23); break;
-	  case 1: newStory(24); break;
+//	  case 0: newStory(23); break;
+//	  case 1: newStory(24); break;
   }
   if (tier>2) {
 	//Tier 3 - Networks

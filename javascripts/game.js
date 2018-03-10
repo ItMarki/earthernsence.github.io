@@ -251,7 +251,7 @@ function prestige(tier) {
     case 1: if (player.compAmount[Math.min(player.prestiges[0],8)]<Math.max(player.prestiges[0]*10-70,10)) return; break;
     case 2: if (player.compAmount[Math.min(player.prestiges[1]+3,8)]<Math.max(player.prestiges[1]*15-40,20)) return; break;
     case 3: if (player.compAmount[8]<player.prestiges[2]*40+80) return; break;
-    case 4: if (player.errors.lt(Number.MAX_VALUE)) return; break;
+    case 4: if (player.errors.lt(NUMBER.MAX_VALUE)) return; break;
     case Infinity: if (!confirm('Are you really sure to reset? You will lose everything you have!')) return; break;
   }
   if (tier==Infinity) {
@@ -264,11 +264,10 @@ function prestige(tier) {
   }
   if (tier>3) {
 	//Tier 4 - Warnings
+	if (player.totalWarning == 0) newStory(24)
 	var warningGain=1
 	player.warnings=(tier==4)?player.warnings.add(warningGain):new Decimal(0)
 	player.totalWarnings=(tier==Infinity)?new Decimal(0):player.totalWarnings.add(warningGain)
-//	  case 0: newStory(23); break;
-//	  case 1: newStory(24); break;
   }
   if (tier>2) {
 	//Tier 3 - Networks
@@ -589,6 +588,7 @@ function gameTick() {
 		  hideElement('statsPrestige4')
 	  }
   }
+  if player.errors.gte(NUMBER.MAX_VALUE) newStory(23)
 }
 
 function save() {

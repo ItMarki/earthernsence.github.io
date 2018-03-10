@@ -782,7 +782,7 @@ window.addEventListener('keydown', function(event) {
             document.getElementById("maxAll").onclick()
         break;
 		    
-        case 84: // T
+        case 80: // P
 		    if (shiftDown) buyGenUpgrade(); 
         else  maxGenUpgrade();
         break;

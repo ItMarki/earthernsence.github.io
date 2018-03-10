@@ -103,6 +103,13 @@ font-size: 14px
 .tabButton:hover {
 	background-color: lightgray;
 }
+.warningUpgrade {
+	width:160px;
+	height:64px
+}
+.tabButton:hover {
+	background-color: lightgray;
+}
 #warnings {
 	position:fixed;
     width:180px;

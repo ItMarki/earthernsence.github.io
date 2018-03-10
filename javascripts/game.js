@@ -11,11 +11,12 @@ defaultPlayer = {
   upgrades: [], //see lines 261-274
   warnings: new Decimal(0), //displayed on the bottom bar
   totalWarnings: new Decimal(0), //displayed in stats
+  warningUpgrades: [],
   playtime: 0, //total time spent online ingame
   time: 0, //total time displayed in stats
   version: 1.5, //very important
-  build: 5, //used for us to communicate commits, helps a lot
-  hotfix: 3, //another way to use commits
+  build: 6, //used for us to communicate commits, helps a lot
+  hotfix: 1, //another way to use commits
   options: {
 	  hotkeys:true, //whether or not hotkeys are enabled (on by default)
 	  notation:0 //notation setting, see options
@@ -354,6 +355,8 @@ function getMultTier(tier) {  let ret = new Decimal.pow(10,tier-1)
   if (player.upgrades.includes(13)) ret = ret.mul(Math.pow(1.05,Math.sqrt(player.compAmount[0]+player.compAmount[1]+player.compAmount[2]+player.compAmount[3]+player.compAmount[4]+player.compAmount[5]+player.compAmount[6]+player.compAmount[7]+player.compAmount[8])))
   if (player.upgrades.includes(14)&&tier<5) ret = ret.mul(10)
   if (player.upgrades.includes(22)) ret = ret.mul(1000000)
+	  
+  if (player.warningUpgrades.includes(1)) ret = ret.mul(getUpgradeMultiplier(1))
   return ret
 }
 
@@ -423,6 +426,24 @@ function buyUpg(id) {
 		case 13: player.errors=player.errors.sub(1e140); break
 	}
 	player.upgrades.push(id)
+}
+
+function getUpgradeMultiplier(id) {
+	if (id==1) return Math.sqrt((player.playtime+1)/86400*2)
+}
+
+function buyWarUpg(id) {
+	if (!player.warningUpgrades.includes(id)) {
+		var warnCost
+		switch (id) {
+			case 1: warnCost=1; break
+		}
+		console.log(warnCost)
+		if (player.warnings.gte(warnCost)) {
+			player.warnings=player.warnings.sub(warnCost)
+			player.warningUpgrades.push(id)
+		}
+	}
 }
 
 function gameTick() {
@@ -551,6 +572,9 @@ function gameTick() {
 		  }
 	  }
   }
+  if (tab=='warning') {
+	  updateElement("w1Multi",getUpgradeMultiplier(1).toFixed(2))
+  }
   if (tab=='stats') {
 	  updateElement('statsTotal','You have gained a total of '+format(player.totalErrors)+' errors.')
 	  updateElement('statsPlaytime','You have played for '+formatTime(player.playtime)+'.')
@@ -664,6 +688,9 @@ function load(savefile) {
 			savefile.prestiges[3]=0
 			savefile.warnings=0
 			savefile.totalWarnings=0
+		}
+	    if (savefile.build < 6) {
+			savefile.warningUpgrades=[]
 		}
 	  }
 	  savefile.version = player.version

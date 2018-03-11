@@ -2,18 +2,18 @@
 <!--game.html and only game.html. v1.5 edits-->
 <html>
 <head>
-	<link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
+	<link href='https://fonts.googleapis.com/css?family=Poiret+One' rel='stylesheet'>
 	<style>
 		body {
 			background-color: #999999;
 			margin:0;
-			font-family:Montserrat;
+			font-family:Poriet+One;
 		}
-		button {background-color: #e5e5e5; font-family:Montserrat; margin-left:5px; border:none}
+		button {background-color: #e5e5e5; font-family:Poriet+One; margin-left:5px; border:none}
 		.optionButton {
 			height:48px;
 			width:72px;
-			font-family:Montserrat;
+			font-family:Poriet+One;
 		}
 		.commonButton {
 background-color: black; 
@@ -25,7 +25,7 @@ text-align: center;
 text-decoration: none; 
 display: inline-block; 
 font-size: 14px; 
-			font-family:Montserrat;
+			font-family:Poriet+One;
 		}			
 	</style>
     <link rel="stylesheet" type="text/css" href="../stylesheets/styles.css" />
@@ -62,7 +62,7 @@ font-size: 14px;
 	  <td><button class='optionButton' onclick='switchNotation()'>Notation: <div id="notationID">Standard</div></button></td>
 	  <td><button class='optionButton' onClick='prestige(Infinity)'>Reset</button></td></tr></table>
 	  <div id='exportSave' style='display:none'> Here is your export save. The dev recommends putting it in a safe spot. <input id='exportText' style='width: 480px'></input></div>
-	<div id='hotkeyText'>P=Max production boost, U=upgrade cmputers, I=IP change and Internet boost, N=network.</div>
+	<div id='hotkeyText'>P=Max production boost, U=Upgrade computers, I=IP change and Internet boost, N=Network.</div>
 	</div>
   <div id='statsTab' style='display:none'>
 	  <div id='statsTotal'>You have gained a total of X errors.</div>
@@ -78,6 +78,7 @@ font-size: 14px;
 <div id="warningTab" style="display:none">
 	<h1 id="warningHeader"> Warning Upgrades </h1>
 	<table align=center><tr><td><button class='warningUpgrade' onClick='buyWarUpg(1)'>Production boost over total time.<br>Currently <text id="w1Multi">X</text>x.</button></td></tr></table>
+	<table align=center><tr><td><button class='warningUpgrade' onClick='buyWarUpg(2)'>Production boost based on how many warning upgrades you have. (warUpg*2)<br>Currently <text id="w2Multi">X</text>x.</button></td></tr></table>
 	</div>
 	
   <table class='sidebar' align=right style='position:absolute; height:100%; top:0px; right:15px; width:20%'>

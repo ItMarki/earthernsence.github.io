@@ -460,8 +460,8 @@ function buyUpg(id) {
 }
 
 function getUpgradeMultiplier(id) {
-	if (id==1) mp = Math.sqrt((player.playtime+1)/86400*2)
-	if (id==2) mp = Math.sqrt((player.warningUpgrades)*2)
+	if (id==1) mp = 1+Math.sqrt((player.playtime+1)/86400*2)
+	if (id==2) mp = player.warningUpgrades.length*2
 	return Math.max(1, mp)
 }
 

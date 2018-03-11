@@ -15,7 +15,7 @@ const defaultPlayer = {
   playtime: 0, //total time spent online ingame
   time: 0, //total time displayed in stats
   version: 1.5, //very important
-  build: 9, //used for us to communicate commits, helps a lot
+  build: 10, //used for us to communicate commits, helps a lot
   hotfix: 2, //another way to use commits
   options: {
 	  hotkeys:true, //whether or not hotkeys are enabled (on by default)
@@ -471,6 +471,7 @@ function buyWarUpg(id) {
 		switch (id) {
 			case 1: warnCost=1; break
 			case 2: warnCost=1; break
+			case 3: warnCost=2; break
 		}
 		console.log(warnCost)
 		if (player.warnings.gte(warnCost)) {

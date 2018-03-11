@@ -33,9 +33,32 @@ const ROMAN_NUMERALS=[]
 const costMult=[2,2.5,3,4,5,6,8,10,12]
 
 var costs={comp:[new Decimal(10),new Decimal(100),new Decimal(1e3),new Decimal(1e4),new Decimal(1e6),new Decimal(1e8),new Decimal(1e10),new Decimal(1e13),new Decimal(1e16)],boost:new Decimal(0),upgs:[new Decimal(0)]}
-var storyMessages=["Pancakes is ready!","Wakey wakey! Aw, c'mon, you still got the rest of the day to sleep. Get up baby, get up!","Nice! A Tier III Computer. Well deserved.","A Tier IV Computer is great, isn't it?","Computers are waking up...","Ah, here we are. Awake and operational.","Network is being horrible. These upgrades don't do anything. What I'd give for an ethernet cord.","I still haven't introduced myself? I'm your first ever Tier I computer. I can't believe you've finally had the care to upgrade me.","Trust me. I stay through it all. Keep getting these I.P. Changes and we'll be set in no time.","Errors? Still? You can do better than that!",
-	"Atta boy! Keep getting em. Also, Tier VI Computers are my best friends. Get more!","Tier VII computers are bullies. Get through them NOW.","Tier VIII! Soon, everybody, soon.","The Internet Boosts are in sight. Get 20 Tier IX computers to buy one.","I got a boost? Good job, you get a <i>small</i> prize.","Networks was found, but all are private for me. :(","The PC found a network! This seems legit. Let's hop on.","Computer: Connecting network. Please wait, this may take a few minutes.","Aw, really? I hate these things.","Computer: Connected.",
-	"Finally! Can't wait to test this bad boy out.","Hey, we're off! Got a I.P. Change as well. The end is near.","Another network? I find out your new network was better so I installed it.","A third network? I am getting notifications for that...","Mighty large number you got there! Sorry, but it' mandatory operation to reset it.","Now you've gotta do it all over again. But you are <i>stronger</i>. Get out there! Make me proud!"]
+var storyMessages=["Pancakes is ready!",
+"Wakey wakey! Aw, c'mon, you still got the rest of the day to sleep. Get up baby, get up!",
+"Nice! A Tier III Computer. Well deserved.",
+"A Tier IV Computer is great, isn't it?",
+"Computers are waking up...",
+"Ah, here we are. Awake and operational.",
+"Network is being horrible. These upgrades don't do anything. What I'd give for an ethernet cord.",
+"I still haven't introduced myself? I'm your first ever Tier I computer. I can't believe you've finally had the care to upgrade me.",
+"Trust me. I stay through it all. Keep getting these I.P. Changes and we'll be set in no time.",
+"Errors? Still? You can do better than that!",
+"Atta boy! Keep getting em. Also, Tier VI Computers are my best friends. Get more!",
+"Tier VII computers are bullies. Get through them NOW.",
+"Tier VIII! Soon, everybody, soon.",
+"The Internet Boosts are in sight. Get 20 Tier IX computers to buy one.",
+"I got a boost? Good job, you get a <i>small</i> prize.",
+"Networks was found, but all are private for me. :(",
+"The PC found a network! This seems legit. Let's hop on.",
+"Computer: Connecting network. Please wait, this may take a few minutes.",
+"Aw, really? I hate these things.",
+"Computer: Connected.",
+"Finally! Can't wait to test this bad boy out.",
+"Hey, we're off! Got a I.P. Change as well. The end is near.",
+"Another network? I find out your new network was better so I installed it.",
+"A third network? I am getting notifications for that...",
+"Mighty large number you got there! Sorry, but it's mandatory operation to reset it.",
+"Now you've gotta do it all over again. But you are <i>stronger</i>. Get out there! Make me proud!"]
 	
 function updateElement(elementID,value) {
 	document.getElementById(elementID).innerHTML=value
@@ -126,22 +149,30 @@ function letter(label) {
 }
 
 function formatTime(s) {
-	if (s < 1) {
-		return Math.floor(s*1000)+' milliseconds'
-	} else if (s < 60) {
-		return Math.floor(s*100)/100+' seconds'
-	} else if (s < 3600) {
-		return Math.floor(s/60)+' minutes and '+Math.floor(s%60)+' seconds'
-	} else if (s < 86400) {
-		return Math.floor(s/3600)+' hours, '+Math.floor(s/60%60)+' minutes, and '+Math.floor(s%60)+' seconds'
-	} else if (s < 2629746) {
-		return Math.floor(s/86400)+' days, '+Math.floor(s/3600%24)+' hours, '+Math.floor(s/60%60)+' minutes, and '+Math.floor(s%60)+' seconds'
-	} else if (s < 31556952) {
-		return Math.floor(s/2629746)+' months, '+Math.floor(s%2629746/86400)+' days, '+Math.floor(s%2629746/3600%24)+' hours, '+Math.floor(s%2629746/60%60)+' minutes, and '+Math.floor(s%2629746%60)+' seconds'
-	} else if (s < Infinity) {
-		return format(Math.floor(s/31556952))+' years, '+Math.floor(s/2629746%12)+' months, '+Math.floor(s%2629746/86400)+' days, '+Math.floor(s%2629746/3600%24)+' hours, '+Math.floor(s%2629746/60%60)+' minutes, and '+Math.floor(s%2629746%60)+' seconds'
-	} else {
-		return 'Infinite'
+  if (s < Infinity) {
+    times = {'year':31556952,
+    'month':2592000,
+    'day':86400,
+    'hour':3600,
+    'minute':60,
+    'second':1}
+    out = []
+    for (var name in times) {
+      len = times[name]
+      if (s > len) {
+        amounts = Math.floor(s/len)
+        out.push(amounts.toString() + " " + name + (s>1?'s':''))
+        s = s % len
+      }
+    }
+    if (out.length >= 2) {
+      var first = out.pop()
+      var second = out.pop()
+      out.push(second + ' and ' + first)
+    }
+    return out.join(', ')
+  } else {
+		return 'forever'
 	}
 }
 

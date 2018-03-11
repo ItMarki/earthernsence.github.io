@@ -149,22 +149,30 @@ function letter(label) {
 }
 
 function formatTime(s) {
-	if (s < 1) {
-		return Math.floor(s*1000)+' milliseconds'
-	} else if (s < 60) {
-		return Math.floor(s*100)/100+' seconds'
-	} else if (s < 3600) {
-		return Math.floor(s/60)+' minutes and '+Math.floor(s%60)+' seconds'
-	} else if (s < 86400) {
-		return Math.floor(s/3600)+' hours, '+Math.floor(s/60%60)+' minutes, and '+Math.floor(s%60)+' seconds'
-	} else if (s < 2629746) {
-		return Math.floor(s/86400)+' days, '+Math.floor(s/3600%24)+' hours, '+Math.floor(s/60%60)+' minutes, and '+Math.floor(s%60)+' seconds'
-	} else if (s < 31556952) {
-		return Math.floor(s/2629746)+' months, '+Math.floor(s%2629746/86400)+' days, '+Math.floor(s%2629746/3600%24)+' hours, '+Math.floor(s%2629746/60%60)+' minutes, and '+Math.floor(s%2629746%60)+' seconds'
-	} else if (s < Infinity) {
-		return format(Math.floor(s/31556952))+' years, '+Math.floor(s/2629746%12)+' months, '+Math.floor(s%2629746/86400)+' days, '+Math.floor(s%2629746/3600%24)+' hours, '+Math.floor(s%2629746/60%60)+' minutes, and '+Math.floor(s%2629746%60)+' seconds'
-	} else {
-		return 'Infinite'
+  if (s < Infinity) {
+    times = {'year':31556952,
+    'month':2592000,
+    'day':86400,
+    'hour':3600,
+    'minute':60,
+    'second':1}
+    out = []
+    for (var name in times) {
+      len = times[name]
+      if (s > len) {
+        amounts = Math.floor(s/len)
+        out.push(amounts.toString() + " " + name + (s>1?'s':''))
+        s = s % len
+      }
+    }
+    if (out.length >= 2) {
+      var first = out.pop()
+      var second = out.pop()
+      out.push(second + ' and ' + first)
+    }
+    return out.join(', ')
+  } else {
+		return 'forever'
 	}
 }
 

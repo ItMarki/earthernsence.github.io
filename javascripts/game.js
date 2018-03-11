@@ -1,7 +1,7 @@
 //game.js and only game.js-v1.5 edits
 var shiftDown=false;
 var controlDown=false;
-defaultPlayer = {
+const defaultPlayer = {
   errors: new Decimal(10), //current errors
   totalErrors: new Decimal(0), //total errors that display in stats
   compAmount: [0,0,0,0,0,0,0,0,0], //amounts that are shown on computer button
@@ -33,9 +33,32 @@ const ROMAN_NUMERALS=[]
 const costMult=[2,2.5,3,4,5,6,8,10,12]
 
 var costs={comp:[new Decimal(10),new Decimal(100),new Decimal(1e3),new Decimal(1e4),new Decimal(1e6),new Decimal(1e8),new Decimal(1e10),new Decimal(1e13),new Decimal(1e16)],boost:new Decimal(0),upgs:[new Decimal(0)]}
-var storyMessages=["Pancakes is ready!","Wakey wakey! Aw, c'mon, you still got the rest of the day to sleep. Get up baby, get up!","Nice! A Tier III Computer. Well deserved.","A Tier IV Computer is great, isn't it?","Computers are waking up...","Ah, here we are. Awake and operational.","Network is being horrible. These upgrades don't do anything. What I'd give for an ethernet cord.","I still haven't introduced myself? I'm your first ever Tier I computer. I can't believe you've finally had the care to upgrade me.","Trust me. I stay through it all. Keep getting these I.P. Changes and we'll be set in no time.","Errors? Still? You can do better than that!",
-	"Atta boy! Keep getting em. Also, Tier VI Computers are my best friends. Get more!","Tier VII computers are bullies. Get through them NOW.","Tier VIII! Soon, everybody, soon.","The Internet Boosts are in sight. Get 20 Tier IX computers to buy one.","I got a boost? Good job, you get a <i>small</i> prize.","Networks was found, but all are private for me. :(","The PC found a network! This seems legit. Let's hop on.","Computer: Connecting network. Please wait, this may take a few minutes.","Aw, really? I hate these things.","Computer: Connected.",
-	"Finally! Can't wait to test this bad boy out.","Hey, we're off! Got a I.P. Change as well. The end is near.","Another network? I find out your new network was better so I installed it.","A third network? I am getting notifications for that...","Mighty large number you got there! Sorry, but it' mandatory operation to reset it.","Now you've gotta do it all over again. But you are <i>stronger</i>. Get out there! Make me proud!"]
+var storyMessages=["Pancakes is ready!",
+"Wakey wakey! Aw, c'mon, you still got the rest of the day to sleep. Get up baby, get up!",
+"Nice! A Tier III Computer. Well deserved.",
+"A Tier IV Computer is great, isn't it?",
+"Computers are waking up...",
+"Ah, here we are. Awake and operational.",
+"Network is being horrible. These upgrades don't do anything. What I'd give for an ethernet cord.",
+"I still haven't introduced myself? I'm your first ever Tier I computer. I can't believe you've finally had the care to upgrade me.",
+"Trust me. I stay through it all. Keep getting these I.P. Changes and we'll be set in no time.",
+"Errors? Still? You can do better than that!",
+"Atta boy! Keep getting em. Also, Tier VI Computers are my best friends. Get more!",
+"Tier VII computers are bullies. Get through them NOW.",
+"Tier VIII! Soon, everybody, soon.",
+"The Internet Boosts are in sight. Get 20 Tier IX computers to buy one.",
+"I got a boost? Good job, you get a <i>small</i> prize.",
+"Networks was found, but all are private for me. :(",
+"The PC found a network! This seems legit. Let's hop on.",
+"Computer: Connecting network. Please wait, this may take a few minutes.",
+"Aw, really? I hate these things.",
+"Computer: Connected.",
+"Finally! Can't wait to test this bad boy out.",
+"Hey, we're off! Got a I.P. Change as well. The end is near.",
+"Another network? I find out your new network was better so I installed it.",
+"A third network? I am getting notifications for that...",
+"Mighty large number you got there! Sorry, but it's mandatory operation to reset it.",
+"Now you've gotta do it all over again. But you are <i>stronger</i>. Get out there! Make me proud!"]
 	
 function updateElement(elementID,value) {
 	document.getElementById(elementID).innerHTML=value
@@ -126,22 +149,30 @@ function letter(label) {
 }
 
 function formatTime(s) {
-	if (s < 1) {
-		return Math.floor(s*1000)+' milliseconds'
-	} else if (s < 60) {
-		return Math.floor(s*100)/100+' seconds'
-	} else if (s < 3600) {
-		return Math.floor(s/60)+' minutes and '+Math.floor(s%60)+' seconds'
-	} else if (s < 86400) {
-		return Math.floor(s/3600)+' hours, '+Math.floor(s/60%60)+' minutes, and '+Math.floor(s%60)+' seconds'
-	} else if (s < 2629746) {
-		return Math.floor(s/86400)+' days, '+Math.floor(s/3600%24)+' hours, '+Math.floor(s/60%60)+' minutes, and '+Math.floor(s%60)+' seconds'
-	} else if (s < 31556952) {
-		return Math.floor(s/2629746)+' months, '+Math.floor(s%2629746/86400)+' days, '+Math.floor(s%2629746/3600%24)+' hours, '+Math.floor(s%2629746/60%60)+' minutes, and '+Math.floor(s%2629746%60)+' seconds'
-	} else if (s < Infinity) {
-		return format(Math.floor(s/31556952))+' years, '+Math.floor(s/2629746%12)+' months, '+Math.floor(s%2629746/86400)+' days, '+Math.floor(s%2629746/3600%24)+' hours, '+Math.floor(s%2629746/60%60)+' minutes, and '+Math.floor(s%2629746%60)+' seconds'
-	} else {
-		return 'Infinite'
+  if (s < Infinity) {
+    times = {'year':31556952,
+    'month':2592000,
+    'day':86400,
+    'hour':3600,
+    'minute':60,
+    'second':1}
+    out = []
+    for (var name in times) {
+      len = times[name]
+      if (s > len) {
+        amounts = Math.floor(s/len)
+        out.push(amounts.toString() + " " + name + (s>1?'s':''))
+        s = s % len
+      }
+    }
+    if (out.length >= 2) {
+      var first = out.pop()
+      var second = out.pop()
+      out.push(second + ' and ' + first)
+    }
+    return out.join(', ')
+  } else {
+		return 'forever'
 	}
 }
 
@@ -198,8 +229,8 @@ function updateCosts() {
 function buyGen(tier,bulk=1) {
   if (player.errors.gte(costs.comp[tier])) {
     player.errors = player.errors.sub(costs.comp[tier])
-	player.compAmount[tier]+=1
-	updateCosts()
+    player.compAmount[tier]+=1
+    updateCosts()
 
     switch (tier) {
       case 0: newStory(0); break;
@@ -247,26 +278,26 @@ function maxGenUpgrade() {
 }
 
 function prestige(tier) {
-    if (player.compAmount[Math.min(player.prestiges[0],8)]<Math.max(player.prestiges[0]*10-70,10) && tier == 1) return;
-    else if (player.compAmount[Math.min(player.prestiges[1]+3,8)]<Math.max(player.prestiges[1]*15-40,20) && tier == 2) return;
-    else if (player.compAmount[8]<player.prestiges[2]*40+80 && tier == 3) return;
-    else if (player.errors.lt(Number.MAX_VALUE) && tier == 4) return;
-    else if (tier == Infinity && !confirm('Are you really sure to reset? You will lose everything you have!')) return;
+  if (player.compAmount[Math.min(player.prestiges[0],8)]<Math.max(player.prestiges[0]*10-70,10) && tier == 1) return;
+  else if (player.compAmount[Math.min(player.prestiges[1]+3,8)]<Math.max(player.prestiges[1]*15-40,20) && tier == 2) return;
+  else if (player.compAmount[8]<player.prestiges[2]*40+80 && tier == 3) return;
+  else if (player.errors.lt(Number.MAX_VALUE) && tier == 4) return;
+  else if (tier == Infinity && !confirm('Are you really sure to reset? You will lose everything you have!')) return;
   if (tier==Infinity) {
-	//Highest tier - Hard reset
-	localStorage.clear('errorSave')
-	player = defaultPlayer
-	updateStory()
+    //Highest tier - Hard reset
+    localStorage.clear('errorSave')
+    player = defaultPlayer
+    updateStory()
   }
   if (tier>3) {
-	//Tier 4 - Warnings
-	var warningGain=1
-	player.warnings=(tier==4)?player.warnings.add(warningGain):new Decimal(0)
-	player.totalWarnings=(tier==Infinity)?new Decimal(0):player.totalWarnings.add(warningGain)
+    //Tier 4 - Warnings
+    var warningGain=1
+    player.warnings=(tier==4)?player.warnings.add(warningGain):new Decimal(0)
+    player.totalWarnings=(tier==Infinity)?new Decimal(0):player.totalWarnings.add(warningGain)
   }
   if (tier>2) {
-	//Tier 3 - Networks
-	player.upgrades=[]
+    //Tier 3 - Networks
+    player.upgrades=[]
   }
   
   player.errors = new Decimal(10); //current errors
@@ -293,11 +324,11 @@ function prestige(tier) {
   }
   if (tier==2) {
     player.prestiges[1]++
-switch(player.prestiges[1]) {
+    switch (player.prestiges[1]) {
       case 1: newStory(8); break;
       case 2: newStory(10); break;
       case 3: newStory(11); break;
-	case 4: newStory(12); break;
+      case 4: newStory(12); break;
       case 5: newStory(13); break;
       case 6: newStory(14); break;
       case 8: newStory(15); break;
@@ -310,7 +341,7 @@ switch(player.prestiges[1]) {
     player.prestiges[2]++;
     switch(player.prestiges[2]) {
       case 1: newStory(17); break;
-	  case 2: newStory(22); break;
+      case 2: newStory(22); break;
       case 3: newStory(23); break;
     }
   } else if (tier>3) {
@@ -331,9 +362,9 @@ switch(player.prestiges[1]) {
 function getMultTier(tier) {  let ret = new Decimal.pow(10,tier-1)
   ret = ret.mul(Decimal.pow(Math.pow(1.05 + Math.max((tier-4)/100,0),tier),player.compAmount[tier-1]))
   ret = ret.mul(Decimal.pow(2+0.5*player.prestiges[2],player.boostPower))
+  ret = ret.mul(Decimal.pow(2+Math.floor(player.compAmount[8]/5)*0.5,player.prestiges[1]))
   if (player.prestiges[0]>=tier) ret = ret.mul(player.upgrades.includes(14)?2.5:2)
   if (player.prestiges[0]>9&&tier==9) ret = ret.mul(Decimal.pow(player.upgrades.includes(14)?2.5:2,player.prestiges[0]-9))
-  ret = ret.mul(Decimal.pow(2+Math.floor(player.compAmount[8]/5)*0.5,player.prestiges[1]))
   if (player.upgrades.includes(1)) ret = ret.mul(2)
   if (player.upgrades.includes(2)) ret = ret.mul(5)
   if (player.upgrades.includes(3)) ret = ret.mul(10)
@@ -355,9 +386,8 @@ function getMultTier(tier) {  let ret = new Decimal.pow(10,tier-1)
   if (player.upgrades.includes(13)) ret = ret.mul(Math.pow(1.05,Math.sqrt(player.compAmount[0]+player.compAmount[1]+player.compAmount[2]+player.compAmount[3]+player.compAmount[4]+player.compAmount[5]+player.compAmount[6]+player.compAmount[7]+player.compAmount[8])))
   if (player.upgrades.includes(14)&&tier<5) ret = ret.mul(10)
   if (player.upgrades.includes(22)) ret = ret.mul(1000000)
-	  
   if (player.warningUpgrades.includes(1)) ret = ret.mul(getUpgradeMultiplier(1))
-			    if (player.warningUpgrades.includes(2)) ret = ret.mul(getUpgradeMultiplier(2))
+	if (player.warningUpgrades.includes(2)) ret = ret.mul(getUpgradeMultiplier(2))
   return ret
 }
 
@@ -375,30 +405,30 @@ function checkIfAffordable(id) {
 		case 1: if (player.errors.lt(1e4)) {return false}; return true
 		case 2: if (player.errors.lt(1e10)) {return false}; return true
 		case 3: if (player.errors.lt(1e20)) {return false}; return true
-		case 17: if (player.errors.lt(1e30)) {return false}; return true
-		case 18: if (player.errors.lt(1e35)) {return false}; return true
-		case 19: if (player.errors.lt(1e40)) {return false}; return true
-		case 20: if (player.errors.lt(1e50)) {return false}; return true
-		case 21: if (player.errors.lt(1e65)) {return false}; return true
-		case 23: if (player.errors.lt(1e75)) {return false}; return true	
-		case 4: if (player.errors.lt(1e35)||player.compAmount[0]<100) {return false}; return true
+    case 4: if (player.errors.lt(1e35)||player.compAmount[0]<100) {return false}; return true
 		case 5: if (player.errors.lt(1e40)||player.compAmount[1]<100) {return false}; return true
 		case 6: if (player.errors.lt(1e50)||player.compAmount[2]<100) {return false}; return true
 		case 7: if (player.errors.lt(1e65)||player.compAmount[3]<100) {return false}; return true
 		case 8: if (player.errors.lt(1e75)||player.compAmount[4]<100) {return false}; return true
 		case 9: if (player.errors.lt(1e85)||player.compAmount[5]<100) {return false}; return true
-case 10: if (player.errors.lt(1e100)||player.compAmount[6]<100) {return false}; return true
+    case 10: if (player.errors.lt(1e100)||player.compAmount[6]<100) {return false}; return true
 		case 11: if (player.errors.lt(1e115)||player.compAmount[7]<100) {return false}; return true
 		case 12: if (player.errors.lt(1e125)||player.compAmount[8]<100) {return false}; return true
 		case 13: if (player.errors.lt(1e140)) return false
-			for (check=4;check<13;check++) {
-				if (!player.upgrades.includes(check)||player.compAmount[check-4]<110) return false
-			}
-			return true
+             for (check=4;check<13;check++) {
+               if (!player.upgrades.includes(check)||player.compAmount[check-4]<110) return false
+             }
+             return true
 		case 14: if (player.prestiges[0]<9) {return false}; return true
 		case 15: if (player.prestiges[1]<5) {return false}; return true
 		case 16: if (player.prestiges[1]<7) {return false}; return true
-		case 22: if (player.prestiges[2]<1||player.errors.lt(1e3)) {return false}; return true
+		case 17: if (player.errors.lt(1e30)) {return false}; return true
+		case 18: if (player.errors.lt(1e35)) {return false}; return true
+		case 19: if (player.errors.lt(1e40)) {return false}; return true
+		case 20: if (player.errors.lt(1e50)) {return false}; return true
+		case 21: if (player.errors.lt(1e65)) {return false}; return true
+    case 22: if (player.prestiges[2]<1||player.errors.lt(1e3)) {return false}; return true
+		case 23: if (player.errors.lt(1e75)) {return false}; return true
 	}
 	return false
 }
@@ -409,29 +439,30 @@ function buyUpg(id) {
 		case 1: player.errors=player.errors.sub(1e4); break
 		case 2: player.errors=player.errors.sub(1e10); break
 		case 3: player.errors=player.errors.sub(1e20); break
+    case 4: player.errors=player.errors.sub(1e35); break
+		case 5: player.errors=player.errors.sub(1e40); break
+		case 6: player.errors=player.errors.sub(1e50); break
+		case 7: player.errors=player.errors.sub(1e65); break
+		case 8: player.errors=player.errors.sub(1e75); break
+		case 9: player.errors=player.errors.sub(1e85); break
+    case 10: player.errors=player.errors.sub(1e100); break
+		case 11: player.errors=player.errors.sub(1e115); break
+		case 12: player.errors=player.errors.sub(1e125); break
+		case 13: player.errors=player.errors.sub(1e140); break
 		case 17: player.errors=player.errors.sub(1e30); break
 		case 18: player.errors=player.errors.sub(1e35); break
 		case 19: player.errors=player.errors.sub(1e40); break
 		case 20: player.errors=player.errors.sub(1e50); break
 		case 21: player.errors=player.errors.sub(1e65); break
 		case 23: player.errors=player.errors.sub(1e75); break
-		case 4: player.errors=player.errors.sub(1e35); break
-		case 5: player.errors=player.errors.sub(1e40); break
-		case 6: player.errors=player.errors.sub(1e50); break
-		case 7: player.errors=player.errors.sub(1e65); break
-		case 8: player.errors=player.errors.sub(1e75); break
-		case 9: player.errors=player.errors.sub(1e85); break
-		case 10: player.errors=player.errors.sub(1e100); break
-		case 11: player.errors=player.errors.sub(1e115); break
-		case 12: player.errors=player.errors.sub(1e125); break
-		case 13: player.errors=player.errors.sub(1e140); break
 	}
 	player.upgrades.push(id)
 }
 
 function getUpgradeMultiplier(id) {
-	if (id==1) return Math.sqrt((player.playtime+1)/86400*2)
-	if (id==2) return Math.sqrt((player.warningUpgrades)*2)
+	if (id==1) mp = 1+Math.sqrt((player.playtime+1)/86400*2)
+	if (id==2) mp = player.warningUpgrades.length*2
+	return Math.max(1, mp)
 }
 
 function buyWarUpg(id) {
@@ -456,7 +487,6 @@ function gameTick() {
 	  player.totalErrors = player.totalErrors.add(getEPS().mul(s));
 	  player.playtime+=s
 	  if (player.errors.gte(Number.MAX_VALUE)) prestige(4)
-		  
 	  move()
   }
   player.time = new Date().getTime()
@@ -715,7 +745,7 @@ function load(savefile) {
 	  realPercentage=percentage
 	  updateElement('title','CEG: '+realPercentage.toFixed(2)+'%')
 	  
-      updateCosts()
+    updateCosts()
 	  updateStory()
 	  updateElement("notationID",notationArray[player.options.notation])
 	  console.log('Game loaded!')
@@ -758,7 +788,7 @@ function setupRoman() {
 
 function updateStory() {
     var Table = document.getElementsByClassName("storybox")[0].tBodies[0];
-	Table.innerHTML=''
+    Table.innerHTML=''
     for (var i=0;i<=player.story;i++) {
 		var row=Table.insertRow(i)
 		row.innerHTML='<td>'+storyMessages[i]+'</td>'

@@ -15,7 +15,7 @@ const defaultPlayer = {
   playtime: 0, //total time spent online ingame
   time: 0, //total time displayed in stats
   version: 1.5, //very important
-  build: 10, //used for us to communicate commits, helps a lot
+  build: 10.1, //used for us to communicate commits, helps a lot
   hotfix: 2, //another way to use commits
   options: {
 	  hotkeys:true, //whether or not hotkeys are enabled (on by default)
@@ -745,7 +745,6 @@ function load(savefile) {
 	  
 	  percentage=Math.min(player.errors.add(1).log10()*0.32440704,100)
 	  realPercentage=percentage
-	  updateElement('title','CEG: '+realPercentage.toFixed(2)+'%')
 	  
     updateCosts()
 	  updateStory()

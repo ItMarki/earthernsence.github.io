@@ -1,11 +1,10 @@
 <!DOCTYPE html>
-<!--game.html and only game.html. v1.5 edits-->
+<!--game.html and only game.html-->
 <html>
 <head>
 	<link href='https://fonts.googleapis.com/css?family=Poiret+One' rel='stylesheet'>
 	<style>
 		body {
-			background-color: #999999;
 			margin:0;
 			font-family:Poriet+One;
 		}
@@ -16,22 +15,23 @@
 			font-family:Poriet+One;
 		}
 		.commonButton {
-background-color: black; 
-border: solid; 
-border-width: 2px;
-color: white; 
-padding: 7.5px 16px; 
-text-align: center; 
-text-decoration: none; 
-display: inline-block; 
-font-size: 14px; 
-			font-family:Poriet+One;
-		}			
+      background-color: black; 
+      border: solid; 
+      border-width: 2px;
+      color: white; 
+      padding: 7.5px 16px; 
+      text-align: center; 
+      text-decoration: none; 
+      display: inline-block; 
+      font-size: 14px; 
+      font-family:Poriet+One;
+      }			
 	</style>
-    <link rel="stylesheet" type="text/css" href="../stylesheets/styles.css" />
+  <link rel="stylesheet" type="text/css" href="../stylesheets/styles.css" />
 	<script type="text/javascript" src="../javascripts/break_infinity.min.js"> </script>
 	<script type="text/javascript" src="../javascripts/game.js"> </script>
-	<title id='title'>CEG: The One and Only Console Error Game</title>
+	<title>CEG: The One and Only Console Error Game</title>
+	<link rel="icon" type="image/png" href="../images/ceg.png"</link>
 </head>
 <body style="text-align:center" onload='gameInit()'>
 <div id="game" style='text-align:center'>
@@ -58,11 +58,11 @@ font-size: 14px;
 	  <table align=center><tr><td><button class='optionButton' onClick='save()'>Save</button></td>
 	  <td><button class='optionButton' onClick='exportSave()'>Export</button></td>
 	  <td><button class='optionButton' onClick='importSave()'>Import</button></td>
-<td><button class='optionButton' id='hotkeysbtn' onclick='toggleHotkeys()'>Hotkeys: enabled</button></td>
+		<td><button class='optionButton' id='hotkeysbtn' onclick='toggleHotkeys()'>Hotkeys: enabled</button></td>
 	  <td><button class='optionButton' onclick='switchNotation()'>Notation: <div id="notationID">Standard</div></button></td>
 	  <td><button class='optionButton' onClick='prestige(Infinity)'>Reset</button></td></tr></table>
 	  <div id='exportSave' style='display:none'> Here is your export save. The dev recommends putting it in a safe spot. <input id='exportText' style='width: 480px'></input></div>
-	<div id='hotkeyText'>P=Max production boost, U=upgrade cmputers, I=IP change and Internet boost, N=network.</div>
+	<div id='hotkeyText'>P=Max production boost, U=Upgrade computers, I=IP change and Internet boost, N=Network.</div>
 	</div>
   <div id='statsTab' style='display:none'>
 	  <div id='statsTotal'>You have gained a total of X errors.</div>
@@ -100,8 +100,8 @@ font-size: 14px;
 		  <div><b>144hz Monitor & Faster Reboot/Startup times</b>: 50x faster computers<br><button id="upg19button" onclick='buyUpg(19)'>Cost: 1e60</button></div>
 		  <div><b>Included Mic & Maximum RAM</b>: 50x faster computers<br><button id="upg20button" onClick="buyUpg(20)">Cost: 1e75</button></div>
 		  <div><b>Quantum I</b>: 50x faster computers.<br><button id="upg21button" onClick="buyUpg(21)">Cost: 1e90</button></div>
-	      <div><b>Quantum II</b>: 50x faster computers.<br><button id="upg23button" onClick="buyUpg(23)">Cost: 1e105</button></div>
-	      <div><b>Faster computers I</b>: Production for Tier I computers increase based on the amount<br><button id="upg4button" onClick='buyUpg(4)'>Cost: 100 TI comps & 1e35</button></div>
+	          <div><b>Quantum II</b>: 50x faster computers.<br><button id="upg23button" onClick="buyUpg(23)">Cost: 1e105</button></div>
+	          <div><b>Faster computers I</b>: Production for Tier I computers increase based on the amount<br><button id="upg4button" onClick='buyUpg(4)'>Cost: 100 TI comps & 1e35</button></div>
 		  <div><b>Faster computers II</b>: Production for Tier II computers increase based on the amount<br><button id="upg5button" onClick='buyUpg(5)'>Cost: 100 TII comps & 1e40</button></div>
 		  <div><b>Faster computers III</b>: Production for Tier III computers increase based on the amount<br><button id="upg6button" onClick='buyUpg(6)'>Cost: 100 TIII comps & 1e50</button></div>
 		  <div><b>Faster computers IV</b>: Production for Tier IV computers increase based on the amount<br><button id="upg7button" onClick='buyUpg(7)'>Cost: 100 TIV comps & 1e65</button></div>

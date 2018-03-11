@@ -229,8 +229,8 @@ function updateCosts() {
 function buyGen(tier,bulk=1) {
   if (player.errors.gte(costs.comp[tier])) {
     player.errors = player.errors.sub(costs.comp[tier])
-	player.compAmount[tier]+=1
-	updateCosts()
+    player.compAmount[tier]+=1
+    updateCosts()
 
     switch (tier) {
       case 0: newStory(0); break;
@@ -278,26 +278,26 @@ function maxGenUpgrade() {
 }
 
 function prestige(tier) {
-    if (player.compAmount[Math.min(player.prestiges[0],8)]<Math.max(player.prestiges[0]*10-70,10) && tier == 1) return;
-    else if (player.compAmount[Math.min(player.prestiges[1]+3,8)]<Math.max(player.prestiges[1]*15-40,20) && tier == 2) return;
-    else if (player.compAmount[8]<player.prestiges[2]*40+80 && tier == 3) return;
-    else if (player.errors.lt(Number.MAX_VALUE) && tier == 4) return;
-    else if (tier == Infinity && !confirm('Are you really sure to reset? You will lose everything you have!')) return;
+  if (player.compAmount[Math.min(player.prestiges[0],8)]<Math.max(player.prestiges[0]*10-70,10) && tier == 1) return;
+  else if (player.compAmount[Math.min(player.prestiges[1]+3,8)]<Math.max(player.prestiges[1]*15-40,20) && tier == 2) return;
+  else if (player.compAmount[8]<player.prestiges[2]*40+80 && tier == 3) return;
+  else if (player.errors.lt(Number.MAX_VALUE) && tier == 4) return;
+  else if (tier == Infinity && !confirm('Are you really sure to reset? You will lose everything you have!')) return;
   if (tier==Infinity) {
-	//Highest tier - Hard reset
-	localStorage.clear('errorSave')
-	player = defaultPlayer
-	updateStory()
+    //Highest tier - Hard reset
+    localStorage.clear('errorSave')
+    player = defaultPlayer
+    updateStory()
   }
   if (tier>3) {
-	//Tier 4 - Warnings
-	var warningGain=1
-	player.warnings=(tier==4)?player.warnings.add(warningGain):new Decimal(0)
-	player.totalWarnings=(tier==Infinity)?new Decimal(0):player.totalWarnings.add(warningGain)
+    //Tier 4 - Warnings
+    var warningGain=1
+    player.warnings=(tier==4)?player.warnings.add(warningGain):new Decimal(0)
+    player.totalWarnings=(tier==Infinity)?new Decimal(0):player.totalWarnings.add(warningGain)
   }
   if (tier>2) {
-	//Tier 3 - Networks
-	player.upgrades=[]
+    //Tier 3 - Networks
+    player.upgrades=[]
   }
   
   player.errors = new Decimal(10); //current errors
@@ -324,11 +324,11 @@ function prestige(tier) {
   }
   if (tier==2) {
     player.prestiges[1]++
-switch(player.prestiges[1]) {
+    switch (player.prestiges[1]) {
       case 1: newStory(8); break;
       case 2: newStory(10); break;
       case 3: newStory(11); break;
-	case 4: newStory(12); break;
+      case 4: newStory(12); break;
       case 5: newStory(13); break;
       case 6: newStory(14); break;
       case 8: newStory(15); break;
@@ -341,7 +341,7 @@ switch(player.prestiges[1]) {
     player.prestiges[2]++;
     switch(player.prestiges[2]) {
       case 1: newStory(17); break;
-	  case 2: newStory(22); break;
+      case 2: newStory(22); break;
       case 3: newStory(23); break;
     }
   } else if (tier>3) {
@@ -362,9 +362,9 @@ switch(player.prestiges[1]) {
 function getMultTier(tier) {  let ret = new Decimal.pow(10,tier-1)
   ret = ret.mul(Decimal.pow(Math.pow(1.05 + Math.max((tier-4)/100,0),tier),player.compAmount[tier-1]))
   ret = ret.mul(Decimal.pow(2+0.5*player.prestiges[2],player.boostPower))
+  ret = ret.mul(Decimal.pow(2+Math.floor(player.compAmount[8]/5)*0.5,player.prestiges[1]))
   if (player.prestiges[0]>=tier) ret = ret.mul(player.upgrades.includes(14)?2.5:2)
   if (player.prestiges[0]>9&&tier==9) ret = ret.mul(Decimal.pow(player.upgrades.includes(14)?2.5:2,player.prestiges[0]-9))
-  ret = ret.mul(Decimal.pow(2+Math.floor(player.compAmount[8]/5)*0.5,player.prestiges[1]))
   if (player.upgrades.includes(1)) ret = ret.mul(2)
   if (player.upgrades.includes(2)) ret = ret.mul(5)
   if (player.upgrades.includes(3)) ret = ret.mul(10)
@@ -386,9 +386,8 @@ function getMultTier(tier) {  let ret = new Decimal.pow(10,tier-1)
   if (player.upgrades.includes(13)) ret = ret.mul(Math.pow(1.05,Math.sqrt(player.compAmount[0]+player.compAmount[1]+player.compAmount[2]+player.compAmount[3]+player.compAmount[4]+player.compAmount[5]+player.compAmount[6]+player.compAmount[7]+player.compAmount[8])))
   if (player.upgrades.includes(14)&&tier<5) ret = ret.mul(10)
   if (player.upgrades.includes(22)) ret = ret.mul(1000000)
-	  
   if (player.warningUpgrades.includes(1)) ret = ret.mul(getUpgradeMultiplier(1))
-			    if (player.warningUpgrades.includes(2)) ret = ret.mul(getUpgradeMultiplier(2))
+	if (player.warningUpgrades.includes(2)) ret = ret.mul(getUpgradeMultiplier(2))
   return ret
 }
 
@@ -406,30 +405,30 @@ function checkIfAffordable(id) {
 		case 1: if (player.errors.lt(1e4)) {return false}; return true
 		case 2: if (player.errors.lt(1e10)) {return false}; return true
 		case 3: if (player.errors.lt(1e20)) {return false}; return true
-		case 17: if (player.errors.lt(1e30)) {return false}; return true
-		case 18: if (player.errors.lt(1e35)) {return false}; return true
-		case 19: if (player.errors.lt(1e40)) {return false}; return true
-		case 20: if (player.errors.lt(1e50)) {return false}; return true
-		case 21: if (player.errors.lt(1e65)) {return false}; return true
-		case 23: if (player.errors.lt(1e75)) {return false}; return true	
-		case 4: if (player.errors.lt(1e35)||player.compAmount[0]<100) {return false}; return true
+    case 4: if (player.errors.lt(1e35)||player.compAmount[0]<100) {return false}; return true
 		case 5: if (player.errors.lt(1e40)||player.compAmount[1]<100) {return false}; return true
 		case 6: if (player.errors.lt(1e50)||player.compAmount[2]<100) {return false}; return true
 		case 7: if (player.errors.lt(1e65)||player.compAmount[3]<100) {return false}; return true
 		case 8: if (player.errors.lt(1e75)||player.compAmount[4]<100) {return false}; return true
 		case 9: if (player.errors.lt(1e85)||player.compAmount[5]<100) {return false}; return true
-case 10: if (player.errors.lt(1e100)||player.compAmount[6]<100) {return false}; return true
+    case 10: if (player.errors.lt(1e100)||player.compAmount[6]<100) {return false}; return true
 		case 11: if (player.errors.lt(1e115)||player.compAmount[7]<100) {return false}; return true
 		case 12: if (player.errors.lt(1e125)||player.compAmount[8]<100) {return false}; return true
 		case 13: if (player.errors.lt(1e140)) return false
-			for (check=4;check<13;check++) {
-				if (!player.upgrades.includes(check)||player.compAmount[check-4]<110) return false
-			}
-			return true
+             for (check=4;check<13;check++) {
+               if (!player.upgrades.includes(check)||player.compAmount[check-4]<110) return false
+             }
+             return true
 		case 14: if (player.prestiges[0]<9) {return false}; return true
 		case 15: if (player.prestiges[1]<5) {return false}; return true
 		case 16: if (player.prestiges[1]<7) {return false}; return true
-		case 22: if (player.prestiges[2]<1||player.errors.lt(1e3)) {return false}; return true
+		case 17: if (player.errors.lt(1e30)) {return false}; return true
+		case 18: if (player.errors.lt(1e35)) {return false}; return true
+		case 19: if (player.errors.lt(1e40)) {return false}; return true
+		case 20: if (player.errors.lt(1e50)) {return false}; return true
+		case 21: if (player.errors.lt(1e65)) {return false}; return true
+    case 22: if (player.prestiges[2]<1||player.errors.lt(1e3)) {return false}; return true
+		case 23: if (player.errors.lt(1e75)) {return false}; return true
 	}
 	return false
 }
@@ -440,22 +439,22 @@ function buyUpg(id) {
 		case 1: player.errors=player.errors.sub(1e4); break
 		case 2: player.errors=player.errors.sub(1e10); break
 		case 3: player.errors=player.errors.sub(1e20); break
+    case 4: player.errors=player.errors.sub(1e35); break
+		case 5: player.errors=player.errors.sub(1e40); break
+		case 6: player.errors=player.errors.sub(1e50); break
+		case 7: player.errors=player.errors.sub(1e65); break
+		case 8: player.errors=player.errors.sub(1e75); break
+		case 9: player.errors=player.errors.sub(1e85); break
+    case 10: player.errors=player.errors.sub(1e100); break
+		case 11: player.errors=player.errors.sub(1e115); break
+		case 12: player.errors=player.errors.sub(1e125); break
+		case 13: player.errors=player.errors.sub(1e140); break
 		case 17: player.errors=player.errors.sub(1e30); break
 		case 18: player.errors=player.errors.sub(1e35); break
 		case 19: player.errors=player.errors.sub(1e40); break
 		case 20: player.errors=player.errors.sub(1e50); break
 		case 21: player.errors=player.errors.sub(1e65); break
 		case 23: player.errors=player.errors.sub(1e75); break
-		case 4: player.errors=player.errors.sub(1e35); break
-		case 5: player.errors=player.errors.sub(1e40); break
-		case 6: player.errors=player.errors.sub(1e50); break
-		case 7: player.errors=player.errors.sub(1e65); break
-		case 8: player.errors=player.errors.sub(1e75); break
-		case 9: player.errors=player.errors.sub(1e85); break
-		case 10: player.errors=player.errors.sub(1e100); break
-		case 11: player.errors=player.errors.sub(1e115); break
-		case 12: player.errors=player.errors.sub(1e125); break
-		case 13: player.errors=player.errors.sub(1e140); break
 	}
 	player.upgrades.push(id)
 }
@@ -488,7 +487,6 @@ function gameTick() {
 	  player.totalErrors = player.totalErrors.add(getEPS().mul(s));
 	  player.playtime+=s
 	  if (player.errors.gte(Number.MAX_VALUE)) prestige(4)
-		  
 	  move()
   }
   player.time = new Date().getTime()
@@ -747,7 +745,7 @@ function load(savefile) {
 	  realPercentage=percentage
 	  updateElement('title','CEG: '+realPercentage.toFixed(2)+'%')
 	  
-      updateCosts()
+    updateCosts()
 	  updateStory()
 	  updateElement("notationID",notationArray[player.options.notation])
 	  console.log('Game loaded!')
@@ -790,7 +788,7 @@ function setupRoman() {
 
 function updateStory() {
     var Table = document.getElementsByClassName("storybox")[0].tBodies[0];
-	Table.innerHTML=''
+    Table.innerHTML=''
     for (var i=0;i<=player.story;i++) {
 		var row=Table.insertRow(i)
 		row.innerHTML='<td>'+storyMessages[i]+'</td>'

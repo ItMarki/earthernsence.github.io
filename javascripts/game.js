@@ -16,7 +16,7 @@ const defaultPlayer = {
   time: 0, //total time displayed in stats
   version: 1.5, //very important
   build: 11, //used for us to communicate commits, helps a lot
-  hotfix: 2, //another way to use commits
+  hotfix: 3, //another way to use commits
   options: {
 	  hotkeys:true, //whether or not hotkeys are enabled (on by default)
 	  notation:0 //notation setting, see options
@@ -388,6 +388,8 @@ function getMultTier(tier) {  let ret = new Decimal.pow(10,tier-1)
   if (player.upgrades.includes(22)) ret = ret.mul(1000000)
   if (player.warningUpgrades.includes(1)) ret = ret.mul(getUpgradeMultiplier(1))
 	if (player.warningUpgrades.includes(2)) ret = ret.mul(getUpgradeMultiplier(2))
+	if (player.warningUpgrades.includes(3)) ret = ret.mul(getUpgradeMultiplier(3,tier))
+	if (player.warningUpgrades.includes(4)) ret = ret.mul(getUpgradeMultiplier(4))
   return ret
 }
 
@@ -459,10 +461,10 @@ function buyUpg(id) {
 	player.upgrades.push(id)
 }
 
-function getUpgradeMultiplier(id) {
+function getUpgradeMultiplier(id,tier) {
 	if (id==1) mp = 1+Math.sqrt((player.playtime+1)/86400*2)
 	if (id==2) mp = player.warningUpgrades.length*2
-	if (id==3) mp = 2^(Math.floor([player.compAmount]/10))
+	if (id==3) mp = Math.pow(2,Math.floor(player.compAmount[tier-1]/10))
 	if (id==4) mp = player.totalWarnings*2
 	return Math.max(1, mp)
 }

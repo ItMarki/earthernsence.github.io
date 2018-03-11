@@ -337,12 +337,12 @@ function getMultTier(tier) {  let ret = new Decimal.pow(10,tier-1)
   if (player.upgrades.includes(1)) ret = ret.mul(2)
   if (player.upgrades.includes(2)) ret = ret.mul(5)
   if (player.upgrades.includes(3)) ret = ret.mul(10)
-  if (player.upgrades.includes(17)) ret = ret.mul(75)
-  if (player.upgrades.includes(18)) ret = ret.mul(750)
-  if (player.upgrades.includes(19)) ret = ret.mul(7500)
-  if (player.upgrades.includes(20)) ret = ret.mul(75000)
-  if (player.upgrades.includes(21)) ret = ret.mul(750000)
-  if (player.upgrades.includes(23)) ret = ret.mul(750000)
+  if (player.upgrades.includes(17)) ret = ret.mul(50)
+  if (player.upgrades.includes(18)) ret = ret.mul(50)
+  if (player.upgrades.includes(19)) ret = ret.mul(50)
+  if (player.upgrades.includes(20)) ret = ret.mul(50)
+  if (player.upgrades.includes(21)) ret = ret.mul(50)
+  if (player.upgrades.includes(23)) ret = ret.mul(50)
   if (player.upgrades.includes(4)&&tier==1) ret = ret.mul(Math.pow(1.15,Math.sqrt(player.compAmount[0])))
   if (player.upgrades.includes(5)&&tier==2) ret = ret.mul(Math.pow(1.15,Math.sqrt(player.compAmount[1])))
   if (player.upgrades.includes(6)&&tier==3) ret = ret.mul(Math.pow(1.15,Math.sqrt(player.compAmount[2])))
@@ -375,11 +375,11 @@ function checkIfAffordable(id) {
 		case 2: if (player.errors.lt(1e10)) {return false}; return true
 		case 3: if (player.errors.lt(1e20)) {return false}; return true
 		case 17: if (player.errors.lt(1e30)) {return false}; return true
-		case 18: if (player.errors.lt(1e35)) {return false}; return true
-		case 19: if (player.errors.lt(1e40)) {return false}; return true
-		case 20: if (player.errors.lt(1e50)) {return false}; return true
-		case 21: if (player.errors.lt(1e65)) {return false}; return true
-		case 23: if (player.errors.lt(1e75)) {return false}; return true	
+		case 18: if (player.errors.lt(1e45)) {return false}; return true
+		case 19: if (player.errors.lt(1e60)) {return false}; return true
+		case 20: if (player.errors.lt(1e75)) {return false}; return true
+		case 21: if (player.errors.lt(1e90)) {return false}; return true
+		case 23: if (player.errors.lt(1e105)) {return false}; return true	
 		case 4: if (player.errors.lt(1e35)||player.compAmount[0]<100) {return false}; return true
 		case 5: if (player.errors.lt(1e40)||player.compAmount[1]<100) {return false}; return true
 		case 6: if (player.errors.lt(1e50)||player.compAmount[2]<100) {return false}; return true
@@ -409,11 +409,11 @@ function buyUpg(id) {
 		case 2: player.errors=player.errors.sub(1e10); break
 		case 3: player.errors=player.errors.sub(1e20); break
 		case 17: player.errors=player.errors.sub(1e30); break
-		case 18: player.errors=player.errors.sub(1e35); break
-		case 19: player.errors=player.errors.sub(1e40); break
-		case 20: player.errors=player.errors.sub(1e50); break
-		case 21: player.errors=player.errors.sub(1e65); break
-		case 23: player.errors=player.errors.sub(1e75); break
+		case 18: player.errors=player.errors.sub(1e45); break
+		case 19: player.errors=player.errors.sub(1e60); break
+		case 20: player.errors=player.errors.sub(1e75); break
+		case 21: player.errors=player.errors.sub(1e90); break
+		case 23: player.errors=player.errors.sub(1e105); break
 		case 4: player.errors=player.errors.sub(1e35); break
 		case 5: player.errors=player.errors.sub(1e40); break
 		case 6: player.errors=player.errors.sub(1e50); break
@@ -501,12 +501,12 @@ function gameTick() {
 	  updateElement('upg11button','Cost: 100 TVIII comps & '+format(1e115))
 	  updateElement('upg12button','Cost: 100 TIX comps & '+format(1e125))
 	  updateElement('upg17button','Cost: '+format(1e30))
-	  updateElement('upg18button','Cost: '+format(1e35))
-	  updateElement('upg19button','Cost: '+format(1e40))
-	  updateElement('upg20button','Cost: '+format(1e50))
-	  updateElement('upg21button','Cost: '+format(1e65))
+	  updateElement('upg18button','Cost: '+format(1e45))
+	  updateElement('upg19button','Cost: '+format(1e60))
+	  updateElement('upg20button','Cost: '+format(1e75))
+	  updateElement('upg21button','Cost: '+format(1e90))
 	  updateElement('upg22button','Cost: N1 & '+format(1e3))
-	  updateElement('upg23button','Cost: '+format(1e75))
+	  updateElement('upg23button','Cost: '+format(1e105))
 	  var check=0
 	  for (i=4;i<13;i++) {
 		  if (player.upgrades.includes(i)) check++

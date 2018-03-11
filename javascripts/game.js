@@ -915,9 +915,6 @@ function gameInit() {
 			},tickspeed)
 		}
 	},0)
-	setInterval(function(){
-		updateElement('title','CEG: '+realPercentage.toFixed(2)+'%')
-	},1000)
 	setInterval(save,1000);
 }
 

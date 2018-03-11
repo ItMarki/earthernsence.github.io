@@ -1,11 +1,10 @@
 <!DOCTYPE html>
-<!--game.html and only game.html. v1.5 edits-->
+<!--game.html and only game.html-->
 <html>
 <head>
 	<link href='https://fonts.googleapis.com/css?family=Poiret+One' rel='stylesheet'>
 	<style>
 		body {
-			background-color: #999999;
 			margin:0;
 			font-family:Poriet+One;
 		}
@@ -31,7 +30,8 @@ font-size: 14px;
     <link rel="stylesheet" type="text/css" href="../stylesheets/styles.css" />
 	<script type="text/javascript" src="../javascripts/break_infinity.min.js"> </script>
 	<script type="text/javascript" src="../javascripts/game.js"> </script>
-	<title id='title'>CEG: The One and Only Console Error Game</title>
+	<title>CEG: The One and Only Console Error Game</title>
+	<link rel="icon" type="image/png" href="../images/ceg.png"</link>
 </head>
 <body style="text-align:center" onload='gameInit()'>
 <div id="game" style='text-align:center'>
@@ -58,7 +58,7 @@ font-size: 14px;
 	  <table align=center><tr><td><button class='optionButton' onClick='save()'>Save</button></td>
 	  <td><button class='optionButton' onClick='exportSave()'>Export</button></td>
 	  <td><button class='optionButton' onClick='importSave()'>Import</button></td>
-<td><button class='optionButton' id='hotkeysbtn' onclick='toggleHotkeys()'>Hotkeys: enabled</button></td>
+		<td><button class='optionButton' id='hotkeysbtn' onclick='toggleHotkeys()'>Hotkeys: enabled</button></td>
 	  <td><button class='optionButton' onclick='switchNotation()'>Notation: <div id="notationID">Standard</div></button></td>
 	  <td><button class='optionButton' onClick='prestige(Infinity)'>Reset</button></td></tr></table>
 	  <div id='exportSave' style='display:none'> Here is your export save. The dev recommends putting it in a safe spot. <input id='exportText' style='width: 480px'></input></div>

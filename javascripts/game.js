@@ -15,8 +15,8 @@ const defaultPlayer = {
   playtime: 0, //total time spent online ingame
   time: 0, //total time displayed in stats
   version: 1.5, //very important
-  build: 7, //used for us to communicate commits, helps a lot
-  hotfix: 1, //another way to use commits
+  build: 9, //used for us to communicate commits, helps a lot
+  hotfix: 2, //another way to use commits
   options: {
 	  hotkeys:true, //whether or not hotkeys are enabled (on by default)
 	  notation:0 //notation setting, see options

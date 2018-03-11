@@ -429,7 +429,7 @@ function checkIfAffordable(id) {
 		case 21: if (player.errors.lt(1e65)) {return false}; return true
     case 22: if (player.prestiges[2]<1||player.errors.lt(1e3)) {return false}; return true
 		case 23: if (player.errors.lt(1e75)) {return false}; return true
-	}
+}
 	return false
 }
 
@@ -462,6 +462,7 @@ function buyUpg(id) {
 function getUpgradeMultiplier(id) {
 	if (id==1) mp = 1+Math.sqrt((player.playtime+1)/86400*2)
 	if (id==2) mp = player.warningUpgrades.length*2
+	if (id==3) mp = 2^(Math.floor([player.compAmount]/10))
 	return Math.max(1, mp)
 }
 
@@ -873,7 +874,7 @@ function move() {
 	var diff=Math.abs(percentage-realPercentage)
 	percentage=realPercentage*(1-Math.pow(Math.min(Math.pow(1-diff/100,3),0.001),s))+percentage*(Math.pow(Math.min(Math.pow(1-diff/100,3),0.001),s))
 	if (realPercentage<24.995) {
-		document.getElementById("percentToWarningBar").style['background-color']='#00e500'
+		document.getElementById("percentToWarningBar").style['background-color']='#ffce00'
 	} else if (realPercentage<49.995) {
 		document.getElementById("percentToWarningBar").style['background-color']='#e5e500'
 	} else if (realPercentage<74.995) {

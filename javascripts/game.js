@@ -15,7 +15,7 @@ defaultPlayer = {
   playtime: 0, //total time spent online ingame
   time: 0, //total time displayed in stats
   version: 1.5, //very important
-  build: 6, //used for us to communicate commits, helps a lot
+  build: 7, //used for us to communicate commits, helps a lot
   hotfix: 1, //another way to use commits
   options: {
 	  hotkeys:true, //whether or not hotkeys are enabled (on by default)
@@ -357,6 +357,7 @@ function getMultTier(tier) {  let ret = new Decimal.pow(10,tier-1)
   if (player.upgrades.includes(22)) ret = ret.mul(1000000)
 	  
   if (player.warningUpgrades.includes(1)) ret = ret.mul(getUpgradeMultiplier(1))
+			    if (player.warningUpgrades.includes(2)) ret = ret.mul(getUpgradeMultiplier(2))
   return ret
 }
 
@@ -437,6 +438,7 @@ function buyWarUpg(id) {
 		var warnCost
 		switch (id) {
 			case 1: warnCost=1; break
+			case 2: warnCost=1; break
 		}
 		console.log(warnCost)
 		if (player.warnings.gte(warnCost)) {
@@ -574,6 +576,7 @@ function gameTick() {
   }
   if (tab=='warning') {
 	  updateElement("w1Multi",getUpgradeMultiplier(1).toFixed(2))
+	  updateElement("w2Multi",getUpgradeMultiplier(2).toFixed(2))
   }
   if (tab=='stats') {
 	  updateElement('statsTotal','You have gained a total of '+format(player.totalErrors)+' errors.')

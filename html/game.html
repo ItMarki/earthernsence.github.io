@@ -6,13 +6,13 @@
 	<style>
 		body {
 			margin:0;
-			font-family:Poriet+One;
+			font-family:'Poiret One';
 		}
-		button {background-color: #e5e5e5; font-family:Poriet+One; margin-left:5px; border:none}
+		button {background-color: #e5e5e5; font-family:'Poiret One'; margin-left:5px; border:none}
 		.optionButton {
 			height:48px;
 			width:72px;
-			font-family:Poriet+One;
+			font-family:'Poiret One';
 		}
 		.commonButton {
       background-color: black; 
@@ -24,14 +24,22 @@
       text-decoration: none; 
       display: inline-block; 
       font-size: 14px; 
-      font-family:Poriet+One;
-      }			
+      font-family:'Poiret One';
+      }	
+		.warUpg {
+text-align:center;
+font-size:12px;
+background-color:black;
+height: 150px;
+width: 150px;
+border-radius:20px;
+}		
 	</style>
   <link rel="stylesheet" type="text/css" href="../stylesheets/styles.css" />
 	<script type="text/javascript" src="../javascripts/break_infinity.min.js"> </script>
 	<script type="text/javascript" src="../javascripts/game.js"> </script>
 	<title>CEG: The One and Only Console Error Game</title>
-	<link rel="icon" type="image/png" href="../images/ceg.png"</link>
+	<link rel="icon" type="image/png" href="../images/ceg.png"></link>
 </head>
 <body style="text-align:center" onload='gameInit()'>
 <div id="game" style='text-align:center'>
@@ -62,8 +70,8 @@
 	  <td><button class='optionButton' onclick='switchNotation()'>Notation: <div id="notationID">Standard</div></button></td>
 	  <td><button class='optionButton' onClick='prestige(Infinity)'>Reset</button></td></tr></table>
 	  <div id='exportSave' style='display:none'> Here is your export save. The dev recommends putting it in a safe spot. <input id='exportText' style='width: 480px'></input></div>
-	<div id='hotkeyText'>P=Max production boost, U=Upgrade computers, I=IP change and Internet boost, N=Network.</div>
-	</div>
+	<div id='hotkeyText'>P=Max production boost, U=Upgrade computers, I=IP change and Internet boost, N=Network, 1-9=but Tier X computer.</div>
+</div>
   <div id='statsTab' style='display:none'>
 	  <div id='statsTotal'>You have gained a total of X errors.</div>
 	  <div id='statsPlaytime'>You have played for X.</div>
@@ -73,12 +81,14 @@
 	  <div id='statsPrestige4'><br><div id='statsP4times'></div><div id='statsP4totalWarnings'></div></div>
   </div>
   <div id='achievementsTab' style='display:none'>
-      <h1 id="soon™"> Soon™</h1>
+	  <h1 id='soontm'>Soon :tm:</h1>
+			  
   </div>
 <div id="warningTab" style="display:none">
 	<h1 id="warningHeader"> Warning Upgrades </h1>
-	<table align=center><tr><td><button class='warningUpgrade' onClick='buyWarUpg(1)'>Production boost over total time.<br>Currently <text id="w1Multi">X</text>x.</button></td></tr></table>
-	<table align=center><tr><td><button class='warningUpgrade' onClick='buyWarUpg(2)'>Production boost based on how many warning upgrades you have.<br>Currently <text id="w2Multi">X</text>x.</button></td></tr></table>
+	<table align=center><tr><td><button class='warUpg1' onClick='buyWarUpg(1)' id="warUpg">Production boost over total time. <br>Cost: 1 W. Currently <text id="w1Multi">X</text>x.</button></td></tr></table>
+	<table align=center><tr><td><button class='warUpg2' onClick='buyWarUpg(2)' id="warUpg">Production boost based on how many warning upgrades you have. (warUpg*2) <br>Cost: 1 W. Currently <text id="w2Multi">X</text>x.</button></td></tr></table>
+	<table align=center><tr><td><button class='warUpg3' onClick='buyWarUpg(3)' id="warUpg">Each set of 10 computers (of any tier) gives a 2x multiplier. <br>Cost: 2 W</button></td></tr></table></br>
 	</div>
 	
   <table class='sidebar' align=right style='position:absolute; height:100%; top:0px; right:15px; width:20%'>
@@ -119,7 +129,7 @@
 		  <div><b>Quantum upgrades</b>: Further maximum of UCs based on Internet Boosts<br><button id="upg16button" onClick='buyUpg(16)'>Cost: IB2</button></div>
 		  <div><b>Hyperquantum Upgrades</b>: Post-Network ONLY: 1,000,000x faster computers<br><button id="upg22button" onClick='buyUpg(22)'>Cost: N1 & 1e3 errors</button></div>
 		  </div>
-		  <div id='upgradereq'>Unlocks at 3 I.P. Changes</div>
+	<br><div id='upgradereq'>Unlocks at 3 I.P. Changes</div></br>
 	  </td></tr>
   </table>
   <table class='prestiges' align=left style='position:fixed; height:100%; top:0px; left:15px; width:20%'>
@@ -130,7 +140,7 @@
     <div>Network: Requires <text id='prestige3Req'>60</text> Tier IX Computers <button id="network" onclick='prestige(3)'>Reset everything, but gain a Production Boost upgrade (x<text id='netMulti'>X</text>).</button></div>
   </td></tr></tbody>
   </table>
-	<div style='background-color: #999999; position: fixed; bottom: 0; width: 100%; color: #191919; z-index: -1'>| <a href="https://discord.gg/23JnYTY" target="_newtab">Discord</a> | <a href="howto.html" target="_newtab">How to Play CEG</a> | <a href="../index.html" target="_newtab"> Back to Main Menu </a>| <a href="changelog.html" target="_newtab">Changelog</a>|<a href="../md/me_ranting.md" target="_newtab">Fun Place</a>|</div> 
+	<div style='background-color: #999999; position: fixed; bottom: 0; width: 100%; color: #191919; z-index: -1'>| <a href="https://discord.gg/23JnYTY" target="_newtab">Discord</a> | <a href="howto.html" target="_newtab">How to Play CEG</a> | <a href="../index.html" target="_newtab"> Back to Main Menu </a>| <a href="changelog.html" target="_newtab">Changelog</a> |</div> 
 	<div id="percentToWarning">
 	  <div id="percentToWarningBar"></div>
 	  <div id="percentToWarningProgress"></div>

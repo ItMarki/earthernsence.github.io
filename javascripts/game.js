@@ -15,7 +15,7 @@ const defaultPlayer = {
   playtime: 0, //total time spent online ingame
   time: 0, //total time displayed in stats
   version: 1.5, //very important
-  build: 9.1, //used for us to communicate commits, helps a lot
+  build: 10.2, //used for us to communicate commits, helps a lot
   hotfix: 1, //another way to use commits
   options: {
 	  hotkeys:true, //whether or not hotkeys are enabled (on by default)
@@ -387,7 +387,8 @@ function getMultTier(tier) {  let ret = new Decimal.pow(10,tier-1)
   if (player.upgrades.includes(14)&&tier<5) ret = ret.mul(10)
   if (player.upgrades.includes(22)) ret = ret.mul(1000000)
   if (player.warningUpgrades.includes(1)) ret = ret.mul(getUpgradeMultiplier(1))
-	if (player.warningUpgrades.includes(2)) ret = ret.mul(getUpgradeMultiplier(2))
+  if (player.warningUpgrades.includes(2)) ret = ret.mul(getUpgradeMultiplier(2))
+  if (player.warningUpgrades.includes(3)) ret = ret.mul(getUpgradeMultiplier(3,tier))
   return ret
 }
 
@@ -459,9 +460,10 @@ function buyUpg(id) {
 	player.upgrades.push(id)
 }
 
-function getUpgradeMultiplier(id) {
+function getUpgradeMultiplier(id,amount) {
 	if (id==1) mp = 1+Math.sqrt((player.playtime+1)/86400*2)
 	if (id==2) mp = Math.sqrt(Math.pow(4,Math.sqrt(player.warningUpgrades.length)))
+	if (id==3) mp = Math.pow(2,Math.floor(player.compAmount[tier-1]/10))
 	return Math.max(1, mp)
 }
 
@@ -471,6 +473,7 @@ function buyWarUpg(id) {
 		switch (id) {
 			case 1: warnCost=1; break
 			case 2: warnCost=1; break
+			case 3: warnCost=2; break
 		}
 		console.log(warnCost)
 		if (player.warnings.gte(warnCost)) {
@@ -743,7 +746,6 @@ function load(savefile) {
 	  
 	  percentage=Math.min(player.errors.add(1).log10()*0.32440704,100)
 	  realPercentage=percentage
-	  updateElement('title','CEG: '+realPercentage.toFixed(2)+'%')
 	  
     updateCosts()
 	  updateStory()
@@ -872,9 +874,9 @@ function move() {
 	var diff=Math.abs(percentage-realPercentage)
 	percentage=realPercentage*(1-Math.pow(Math.min(Math.pow(1-diff/100,3),0.001),s))+percentage*(Math.pow(Math.min(Math.pow(1-diff/100,3),0.001),s))
 	if (realPercentage<24.995) {
-		document.getElementById("percentToWarningBar").style['background-color']='#00e500'
+		document.getElementById("percentToWarningBar").style['background-color']='#22ff00'
 	} else if (realPercentage<49.995) {
-		document.getElementById("percentToWarningBar").style['background-color']='#e5e500'
+		document.getElementById("percentToWarningBar").style['background-color']='#ffce00'
 	} else if (realPercentage<74.995) {
 		document.getElementById("percentToWarningBar").style['background-color']='#e57200'
 	} else if (realPercentage<99.995) {
@@ -913,9 +915,6 @@ function gameInit() {
 			},tickspeed)
 		}
 	},0)
-	setInterval(function(){
-		updateElement('title','CEG: '+realPercentage.toFixed(2)+'%')
-	},1000)
 	setInterval(save,1000);
 }
 

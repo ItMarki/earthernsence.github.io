@@ -874,9 +874,9 @@ function move() {
 	var diff=Math.abs(percentage-realPercentage)
 	percentage=realPercentage*(1-Math.pow(Math.min(Math.pow(1-diff/100,3),0.001),s))+percentage*(Math.pow(Math.min(Math.pow(1-diff/100,3),0.001),s))
 	if (realPercentage<24.995) {
-		document.getElementById("percentToWarningBar").style['background-color']='#ffce00'
+		document.getElementById("percentToWarningBar").style['background-color']='#22ff00'
 	} else if (realPercentage<49.995) {
-		document.getElementById("percentToWarningBar").style['background-color']='#e5e500'
+		document.getElementById("percentToWarningBar").style['background-color']='#ffce00'
 	} else if (realPercentage<74.995) {
 		document.getElementById("percentToWarningBar").style['background-color']='#e57200'
 	} else if (realPercentage<99.995) {

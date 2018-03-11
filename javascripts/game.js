@@ -1,7 +1,7 @@
 //game.js and only game.js-v1.5 edits
 var shiftDown=false;
 var controlDown=false;
-defaultPlayer = {
+const defaultPlayer = {
   errors: new Decimal(10), //current errors
   totalErrors: new Decimal(0), //total errors that display in stats
   compAmount: [0,0,0,0,0,0,0,0,0], //amounts that are shown on computer button

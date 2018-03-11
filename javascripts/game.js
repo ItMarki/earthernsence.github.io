@@ -387,7 +387,7 @@ function checkIfAffordable(id) {
 		case 7: if (player.errors.lt(1e65)||player.compAmount[3]<100) {return false}; return true
 		case 8: if (player.errors.lt(1e75)||player.compAmount[4]<100) {return false}; return true
 		case 9: if (player.errors.lt(1e85)||player.compAmount[5]<100) {return false}; return true
-		case 10: if (player.errors.lt(1e100)||player.compAmount[6]<100) {return false}; return true
+case 10: if (player.errors.lt(1e100)||player.compAmount[6]<100) {return false}; return true
 		case 11: if (player.errors.lt(1e115)||player.compAmount[7]<100) {return false}; return true
 		case 12: if (player.errors.lt(1e125)||player.compAmount[8]<100) {return false}; return true
 		case 13: if (player.errors.lt(1e140)) return false
@@ -431,6 +431,7 @@ function buyUpg(id) {
 
 function getUpgradeMultiplier(id) {
 	if (id==1) return Math.sqrt((player.playtime+1)/86400*2)
+	if (id==2) return Math.sqrt((player.warningUpgrades)*2)
 }
 
 function buyWarUpg(id) {

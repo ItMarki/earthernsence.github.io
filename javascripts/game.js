@@ -15,7 +15,7 @@ const defaultPlayer = {
   playtime: 0, //total time spent online ingame
   time: 0, //total time displayed in stats
   version: 1.5, //very important
-  build: 12, //used for us to communicate commits, helps a lot
+  build: 13, //used for us to communicate commits, helps a lot
   hotfix: 1, //another way to use commits
   options: {
 	  hotkeys:true, //whether or not hotkeys are enabled (on by default)
@@ -58,7 +58,8 @@ var storyMessages=["Pancakes is ready!",
 "Another network? I find out your new network was better so I installed it.",
 "A third network? I am getting notifications for that...",
 "Mighty large number you got there! Sorry, but it's mandatory operation to reset it.",
-"Now you've gotta do it all over again. But you are <i>stronger</i>. Get out there! Make me proud!"]
+"Now you've gotta do it all over again. But you are <i>stronger</i>. Get out there! Make me proud!",
+"Congratulations! You just beat the game! (for now...)<br>Why not you play other games like the inspiration at the title screen until the next update comes out?"]
 	
 function updateElement(elementID,value) {
 	document.getElementById(elementID).innerHTML=value
@@ -600,6 +601,12 @@ function gameTick() {
     hideElement('warningTab')
     hideElement('warnings')
     document.getElementById('percentToWarning').style.width='calc(80% - 20px)'
+  }
+  if (false) {
+	  showElement('theEndButton','inline')
+	  newStory(26)
+  } else {
+	  hideElement('theEndButton')
   }
   if (tab=='computers') {
 	  for (let i=0;i<Math.min(player.prestiges[1]+4,9);i++) {

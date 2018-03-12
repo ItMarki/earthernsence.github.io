@@ -51,7 +51,7 @@ border-radius:20px;
   <div id='genUpgrade' style='display:none'>Increase the boost by <text id='genIncrease'>2</text>x.<br>
   <button id="genIncreaseCost" onclick="buyGenUpgrade()">Cost: 1000</button><button id="buyMax" onclick="maxGenUpgrade()">Buy Max</button><br>
   Production boost: <text id='genBoost'>1</text>x</div><br>
-  <div><button onclick='switchTab("computers")' id="tabButton">Computers</button><button onclick='switchTab("options")' id="tabButton">Options</button><button onclick='switchTab("stats")' id="tabButton">Stats</button><button onclick='switchTab("achievements")' id="tabButton">Achievements</button><button id='warningTab' style='display:none' onclick='switchTab("warning")'>Warning</button></div>
+  <div><button onclick='switchTab("computers")' id="tabButton">Computers</button><button onclick='switchTab("options")' id="tabButton">Options</button><button onclick='switchTab("stats")' id="tabButton">Stats</button><button onclick='switchTab("achievements")' id="tabButton">Achievements</button><button id='warningTab' style='display:none' onclick='switchTab("warning")'>Warning</button><button id='theEndButton' style='display:none' onclick='switchTab("theEnd")'>The End</button></div>
   <br>
   <div id='computersTab'>
 	  <td style='width:96px'><button id='maxAll' class='commonButton' onClick='maxGenUpgrade();maxGen();'>Max All</button></td>	  
@@ -81,6 +81,16 @@ border-radius:20px;
 	  <div id='statsPrestige2'>You have X new computers.</div>
 	  <div id='statsPrestige3'>You have X networks.</div>
 	  <div id='statsPrestige4'><br><div id='statsP4times'></div><div id='statsP4totalWarnings'></div></div>
+  </div>
+  <div id='theEndTab' style='display:none'>
+	<h1 id="logo">The Console Error Game</h1>
+	<h2>The One and Only Console Error Game</h2>
+	<div>Congratulations! You just beat the game! (for now...)<br>Why not you play other games like the inspiration at the title screen until the next update comes out?</div>
+	<h2>Credits</h2>
+	<div>Created by Frostbite5</div>
+	<div>Co-developed by Aarex</div>
+	<div>Helped by IkerStreamer, slabdrill, Username5243 & Merp</div>
+	<div>Inspired from <a href="https://aarextiaokhiao.github.io/Universal-Attractor/game.html">Universal Attractor</a>, made by Aarex</div>
   </div>
   <div id='achievementsTab' style='display:none'>
 	  <h1 id='soontm'>Soon :tm:</h1>

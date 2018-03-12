@@ -616,8 +616,8 @@ function gameTick() {
   if (tab=='warning') {
 	  updateElement("w1Multi",getUpgradeMultiplier(1).toFixed(2))
 	  updateElement("w2Multi",getUpgradeMultiplier(2).toFixed(2))
-	  updateElement("w4Multi",getUpgradeMultiplier(4).toFixed(4))
-	  updateElement("w5Multi",getUpgradeMultiplier(5).toFixed(5))
+	  updateElement("w4Multi",getUpgradeMultiplier(4).toFixed(2))
+	  updateElement("w5Multi",getUpgradeMultiplier(5).toFixed(2))
   }
   if (tab=='stats') {
 	  updateElement('statsTotal','You have gained a total of '+format(player.totalErrors)+' errors.')

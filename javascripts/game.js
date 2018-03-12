@@ -15,8 +15,8 @@ const defaultPlayer = {
   playtime: 0, //total time spent online ingame
   time: 0, //total time displayed in stats
   version: 1.5, //very important
-  build: 9, //used for us to communicate commits, helps a lot
-  hotfix: 2, //another way to use commits
+  build: 11, //used for us to communicate commits, helps a lot
+  hotfix: 3, //another way to use commits
   options: {
 	  hotkeys:true, //whether or not hotkeys are enabled (on by default)
 	  notation:0 //notation setting, see options
@@ -388,6 +388,8 @@ function getMultTier(tier) {  let ret = new Decimal.pow(10,tier-1)
   if (player.upgrades.includes(22)) ret = ret.mul(1000000)
   if (player.warningUpgrades.includes(1)) ret = ret.mul(getUpgradeMultiplier(1))
 	if (player.warningUpgrades.includes(2)) ret = ret.mul(getUpgradeMultiplier(2))
+	if (player.warningUpgrades.includes(3)) ret = ret.mul(getUpgradeMultiplier(3,tier))
+	if (player.warningUpgrades.includes(4)) ret = ret.mul(getUpgradeMultiplier(4))
   return ret
 }
 
@@ -422,14 +424,14 @@ function checkIfAffordable(id) {
 		case 14: if (player.prestiges[0]<9) {return false}; return true
 		case 15: if (player.prestiges[1]<5) {return false}; return true
 		case 16: if (player.prestiges[1]<7) {return false}; return true
-		case 17: if (player.errors.lt(1e30)) {return false}; return true
+case 17: if (player.errors.lt(1e30)) {return false}; return true
 		case 18: if (player.errors.lt(1e35)) {return false}; return true
 		case 19: if (player.errors.lt(1e40)) {return false}; return true
 		case 20: if (player.errors.lt(1e50)) {return false}; return true
 		case 21: if (player.errors.lt(1e65)) {return false}; return true
     case 22: if (player.prestiges[2]<1||player.errors.lt(1e3)) {return false}; return true
 		case 23: if (player.errors.lt(1e75)) {return false}; return true
-	}
+}
 	return false
 }
 
@@ -459,9 +461,12 @@ function buyUpg(id) {
 	player.upgrades.push(id)
 }
 
-function getUpgradeMultiplier(id) {
+function getUpgradeMultiplier(id,tier) {
 	if (id==1) mp = 1+Math.sqrt((player.playtime+1)/86400*2)
 	if (id==2) mp = player.warningUpgrades.length*2
+	if (id==3) mp = Math.pow(2,Math.floor(player.compAmount[tier-1]/10))
+	if (id==4) mp = player.totalWarnings*2
+	if (id==5) mp = Math.pow(2,Math.floor(player.warnings))
 	return Math.max(1, mp)
 }
 
@@ -471,6 +476,9 @@ function buyWarUpg(id) {
 		switch (id) {
 			case 1: warnCost=1; break
 			case 2: warnCost=1; break
+			case 3: warnCost=2; break
+			case 4: warnCost=1; break
+			case 5: warnCost=2; break
 		}
 		console.log(warnCost)
 		if (player.warnings.gte(warnCost)) {
@@ -608,6 +616,8 @@ function gameTick() {
   if (tab=='warning') {
 	  updateElement("w1Multi",getUpgradeMultiplier(1).toFixed(2))
 	  updateElement("w2Multi",getUpgradeMultiplier(2).toFixed(2))
+	  updateElement("w4Multi",getUpgradeMultiplier(4).toFixed(2))
+	  updateElement("w5Multi",getUpgradeMultiplier(5).toFixed(2))
   }
   if (tab=='stats') {
 	  updateElement('statsTotal','You have gained a total of '+format(player.totalErrors)+' errors.')
@@ -743,7 +753,6 @@ function load(savefile) {
 	  
 	  percentage=Math.min(player.errors.add(1).log10()*0.32440704,100)
 	  realPercentage=percentage
-	  updateElement('title','CEG: '+realPercentage.toFixed(2)+'%')
 	  
     updateCosts()
 	  updateStory()
@@ -872,9 +881,9 @@ function move() {
 	var diff=Math.abs(percentage-realPercentage)
 	percentage=realPercentage*(1-Math.pow(Math.min(Math.pow(1-diff/100,3),0.001),s))+percentage*(Math.pow(Math.min(Math.pow(1-diff/100,3),0.001),s))
 	if (realPercentage<24.995) {
-		document.getElementById("percentToWarningBar").style['background-color']='#00e500'
+		document.getElementById("percentToWarningBar").style['background-color']='#22ff00'
 	} else if (realPercentage<49.995) {
-		document.getElementById("percentToWarningBar").style['background-color']='#e5e500'
+		document.getElementById("percentToWarningBar").style['background-color']='#ffce00'
 	} else if (realPercentage<74.995) {
 		document.getElementById("percentToWarningBar").style['background-color']='#e57200'
 	} else if (realPercentage<99.995) {
@@ -913,9 +922,6 @@ function gameInit() {
 			},tickspeed)
 		}
 	},0)
-	setInterval(function(){
-		updateElement('title','CEG: '+realPercentage.toFixed(2)+'%')
-	},1000)
 	setInterval(save,1000);
 }
 

@@ -424,7 +424,7 @@ function checkIfAffordable(id) {
 		case 14: if (player.prestiges[0]<9) {return false}; return true
 		case 15: if (player.prestiges[1]<5) {return false}; return true
 		case 16: if (player.prestiges[1]<7) {return false}; return true
-		case 17: if (player.errors.lt(1e30)) {return false}; return true
+case 17: if (player.errors.lt(1e30)) {return false}; return true
 		case 18: if (player.errors.lt(1e35)) {return false}; return true
 		case 19: if (player.errors.lt(1e40)) {return false}; return true
 		case 20: if (player.errors.lt(1e50)) {return false}; return true
@@ -466,6 +466,7 @@ function getUpgradeMultiplier(id,tier) {
 	if (id==2) mp = player.warningUpgrades.length*2
 	if (id==3) mp = Math.pow(2,Math.floor(player.compAmount[tier-1]/10))
 	if (id==4) mp = player.totalWarnings*2
+	if (id==5) mp = Math.pow(2,Math.floor(player.warnings))
 	return Math.max(1, mp)
 }
 
@@ -477,6 +478,7 @@ function buyWarUpg(id) {
 			case 2: warnCost=1; break
 			case 3: warnCost=2; break
 			case 4: warnCost=1; break
+			case 5: warnCost=2; break
 		}
 		console.log(warnCost)
 		if (player.warnings.gte(warnCost)) {

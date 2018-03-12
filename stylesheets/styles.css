@@ -1,5 +1,5 @@
 html * {
-	font-weight:normal
+	font-weight:bold !important
 }
 table.prestiges tr {
 	height:0%;

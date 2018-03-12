@@ -31,6 +31,7 @@ const story = ['','','','','']
 const TIER_NAMES = ['first','second','third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 'ninth']; // can add more if more gens/story elements, cuz that uses this too
 const ROMAN_NUMERALS=[]
 const costMult=[2,2.5,3,4,5,6,8,10,12]
+const warUpgCosts = [1,1,2,1,2]
 
 var costs={comp:[new Decimal(10),new Decimal(100),new Decimal(1e3),new Decimal(1e4),new Decimal(1e6),new Decimal(1e8),new Decimal(1e10),new Decimal(1e13),new Decimal(1e16)],boost:new Decimal(0),upgs:[new Decimal(0)]}
 var storyMessages=["Pancakes is ready!",
@@ -472,14 +473,7 @@ function getUpgradeMultiplier(id,tier) {
 
 function buyWarUpg(id) {
 	if (!player.warningUpgrades.includes(id)) {
-		var warnCost
-		switch (id) {
-			case 1: warnCost=1; break
-			case 2: warnCost=1; break
-			case 3: warnCost=2; break
-			case 4: warnCost=1; break
-			case 5: warnCost=2; break
-		}
+		var warnCost = warUpgCosts[id-1]
 		console.log(warnCost)
 		if (player.warnings.gte(warnCost)) {
 			player.warnings=player.warnings.sub(warnCost)

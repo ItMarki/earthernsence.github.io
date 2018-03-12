@@ -46,20 +46,20 @@ border-radius:20px;
 <body style="background-color:gray;text-align:center" onload='gameInit()'>
 <div id="game" style='text-align:center'>
   <h1 id="logo">The Console Error Game</h1>
-  <div>You have <text id="errors">x</text> errors.</div>
-  <div>You are making <text id="eps">x</text> errors per second.</div>
-  <div id='genUpgrade'>Increase the boost by <text id='genIncrease'>2</text>x.<br>
+  <div>You have <text id="errors">10</text> errors.</div>
+  <div>You are making <text id="eps">0</text> errors per second.</div>
+  <div id='genUpgrade' style='display:none'>Increase the boost by <text id='genIncrease'>2</text>x.<br>
   <button id="genIncreaseCost" onclick="buyGenUpgrade()">Cost: 1000</button><button id="buyMax" onclick="maxGenUpgrade()">Buy Max</button><br>
   Production boost: <text id='genBoost'>1</text>x</div><br>
-  <div><button onclick='switchTab("computers")' id="tabButton">Computers</button><button onclick='switchTab("options")' id="tabButton">Options</button><button onclick='switchTab("stats")' id="tabButton">Stats</button><button onclick='switchTab("achievements")' id="tabButton">Achievements</button><button onclick='switchTab("warning")' id="tabButton">Warning</button></div>
+  <div><button onclick='switchTab("computers")' id="tabButton">Computers</button><button onclick='switchTab("options")' id="tabButton">Options</button><button onclick='switchTab("stats")' id="tabButton">Stats</button><button onclick='switchTab("achievements")' id="tabButton">Achievements</button><button id='warningTab' style='display:none' onclick='switchTab("warning")'>Warning</button></div>
   <br>
   <div id='computersTab'>
 	  <td style='width:96px'><button id='maxAll' class='commonButton' onClick='maxGenUpgrade();maxGen();'>Max All</button></td>	  
-	  <div>Tier I Computer:<button id="cop1" onClick='buyGen(0)'> (<text id="firstAmt">x</text>)</button></div>
-	  <div>Tier II Computer:<button id="cop2" onClick='buyGen(1)'> (<text id="secondAmt">x</text>)</button></div>
-	  <div>Tier III Computer:<button id="cop3" onClick='buyGen(2)'> (<text id="thirdAmt">x</text>)</button></div>
-	  <div>Tier IV Computer:<button id="cop4"  onClick='buyGen(3)'> (<text id="forthAmt">x</text>)</button></div>
-          <div id='fifthComp' style='display:none'>Tier V Computer:<button id="cop5"  onClick='buyGen(4)'> (<text id="fifthAmt">x</text>)</button></div>
+	  <div>Tier I Computer:<button id="cop1" onClick='buyGen(0)'>Cost: 10 (0)</button></div>
+	  <div>Tier II Computer:<button id="cop2" class='cantBuy' onClick='buyGen(1)'>Cost: 100 (0)</button></div>
+	  <div>Tier III Computer:<button id="cop3" class='cantBuy' onClick='buyGen(2)'>Cost: 1.00K (0)</button></div>
+	  <div>Tier IV Computer:<button id="cop4" class='cantBuy' onClick='buyGen(3)'>Cost: 10.00K (0)</button></div>
+      <div id='fifthComp' style='display:none'>Tier V Computer:<button id="cop5"  onClick='buyGen(4)'> (<text id="fifthAmt">x</text>)</button></div>
 	  <div id='sixthComp' style='display:none'>Tier VI Computer:<button id="cop6"  onClick='buyGen(5)'> (<text id="sixthAmt">x</text>)</button></div>	  <div id='seventhComp' style='display:none'>Tier VII Computer:<button id="cop7"  onClick='buyGen(6)'> (<text id="seventhAmt">x</text>)</button></div>
 	  <div id='eighthComp' style='display:none'>Tier VIII Computer:<button id="cop8"  onClick='buyGen(7)'> (<text id="eighthAmt">x</text>)</button></div>
 	  <div id='ninthComp' style='display:none'>Tier IX Computer:<button id="cop9"  onClick='buyGen(8)'> (<text id="ninthAmt">x</text>)</button></div>
@@ -114,8 +114,8 @@ border-radius:20px;
 		  <div><b>144hz Monitor & Faster Reboot/Startup times</b>: 7,500x faster computers<br><button id="upg19button" onclick='buyUpg(19)'>Cost: 1e40</button></div>
 		  <div><b>Included Mic & Maximum RAM</b>: 75,000x faster computers<br><button id="upg20button" onClick="buyUpg(20)">Cost: 1e50</button></div>
 		  <div><b>Quantum I</b>: 750,000x faster computers.<br><button id="upg21button" onClick="buyUpg(21)">Cost: 1e65</button></div>
-	          <div><b>Quantum II</b>: 750,000x faster computers.<br><button id="upg23button" onClick="buyUpg(23)">Cost: 1e75</button></div>
-	          <div><b>Faster computers I</b>: Production for Tier I computers increase based on the amount<br><button id="upg4button" onClick='buyUpg(4)'>Cost: 100 TI comps & 1e35</button></div>
+	      <div><b>Quantum II</b>: 750,000x faster computers.<br><button id="upg23button" onClick="buyUpg(23)">Cost: 1e75</button></div>
+	      <div><b>Faster computers I</b>: Production for Tier I computers increase based on the amount<br><button id="upg4button" onClick='buyUpg(4)'>Cost: 100 TI comps & 1e35</button></div>
 		  <div><b>Faster computers II</b>: Production for Tier II computers increase based on the amount<br><button id="upg5button" onClick='buyUpg(5)'>Cost: 100 TII comps & 1e40</button></div>
 		  <div><b>Faster computers III</b>: Production for Tier III computers increase based on the amount<br><button id="upg6button" onClick='buyUpg(6)'>Cost: 100 TIII comps & 1e50</button></div>
 		  <div><b>Faster computers IV</b>: Production for Tier IV computers increase based on the amount<br><button id="upg7button" onClick='buyUpg(7)'>Cost: 100 TIV comps & 1e65</button></div>
@@ -132,24 +132,24 @@ border-radius:20px;
 		  <div><b>Stronger I.P encryption</b>: 10x bonus that didn't have to have an I.P. change<br><button id="upg15button" onClick='buyUpg(15)'>Cost: IP5</button></div>
 		  <div><b>Quantum upgrades</b>: Further maximum of UCs based on Internet Boosts<br><button id="upg16button" onClick='buyUpg(16)'>Cost: IB2</button></div>
 		  <div><b>Hyperquantum Upgrades</b>: Post-Network ONLY: 1,000,000x faster computers<br><button id="upg22button" onClick='buyUpg(22)'>Cost: N1 & 1e3 errors</button></div>
-		  </div>
-	<br><div id='upgradereq'>Unlocks at 3 I.P. Changes</div></br>
+		  </div><br>
+		  <div id='upgradereq'>Unlocks at 3 I.P. Changes</div>
 	  </td></tr>
   </table>
   <table class='prestiges' align=left style='position:fixed; height:100%; top:0px; left:15px; width:20%'>
   <thead><tr><th style='font-size:32px'>Prestiges</th></tr></thead>
   <tbody><tr><td>
-    <div>Upgrade Computers: <text id='abletoprestige'>Requires <text id='prestige1Gen'>10 Tier IV</text> Computers <button id="upgradeComputers" onClick='prestige(1)'>Reset back to beginning of run, but gain a small boost.</button></text><text id='maxout' style='display:none'>Maxed out!</text></div>
-    <div><text id='prestige2Type'>I.P. Change</text>: Requires <text id='prestige2Gen'>20 Tier IV</text> Computers <button id="ipChange" onClick='prestige(2)'></button></div>
-    <div>Network: Requires <text id='prestige3Req'>60</text> Tier IX Computers <button id="network" onclick='prestige(3)'>Reset everything, but gain a Production Boost upgrade (x<text id='netMulti'>X</text>).</button></div>
+    <div><b>Upgrade Computers</b>: <text id='abletoprestige'>Requires <text id='prestige1Gen'>10 Tier I</text> Computers <button id="upgradeComputers" onClick='prestige(1)'>Reset back to beginning of run, but gain a small boost.</button></text><text id='maxout' style='display:none'>Maxed out!</text></div>
+    <div><b id='prestige2Type'>I.P. Change</b>: Requires <text id='prestige2Gen'>20 Tier IV</text> Computers <button id="ipChange" onClick='prestige(2)'>Gain Tier V Computer, but resets everything.</button></div>
+    <div><b>Network</b>: Requires <text id='prestige3Req'>80</text> Tier IX Computers <button id="network" onclick='prestige(3)'>Reset everything, but gain a Production Boost upgrade (x<text id='netMulti'>2.5</text>).</button></div>
   </td></tr></tbody>
   </table>
 	<div style='background-color: #999999; position: fixed; bottom: 0; width: 100%; color: #191919; z-index: -1'>| <a href="https://discord.gg/23JnYTY" target="_newtab">Discord</a> | <a href="howto.html" target="_newtab">How to Play CEG</a> | <a href="../index.html" target="_newtab"> Back to Main Menu </a>| <a href="changelog.html" target="_newtab">Changelog</a> |</div> 
 	<div id="percentToWarning">
 	  <div id="percentToWarningBar"></div>
-	  <div id="percentToWarningProgress"></div>
+	  <div id="percentToWarningProgress">0.34%</div>
 	</div>
-	<div id='warnings'>You have 0 warnings.</div>
+	<div id='warnings' style='display:none'>You have 0 warnings.</div>
 </div>
 </body>
 </html>

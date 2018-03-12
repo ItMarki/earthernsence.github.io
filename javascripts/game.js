@@ -15,8 +15,8 @@ const defaultPlayer = {
   playtime: 0, //total time spent online ingame
   time: 0, //total time displayed in stats
   version: 1.5, //very important
-  build: 11, //used for us to communicate commits, helps a lot
-  hotfix: 3, //another way to use commits
+  build: 12, //used for us to communicate commits, helps a lot
+  hotfix: 1, //another way to use commits
   options: {
 	  hotkeys:true, //whether or not hotkeys are enabled (on by default)
 	  notation:0 //notation setting, see options
@@ -592,10 +592,14 @@ function gameTick() {
   updateElement('prestige3Req',player.prestiges[2]*40+80)
   updateElement('netMulti',(5+player.prestiges[2])/2)
   if (player.prestiges[3]>0||player.warnings.gt(0)) {
+    showElement('warningTab','inline-block')
     showElement('warnings','block')
     updateElement('warnings','You have '+format(player.warnings)+' warnings.')
+    document.getElementById('percentToWarning').style.width='calc(80% - 200px)'
   } else {
-    hideElement('warnings','block')
+    hideElement('warningTab')
+    hideElement('warnings')
+    document.getElementById('percentToWarning').style.width='calc(80% - 20px)'
   }
   if (tab=='computers') {
 	  for (let i=0;i<Math.min(player.prestiges[1]+4,9);i++) {

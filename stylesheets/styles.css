@@ -1,3 +1,6 @@
+html * {
+	font-weight:normal
+}
 table.prestiges tr {
 	height:0%;
 	vertical-align:0

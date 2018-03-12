@@ -388,9 +388,9 @@ function getMultTier(tier) {  let ret = new Decimal.pow(10,tier-1)
   if (player.upgrades.includes(14)&&tier<5) ret = ret.mul(10)
   if (player.upgrades.includes(22)) ret = ret.mul(1000000)
   if (player.warningUpgrades.includes(1)) ret = ret.mul(getUpgradeMultiplier(1))
-	if (player.warningUpgrades.includes(2)) ret = ret.mul(getUpgradeMultiplier(2))
-	if (player.warningUpgrades.includes(3)) ret = ret.mul(getUpgradeMultiplier(3,tier))
-	if (player.warningUpgrades.includes(4)) ret = ret.mul(getUpgradeMultiplier(4))
+  if (player.warningUpgrades.includes(2)) ret = ret.mul(getUpgradeMultiplier(2))
+  if (player.warningUpgrades.includes(3)) ret = ret.mul(getUpgradeMultiplier(3,tier))
+  if (player.warningUpgrades.includes(4)) ret = ret.mul(getUpgradeMultiplier(4))
   return ret
 }
 

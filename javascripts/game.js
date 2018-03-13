@@ -467,7 +467,7 @@ function getUpgradeMultiplier(id,tier) {
 	if (id==2) mp = player.warningUpgrades.length*2
 	if (id==3) mp = Math.pow(2,Math.floor(player.compAmount[tier-1]/10))
 	if (id==4) mp = player.totalWarnings*2
-	if (id==5) mp = Math.pow(2,Math.floor(player.warnings))
+	if (id==5) mp = Math.pow(Math.floor(player.warnings),2))
 	return Math.max(1, mp)
 }
 

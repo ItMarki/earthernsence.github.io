@@ -911,16 +911,23 @@ function gameInit() {
 	var tickspeed=0
 	var s=0
 	updated=true
-	setInterval(function(){
-		if (updated) {
+  gameLoop = setInterval(function()
+  { 
+    failsafe = 0
+    if (failsafe >= 5) {
+      console.log('Sorry! Seems like the game is broken! Stopping gameLoop......')
+      clearInterval(gameLoop)
+		} else if (updated) {
 			updated=false
 			setTimeout(function(){
 				var startTime=new Date().getTime()
 				try {
 				    gameTick()
+            failsafe = 0
 				} catch (e) {
 					console.log('A game error has occured:')
 					console.error(e)
+          failsafe++
 				}
 				tickspeed=(new Date().getTime()-startTime)*0.2+tickspeed*0.8
 				updated=true

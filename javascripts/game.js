@@ -31,6 +31,7 @@ const story = ['','','','','']
 const TIER_NAMES = ['first','second','third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 'ninth']; // can add more if more gens/story elements, cuz that uses this too
 const ROMAN_NUMERALS=[]
 const costMult=[2,2.5,3,4,5,6,8,10,12]
+const warUpgCosts = [1,1,2,1,2]
 
 var costs={comp:[new Decimal(10),new Decimal(100),new Decimal(1e3),new Decimal(1e4),new Decimal(1e6),new Decimal(1e8),new Decimal(1e10),new Decimal(1e13),new Decimal(1e16)],boost:new Decimal(0),upgs:[new Decimal(0)]}
 var storyMessages=["Pancakes is ready!",
@@ -388,9 +389,9 @@ function getMultTier(tier) {  let ret = new Decimal.pow(10,tier-1)
   if (player.upgrades.includes(14)&&tier<5) ret = ret.mul(10)
   if (player.upgrades.includes(22)) ret = ret.mul(1000000)
   if (player.warningUpgrades.includes(1)) ret = ret.mul(getUpgradeMultiplier(1))
-	if (player.warningUpgrades.includes(2)) ret = ret.mul(getUpgradeMultiplier(2))
-	if (player.warningUpgrades.includes(3)) ret = ret.mul(getUpgradeMultiplier(3,tier))
-	if (player.warningUpgrades.includes(4)) ret = ret.mul(getUpgradeMultiplier(4))
+  if (player.warningUpgrades.includes(2)) ret = ret.mul(getUpgradeMultiplier(2))
+  if (player.warningUpgrades.includes(3)) ret = ret.mul(getUpgradeMultiplier(3,tier))
+  if (player.warningUpgrades.includes(4)) ret = ret.mul(getUpgradeMultiplier(4))
   return ret
 }
 
@@ -473,14 +474,7 @@ function getUpgradeMultiplier(id,tier) {
 
 function buyWarUpg(id) {
 	if (!player.warningUpgrades.includes(id)) {
-		var warnCost
-		switch (id) {
-			case 1: warnCost=1; break
-			case 2: warnCost=1; break
-			case 3: warnCost=2; break
-			case 4: warnCost=1; break
-			case 5: warnCost=2; break
-		}
+		var warnCost = warUpgCosts[id-1]
 		console.log(warnCost)
 		if (player.warnings.gte(warnCost)) {
 			player.warnings=player.warnings.sub(warnCost)
@@ -917,16 +911,23 @@ function gameInit() {
 	var tickspeed=0
 	var s=0
 	updated=true
-	setInterval(function(){
-		if (updated) {
+  gameLoop = setInterval(function()
+  { 
+    failsafe = 0
+    if (failsafe >= 5) {
+      console.log('Sorry! Seems like the game is broken! Stopping gameLoop......')
+      clearInterval(gameLoop)
+		} else if (updated) {
 			updated=false
 			setTimeout(function(){
 				var startTime=new Date().getTime()
 				try {
 				    gameTick()
+            failsafe = 0
 				} catch (e) {
 					console.log('A game error has occured:')
 					console.error(e)
+          failsafe++
 				}
 				tickspeed=(new Date().getTime()-startTime)*0.2+tickspeed*0.8
 				updated=true

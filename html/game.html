@@ -40,7 +40,7 @@ font-size: 14px;
   <div id='genUpgrade'>Increase the boost by <text id='genIncrease'>2</text>x.<br>
   <button id="genIncreaseCost" onclick="buyGenUpgrade()">Cost: 1000</button><button id="buyMax" onclick="maxGenUpgrade()">Buy Max</button><br>
   Production boost: <text id='genBoost'>1</text>x</div><br>
-  <div><button onclick='switchTab("computers")'>Computers</button><button onclick='switchTab("options")'>Options</button><button onclick='switchTab("stats")'>Stats</button><button onclick='switchTab("achievements")'>Achievements</button><!--<button onclick='switchTab("warning")'>Warning</button>--></div><!--I added the warning tab for later.-->
+  <div><button onclick='switchTab("computers")'>Computers</button><button onclick='switchTab("options")'>Options</button><button onclick='switchTab("stats")'>Stats</button><button onclick='switchTab("achievements")'>Achievements</button><button id='theEndButton' style='display:none' onclick='switchTab("theEnd")'>The End</button><!--<button onclick='switchTab("warning")'>Warning</button>--></div><!--I added the warning tab for later.-->
   <br>
   <div id='computersTab'>
 	  <td style='width:96px'><button id='maxAll' class='commonButton' onClick='maxGenUpgrade();maxGen();'>Max All</button></td>	  
@@ -68,6 +68,17 @@ font-size: 14px;
 	  <div id='statsPrestige1'>You upgraded your computers, X times.</div>
 	  <div id='statsPrestige2'>You have X new computers.</div>
 <div id='statsPrestige3'>You have X networks.</div>
+  </div>
+  <div id='theEndTab' style='display:none'>
+	<h1 id="logo">The Console Error Game</h1>
+	<h2>The One and Only Console Error Game</h2>
+	<div id='finalMessage'></div>
+	<div>Why not you play other games like the inspiration at the title screen until the next update comes out?</div>
+	<h2>Credits</h2>
+	<div>Created by Frostbite5</div>
+	<div>Co-developed by Aarex</div>
+	<div>Helped by IkerStreamer, slabdrill, Username5243 & Merp</div>
+	<div>Inspired from <a href="https://aarextiaokhiao.github.io/Universal-Attractor/game.html">Universal Attractor</a>, made by Aarex, which is a inspiration of IvarK's game <a href="https://ivark.github.io/">Antimatter Dimensions</a>.</div>
   </div>
   <div id='achievementsTab' style='display:none'>
       <h1 id="soon™"> Soon™</h1>

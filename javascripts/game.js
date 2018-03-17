@@ -232,8 +232,6 @@ function buyGenUpgrade() {
     player.boostPower+=1
     updateCosts()
   }
-}
-
 function maxGenUpgrade() {
   while (player.errors.gte(costs.boost)) {
     player.errors=player.errors.sub(costs.boost)
@@ -245,7 +243,7 @@ function maxGenUpgrade() {
 function prestige(tier) {
     if (player.compAmount[Math.min(player.prestiges[0],8)]<Math.max(player.prestiges[0]*10-70,10) && tier == 1) return;
     else if (player.compAmount[Math.min(player.prestiges[1]+3,8)]<Math.max(player.prestiges[1]*15-40,20) && tier == 2) return;
-    else if (player.compAmount[8]<player.prestiges[2]*40+80 && tier == 3) return;
+    else if (player.compAmount[8]<player.prestiges[2]*40+70 && tier == 3) return;
     else if (tier == Infinity && !confirm('Are you really sure to reset? You will lose everything you have!')) return;
   if (tier==Infinity) {
 	//Highest tier - Hard reset

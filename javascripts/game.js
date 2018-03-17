@@ -232,6 +232,7 @@ function buyGenUpgrade() {
     player.boostPower+=1
     updateCosts()
   }
+}
 function maxGenUpgrade() {
   while (player.errors.gte(costs.boost)) {
     player.errors=player.errors.sub(costs.boost)

@@ -35,37 +35,32 @@ const warUpgCosts = [1,1,2,1,2]
 
 var costs={comp:[new Decimal(10),new Decimal(100),new Decimal(1e3),new Decimal(1e4),new Decimal(1e6),new Decimal(1e8),new Decimal(1e10),new Decimal(1e13),new Decimal(1e16)],boost:new Decimal(0),upgs:[new Decimal(0)]}
 var storyMessages=["Pancakes is ready!",
-                   "Wakey wakey! Aw, c'mon, you still got the rest of the day to sleep. Get up baby, get up!",
-                   "Nice! A Tier III Computer. Well deserved.",
-                   "A Tier IV Computer is great, isn't it?",
-                   "Computers are waking up...",
-                   "Ah, here we are. Awake and operational.",
-                   "Network is being horrible. These upgrades don't do anything. What I'd give for an ethernet cord.",
-                   "I still haven't introduced myself? I'm your first ever Tier I computer. I can't believe you've finally had the care to upgrade me.",
-                   "Trust me. I stay through it all. Keep getting these I.P. Changes and we'll be set in no time.",
-                   "Errors? Still? You can do better than that!",
-                   "Atta boy! Keep getting em. Also, Tier VI Computers are my best friends. Get more!",
-                   "Tier VII computers are bullies. Get through them NOW.",
-                   "Tier VIII! Soon, everybody, soon.",
-                   "The Internet Boosts are in sight. Get 20 Tier IX computers to buy one.",
-                   "I got a boost? Good job, you get a <i>small</i> prize.",
-                   "Networks was found, but all are private for me. :(",
-                   "The PC found a network! This seems legit. Let's hop on.",
-                   "Computer: Connecting network. Please wait, this may take a few minutes.",
-                   "Aw, really? I hate these things.",
-                   "Computer: Connected.",
-                   "Finally! Can't wait to test this bad boy out.",
-                   "Hey, we're off! Got a I.P. Change as well. The end is near.",
-                   "Another network? I find out your new network was better so I installed it.",
-                   "A third network? I am getting notifications for that...",
-                   "Mighty large number you got there! Sorry, but it's mandatory operation to reset it.",
-                   "Now you've gotta do it all over again. But you are <i>stronger</i>. Get out there! Make me proud!",
-                   "Congratulations! You just beat the game! (for now...)<br>Why not you play other games like the inspiration at the title screen until the next update comes out?"]
-var finalMessages=["Congratulations! You just beat the game! (because FrostBite told N1 is impossible for now...)",
-                   "Woah, seventy-seven T9 computers? Congratulations, you got a bronze cake.",
-                   "78 T9 COMPUTERS!? WHOO! The prize would be silver cake!",
-                   "SEVENTY-NINE TIER IX COMPUTER!?!?! YAHOO!!! The prize would be golden cake!",
-                   "EIGHTY!?! HOW DID YOU MADE THIS POSSIBLE!?! YOU JUST FOUND A NETWORK!?! OMG!!! YOU GET A PLATINUM CAKE!!!"]
+"Wakey wakey! Aw, c'mon, you still got the rest of the day to sleep. Get up baby, get up!",
+"Nice! A Tier III Computer. Well deserved.",
+"A Tier IV Computer is great, isn't it?",
+"Computers are waking up...",
+"Ah, here we are. Awake and operational.",
+"Network is being horrible. These upgrades don't do anything. What I'd give for an ethernet cord.",
+"I still haven't introduced myself? I'm your first ever Tier I computer. I can't believe you've finally had the care to upgrade me.",
+"Trust me. I stay through it all. Keep getting these I.P. Changes and we'll be set in no time.",
+"Errors? Still? You can do better than that!",
+"Atta boy! Keep getting em. Also, Tier VI Computers are my best friends. Get more!",
+"Tier VII computers are bullies. Get through them NOW.",
+"Tier VIII! Soon, everybody, soon.",
+"The Internet Boosts are in sight. Get 20 Tier IX computers to buy one.",
+"I got a boost? Good job, you get a <i>small</i> prize.",
+"Networks was found, but all are private for me. :(",
+"The PC found a network! This seems legit. Let's hop on.",
+"Computer: Connecting network. Please wait, this may take a few minutes.",
+"Aw, really? I hate these things.",
+"Computer: Connected.",
+"Finally! Can't wait to test this bad boy out.",
+"Hey, we're off! Got a I.P. Change as well. The end is near.",
+"Another network? I find out your new network was better so I installed it.",
+"A third network? I am getting notifications for that...",
+"Mighty large number you got there! Sorry, but it's mandatory operation to reset it.",
+"Now you've gotta do it all over again. But you are <i>stronger</i>. Get out there! Make me proud!",
+"Congratulations! You just beat the game! (for now...)<br>Why not you play other games like the inspiration at the title screen until the next update comes out?"]
 	
 function updateElement(elementID,value) {
 	document.getElementById(elementID).innerHTML=value
@@ -589,12 +584,6 @@ function gameTick() {
 	  else if (checkIfAffordable(22)) updateClass('upg'+22+'button','')
 	  else updateClass('upg'+22+'button','cantBuy')
   }
-  if (player.compAmount[8]>75||player.prestiges[2]>0) {
-	  showElement('theEndButton','inline')
-	  newStory(16)
-  } else {
-	  hideElement('theEndButton')
-  }
   updateElement('prestige3Req',player.prestiges[2]*40+80)
   updateElement('netMulti',(5+player.prestiges[2])/2)
   if (player.prestiges[3]>0||player.warnings.gt(0)) {
@@ -672,9 +661,6 @@ function gameTick() {
 	  } else {
 		  hideElement('statsPrestige4')
 	  }
-  }
-  if (tab=='theEnd') {
-	  updateElement('finalMessage',player.prestiges[2]>0?finalMessages[4]:finalMessages[player.compAmount[8]-76])
   }
 }
 

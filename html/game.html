@@ -36,7 +36,7 @@ height: 150px;
 width: 150px;
 border-radius:20px;
 }
-		#downtimeUpg {
+		#downtimeChallenges {
 			text-align:center;
 			font-size:14px;
 			background-color:darkgray;
@@ -74,7 +74,8 @@ border-radius:20px;
 	  <div id='ninthComp' style='display:none'>Tier IX Computer:<button id="cop9"  onClick='buyGen(8)'> (<text id="ninthAmt">x</text>)</button></div>
   </div>
   <div id='downtimeTab' style='display:none'>
-	  <table align=center><tr><td><button class='downtime1' id='downtimeUpg'>Production boost effectiveness is halved.<br>Goal: 1e30 errors.</button></br>
+  <button onclick='switchTab("downtimeChallenges")' id="tabButton">Downtime Challenges</button>
+	  <table align=center><tr><td><button class='downtime1' id='downtimeChallenges'>Production boost effectiveness is halved.<br>Goal: 1e30 errors.</button></br>
 	  </table>
 	  </tr>
 	</td>

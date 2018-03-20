@@ -35,7 +35,16 @@ background-color:black;
 height: 150px;
 width: 150px;
 border-radius:20px;
-}		
+}
+		#downtimeUpg {
+			text-align:center;
+			font-size:14px;
+			background-color:darkgray;
+			color: red;
+			height: 150px;
+			width: 150px;
+			border-radius:20px;
+		}
 	</style>
   <link rel="stylesheet" type="text/css" href="../stylesheets/styles.css" />
 	<script type="text/javascript" src="../javascripts/break_infinity.min.js"> </script>
@@ -51,7 +60,7 @@ border-radius:20px;
   <div id='genUpgrade' style='display:none'>Increase the boost by <text id='genIncrease'>2</text>x.<br>
   <button id="genIncreaseCost" onclick="buyGenUpgrade()">Cost: 1000</button><button id="buyMax" onclick="maxGenUpgrade()">Buy Max</button><br>
   Production boost: <text id='genBoost'>1</text>x</div><br>
-  <div><button onclick='switchTab("computers")' id="tabButton">Computers</button><button onclick='switchTab("options")' id="tabButton">Options</button><button onclick='switchTab("stats")' id="tabButton">Stats</button><button onclick='switchTab("achievements")' id="tabButton">Achievements</button><button id='warningTabButton' style='display:none' onclick='switchTab("warning")'>Warning</button><button id='theEndButton' style='display:none' onclick='switchTab("theEnd")'>The End</button></div>
+  <div><button onclick='switchTab("computers")' id="tabButton">Computers</button><button onclick='switchTab("downtime")' id="tabButton">Downtime</button><button onclick='switchTab("options")' id="tabButton">Options</button><button onclick='switchTab("stats")' id="tabButton">Stats</button><button onclick='switchTab("achievements")' id="tabButton">Achievements</button><button id='warningTabButton' style='display:none' onclick='switchTab("warning")'>Warning</button><button id='theEndButton' style='display:none' onclick='switchTab("theEnd")'>The End</button></div>
   <br>
   <div id='computersTab'>
 	  <td style='width:96px'><button id='maxAll' class='commonButton' onClick='maxGenUpgrade();maxGen();'>Max All</button></td>	  
@@ -64,7 +73,13 @@ border-radius:20px;
 	  <div id='eighthComp' style='display:none'>Tier VIII Computer:<button id="cop8"  onClick='buyGen(7)'> (<text id="eighthAmt">x</text>)</button></div>
 	  <div id='ninthComp' style='display:none'>Tier IX Computer:<button id="cop9"  onClick='buyGen(8)'> (<text id="ninthAmt">x</text>)</button></div>
   </div>
-  <div id='optionsTab' style='display:none'>
+  <div id='downtimeTab' style='display:none'>
+	  <table align=center><tr><td><button class='downtime1' id='downtimeUpg'>Production boost effectiveness is halved.<br>Goal: 1e30 errors.</button></br>
+	  </table>
+	  </tr>
+	</td>
+	</div>
+	<div id='optionsTab' style='display:none'>
 	  <table align=center><tr><td><button class='optionButton' onClick='save()'>Save</button></td>
 	  <td><button class='optionButton' onClick='exportSave()'>Export</button></td>
 	  <td><button class='optionButton' onClick='importSave()'>Import</button></td>
@@ -85,7 +100,7 @@ border-radius:20px;
   <div id='theEndTab' style='display:none'>
 	<h1 id="logo">The Console Error Game</h1>
 	<h2>The One and Only Console Error Game</h2>
-	<div>Congratulations! You just beat the game! (for now...)<br>Why not you play other games like the inspiration at the title screen until the next update comes out?</div>
+	<div>Congratulations! You just beat the game! (for now...)<br>Why not play other games like the inspiration at the title screen until the next update comes out?</div>
 	<h2>Credits</h2>
 	<div>Created by Frostbite5</div>
 	<div>Co-developed by Aarex</div>

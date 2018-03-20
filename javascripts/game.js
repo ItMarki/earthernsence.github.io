@@ -499,13 +499,13 @@ function gameTick() {
 		  else updateClass('upg'+i+'button','cantBuy')
 	  }
   }
-  if (player.compAmount[8]>75||player.prestiges[2]>0) {
+  if (player.compAmount[8]>=100||player.prestiges[2]>=2) {
 	  showElement('theEndButton','inline')
 	  newStory(16)
   } else {
 	  hideElement('theEndButton')
   }
-  updateElement('prestige3Req',player.prestiges[2]*40+80)
+  updateElement('prestige3Req',player.prestiges[2]*40+70)
   updateElement('netMulti',(5+player.prestiges[2])/2)
   if (tab=='computers') {
 	  for (let i=0;i<Math.min(player.prestiges[1]+4,9);i++) {

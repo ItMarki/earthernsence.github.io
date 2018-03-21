@@ -81,6 +81,9 @@ function showElement(elementID,style) {
 function hideElement(elementID) {
 	document.getElementById(elementID).style.display='none'
 }
+function exitChall() {
+challid==0
+}
 
 var notationArray = ["Standard","Scientific","Engineering","Logarithm","Letters","Mixed"]
 

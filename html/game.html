@@ -54,7 +54,7 @@ border-radius:20px;
 </head>
 <body style="background-color:gray;text-align:center" onload='gameInit()'>
 <div id="game" style='text-align:center'>
-  <h1 id="logo">The Console Error Game</h1>
+	<h1 id="logo">The Console Error Game</h1>
   <div>You have <text id="errors">10</text> errors.</div>
   <div>You are making <text id="eps">0</text> errors per second.</div>
   <div id='genUpgrade' style='display:none'>Increase the boost by <text id='genIncrease'>2</text>x.<br>
@@ -76,6 +76,7 @@ border-radius:20px;
   <div id='downtimeTab' style='display:none'>
   <button onclick='switchDTTab("downtimeChallenges")' id="tabButton">Downtime Challenges</button><button onclick='switchDTTab("downtimeUpgrades")' id="tabButton">Downtime Upgrades</button>
 	  <div id='downtimeChallengesTab'>
+		  <button class='commonButton' onclick='exitChall()'>Exit Downtime</button>
 	  <table align=center><tr><td><button class='downtimeButton' onclick='prestige(2,1)'>Production boost effectiveness is halved.<br>Goal: 1e30 errors.</button>
 	  <button class='downtimeButton'>T9 & T8 are useless.<br>Goal: 1e50 errors.</button></td></tr></table>
 	  </div>

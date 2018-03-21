@@ -715,7 +715,7 @@ function gameInit() {
 				try {
 				    gameTick()
 				} catch (e) {
-					console.log('A game error has been occured: '+e)
+					console.log(e)
 				}
 				tickspeed=(new Date().getTime()-startTime)*0.2+tickspeed*0.8
 				updated=true

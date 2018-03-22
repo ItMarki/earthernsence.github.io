@@ -82,7 +82,7 @@ function hideElement(elementID) {
 	document.getElementById(elementID).style.display='none'
 }
 function exitChall() {
-challid==0
+    if (player.downtimeChallenge>0) prestige(3,-1)
 }
 
 var notationArray = ["Standard","Scientific","Engineering","Logarithm","Letters","Mixed"]

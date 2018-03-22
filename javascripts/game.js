@@ -83,6 +83,7 @@ function hideElement(elementID) {
 }
 function exitChall() {
     if (player.downtimeChallenge>0) prestige(3,-1)
+completeChall()
 }
 
 var notationArray = ["Standard","Scientific","Engineering","Logarithm","Letters","Mixed"]
@@ -298,7 +299,7 @@ function prestige(tier,challid=0) {
 	  else if (player.errors.lt(Number.MAX_VALUE) && tier == 4) return;
 	  else if (tier == Infinity && !confirm('Are you really sure to reset? You will lose everything you have!')) return;
   } else {
-      if (tier==2 && challid>0 && !confirm('If you start the challenge, you will reset as normal I.P. change but won\'t earn 1 I.P. change. These challenges will not reset on I.P. change but reset when you reach '+format(Number.MAX_VALUE)+' errors!')) return;
+      if (tier==2 && challid>0 && !confirm('If you start the challenge, you will reset as normal. These challenges will not reset on I.P. change but reset when you reach the required amount of errors!')) return;
   }
   if (tier==Infinity) {
     //Highest tier - Hard reset

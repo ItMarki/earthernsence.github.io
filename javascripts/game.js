@@ -9,14 +9,16 @@ const defaultPlayer = {
   prestiges: [0,0,0,0], //amount of prestiges where [X,0,0] is X UCs, [0,X,0] is X I.P. changes/internet boosts and [0,0,X] is X networks, and [0,0,0,X] is warnings.
   story: -1, //amount of story.
   upgrades: [], //see lines 261-274
+  downtimeChallenge: 0,
+  dtChallCompleted: {},
   warnings: new Decimal(0), //displayed on the bottom bar
   totalWarnings: new Decimal(0), //displayed in stats
   warningUpgrades: [],
   playtime: 0, //total time spent online ingame
   time: 0, //total time displayed in stats
   version: 1.5, //very important
-  build: 13, //used for us to communicate commits, helps a lot
-  hotfix: 2, //another way to use commits
+  build: 14, //used for us to communicate commits, helps a lot
+  hotfix: 1, //another way to use commits
   options: {
 	  hotkeys:true, //whether or not hotkeys are enabled (on by default)
 	  notation:0 //notation setting, see options
@@ -25,6 +27,8 @@ const defaultPlayer = {
 player = defaultPlayer
 tab='computers'
 oldtab=tab
+dttab='downtimeChallenges'
+olddttab=dttab
 percentage=0
 realPercentage=0
 const story = ['','','','','']
@@ -76,6 +80,10 @@ function showElement(elementID,style) {
 	
 function hideElement(elementID) {
 	document.getElementById(elementID).style.display='none'
+}
+function exitChall() {
+    if (player.downtimeChallenge>0) prestige(3,-1)
+completeChall()
 }
 
 var notationArray = ["Standard","Scientific","Engineering","Logarithm","Letters","Mixed"]
@@ -197,6 +205,10 @@ function switchTab(tabid) {
 	tab=tabid
 }
 
+function switchDTTab(tabid) {
+	dttab=tabid
+}
+
 function changeMults() {
   if (player.buyMult == 1) {
 	  player.buyMult = 5;
@@ -279,12 +291,16 @@ function maxGenUpgrade() {
   }
 }
 
-function prestige(tier) {
-  if (player.compAmount[Math.min(player.prestiges[0],8)]<Math.max(player.prestiges[0]*10-70,10) && tier == 1) return;
-  else if (player.compAmount[Math.min(player.prestiges[1]+3,8)]<Math.max(player.prestiges[1]*15-40,20) && tier == 2) return;
-  else if (player.compAmount[8]<player.prestiges[2]*40+80 && tier == 3) return;
-  else if (player.errors.lt(Number.MAX_VALUE) && tier == 4) return;
-  else if (tier == Infinity && !confirm('Are you really sure to reset? You will lose everything you have!')) return;
+function prestige(tier,challid=0) {
+  if (challid==0) {
+	  if (player.compAmount[Math.min(player.prestiges[0],8)]<Math.max(player.prestiges[0]*10-70,10) && tier == 1) return;
+	  else if (player.compAmount[Math.min(player.prestiges[1]+3,8)]<Math.max(player.prestiges[1]*15-40,20) && tier == 2) return;
+	  else if (player.compAmount[8]<player.prestiges[2]*40+80 && tier == 3) return;
+	  else if (player.errors.lt(Number.MAX_VALUE) && tier == 4) return;
+	  else if (tier == Infinity && !confirm('Are you really sure to reset? You will lose everything you have!')) return;
+  } else {
+      if (tier==2 && challid>0 && !confirm('If you start the challenge, you will reset as normal. These challenges will not reset on I.P. change but reset when you reach the required amount of errors!')) return;
+  }
   if (tier==Infinity) {
     //Highest tier - Hard reset
     localStorage.clear('errorSave')
@@ -293,6 +309,8 @@ function prestige(tier) {
   }
   if (tier>3) {
     //Tier 4 - Warnings
+    player.dtChallCompleted={}
+	
     var warningGain=1
     player.warnings=(tier==4)?player.warnings.add(warningGain):new Decimal(0)
     player.totalWarnings=(tier==Infinity)?new Decimal(0):player.totalWarnings.add(warningGain)
@@ -325,7 +343,8 @@ function prestige(tier) {
     player.prestiges[0] = 0
   }
   if (tier==2) {
-    player.prestiges[1]++
+    if (challid==0) player.prestiges[1]++
+	player.downtimeChallenge=Math.max(challid,0)
     switch (player.prestiges[1]) {
       case 1: newStory(8); break;
       case 2: newStory(10); break;
@@ -338,6 +357,7 @@ function prestige(tier) {
     if (player.prestiges[2]==1) newStory(21);
   } else if (tier>2) {
     player.prestiges[1] = 0
+	player.downtimeChallenge=0
   }
   if (tier==3) {
     player.prestiges[2]++;
@@ -361,9 +381,15 @@ function prestige(tier) {
   updateCosts()
 }
 
+function completeChall(id) {
+	if (player.dtChallCompleted[id]==undefined) player.dtChallCompleted[id]=1
+	else player.dtChallCompleted[id]++
+	prestige(2,-1)
+}
+
 function getMultTier(tier) {  let ret = new Decimal.pow(10,tier-1)
   ret = ret.mul(Decimal.pow(Math.pow(1.05 + Math.max((tier-4)/100,0),tier),player.compAmount[tier-1]))
-  ret = ret.mul(Decimal.pow(2+0.5*player.prestiges[2],player.boostPower))
+  ret = ret.mul(Decimal.pow(Math.pow(2+0.5*player.prestiges[2],(player.downtimeChallenge==1)?0.5:1),player.boostPower))
   ret = ret.mul(Decimal.pow(2+Math.floor(player.compAmount[8]/5)*0.5,player.prestiges[1]))
   if (player.prestiges[0]>=tier) ret = ret.mul(player.upgrades.includes(14)?2.5:2)
   if (player.prestiges[0]>9&&tier==9) ret = ret.mul(Decimal.pow(player.upgrades.includes(14)?2.5:2,player.prestiges[0]-9))
@@ -475,7 +501,6 @@ function getUpgradeMultiplier(id,tier) {
 function buyWarUpg(id) {
 	if (!player.warningUpgrades.includes(id)) {
 		var warnCost = warUpgCosts[id-1]
-		console.log(warnCost)
 		if (player.warnings.gte(warnCost)) {
 			player.warnings=player.warnings.sub(warnCost)
 			player.warningUpgrades.push(id)
@@ -489,6 +514,7 @@ function gameTick() {
 	  player.errors = player.errors.add(getEPS().mul(s));
 	  player.totalErrors = player.totalErrors.add(getEPS().mul(s));
 	  player.playtime+=s
+	  if (player.downtimeChallenge==1) if (player.errors.gte(1e30)) completeChall()
 	  if (player.errors.gte(Number.MAX_VALUE)) prestige(4)
 	  move()
   }
@@ -499,7 +525,7 @@ function gameTick() {
 	  showElement('genUpgrade','block');
 	  updateElement('genIncrease',(4+player.prestiges[2])/2);
 	  updateElement('genIncreaseCost','Cost: ' + format(costs.boost));
-	  updateElement('genBoost',format(Decimal.pow(2+0.5*player.prestiges[2],player.boostPower)));
+	  updateElement('genBoost',format(Math.pow(2+0.5*player.prestiges[2],(player.downtimeChallenge==1)?0.5:1)));
 	  if (player.errors.lt(costs.boost)) updateClass('genIncreaseCost','cantBuy')
 	  else updateClass('genIncreaseCost','')
   } else {
@@ -509,6 +535,11 @@ function gameTick() {
 	  hideElement(oldtab+'Tab')
 	  showElement(tab+'Tab','block')
 	  oldtab=tab
+  }
+  if (dttab!=olddttab) {
+	  hideElement(olddttab+'Tab')
+	  showElement(dttab+'Tab','block')
+	  olddttab=dttab
   }
   if (player.prestiges[0]<Math.min(player.prestiges[1]+4,player.upgrades.includes(16)?Math.max(player.prestiges[1]+4,9):9)) {
 	  updateElement('prestige1Gen',Math.max(player.prestiges[0]*10-70,10)+' Tier '+ROMAN_NUMERALS[Math.min(player.prestiges[0]+1,9)])
@@ -731,6 +762,7 @@ function load(savefile) {
 				notation:savefile.notation}
 			delete savefile.notation
 		}
+		savefile.build=0
 	  }
 	  if (savefile.version <= 1.5) {
 	    if (savefile.build < 1) {
@@ -740,6 +772,10 @@ function load(savefile) {
 		}
 	    if (savefile.build < 6) {
 			savefile.warningUpgrades=[]
+		}
+	    if (savefile.build < 14) {
+			savefile.downtimeChallenge=0
+			savefile.dtChallCompleted={}
 		}
 	  }
 	  savefile.version = player.version

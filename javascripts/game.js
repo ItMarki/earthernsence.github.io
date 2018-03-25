@@ -65,7 +65,9 @@ var storyMessages=["Pancakes is ready!",
 "Mighty large number you got there! Sorry, but it's mandatory operation to reset it.",
 "Now you've gotta do it all over again. But you are <i>stronger</i>. Get out there! Make me proud!",
 "Congratulations! You just beat the game! (for now...)<br>Why not you play other games like the inspiration at the title screen until the next update comes out?"]
-  
+var failsafe = 0
+var gameFucked = false
+
 function updateElement(elementID,value) {
   document.getElementById(elementID).innerHTML=value
 }
@@ -697,7 +699,6 @@ function gameTick() {
       hideElement('statsPrestige4')
     }
   }
-  return true
 }
 
 function save() {
@@ -947,31 +948,36 @@ function move() {
 } 
 
 function gameInit() {
+  failsafe = 0
+  gameFucked = false
   setupRoman()
   load(localStorage.getItem('errorSave'))
   var tickspeed=0
   var s=0
   updated=true
-  gameLoop = setInterval(function()
+  setInterval(function()
   { 
-    failsafe = 0
-    if (failsafe >= 5) {
-      console.log('Sorry! Seems like the game is broken! Stopping gameLoop......')
-      clearInterval(gameLoop)
-    } else if (updated) {
-      updated=false
-      setTimeout(function(){
-        var startTime=new Date().getTime()
-        try {
-          if (gameTick()) failsafe = 0
-        } catch (e) {
-          console.log('A game error has occured:')
-          console.error(e)
-          failsafe++
-        }
-        tickspeed=(new Date().getTime()-startTime)*0.2+tickspeed*0.8
-        updated=true
-      },tickspeed)
+    if (!gameFucked) {
+      if (failsafe >= 5) {
+        console.log('Sorry! Something is wrong with the game! Stopping the game, you can restart the game with GameInit() if you think you fixed it')
+        gameFucked = true
+      } else if (updated) {
+        updated=false
+        setTimeout(function(){
+          var startTime=new Date().getTime()
+          try {
+            gameTick()
+          } catch (e) {
+            console.log('A game error has occured:')
+            console.error(e)
+            failsafe++
+          } finally {
+            failSafe = 0
+          }
+          tickspeed=(new Date().getTime()-startTime)*0.2+tickspeed*0.8
+          updated=true
+        },tickspeed)
+      }
     }
   },0)
   setInterval(save,1000);

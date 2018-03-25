@@ -961,13 +961,10 @@ function move() {
     updateElement('percentToWarningProgress',realPercentage.toFixed(2)+'%')
 } 
 
-var failsafe = 0
 var gameFucked = false
 var triedFix = false
 var lastError = "Nothing"
 function gameInit() {
-  failsafe = 0
-  gameFucked = false
   setupRoman()
   load(localStorage.getItem('errorSave'))
   var tickspeed=0
@@ -991,7 +988,6 @@ function gameInit() {
               console.log("YAY it works now")
               recover()
             }
-            failsafe = Math.max(0, failsafe-1)
           }
           tickspeed=(new Date().getTime()-startTime)*0.2+tickspeed*0.8
           updated=true
@@ -1003,7 +999,6 @@ function gameInit() {
 }
 
 function recover() {
-  failsafe = 0
   gameFucked = false
   triedFix = false
   lastError = "Nothing"

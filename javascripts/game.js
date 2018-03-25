@@ -1022,7 +1022,7 @@ function tryFix(e) {
   if (messages[0].split(".")[0] == "player") {
     console.log('Detected save error, trying to fix it...')
     if (typeof player != 'object') {
-      console.log('Sorry! the whole save if ruined! loading default save...')
+      console.log('Sorry! the whole save is ruined! loading default save...')
       load("default")
       return
     }

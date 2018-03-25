@@ -82,9 +82,8 @@ function hideElement(elementID) {
 	document.getElementById(elementID).style.display='none'
 }
 function exitChall() {
-    if (!player.downtimeChallenge>0) return
-    prestige(3,-1)
-    completeChall(false)
+    if (player.downtimeChallenge>0) prestige(3,-1)
+completeChall()
 }
 
 var notationArray = ["Standard","Scientific","Engineering","Logarithm","Letters","Mixed"]
@@ -344,9 +343,8 @@ function prestige(tier,challid=0) {
     player.prestiges[0] = 0
   }
   if (tier==2) {
-    if (challid==-1) player.prestiges[1]=0
-    else player.prestiges++
-    player.downtimeChallenge=Math.max(challid,0)
+    if (challid==0) player.prestiges[1]++
+	player.downtimeChallenge=Math.max(challid,0)
     switch (player.prestiges[1]) {
       case 1: newStory(8); break;
       case 2: newStory(10); break;
@@ -362,8 +360,7 @@ function prestige(tier,challid=0) {
 	player.downtimeChallenge=0
   }
   if (tier==3) {
-    if challid==-1 player.prestiges[2]=0
-    else player.prestiges[2]++;
+    player.prestiges[2]++;
     switch(player.prestiges[2]) {
       case 1: newStory(17); break;
       case 2: newStory(22); break;
@@ -384,11 +381,10 @@ function prestige(tier,challid=0) {
   updateCosts()
 }
 
-function completeChall(id,success=true) {
-	prestige(2,-1)
-	if (!success) return
+function completeChall(id) {
 	if (player.dtChallCompleted[id]==undefined) player.dtChallCompleted[id]=1
 	else player.dtChallCompleted[id]++
+	prestige(2,-1)
 }
 
 function getMultTier(tier) {  let ret = new Decimal.pow(10,tier-1)

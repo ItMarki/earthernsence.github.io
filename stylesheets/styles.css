@@ -72,6 +72,9 @@ background-color:#00e500
 	background-color:#424242;
 		text-color: white;
 }
+.cantBuy:hover {
+	cursor: default;
+}
 
 .comp {
     width:40%;

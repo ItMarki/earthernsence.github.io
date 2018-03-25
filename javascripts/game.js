@@ -971,6 +971,8 @@ function gameInit() {
             console.log('A game error has occured:')
             console.error(e)
             failsafe++
+          } finally {
+            failSafe = 0
           }
           tickspeed=(new Date().getTime()-startTime)*0.2+tickspeed*0.8
           updated=true

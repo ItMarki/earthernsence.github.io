@@ -65,8 +65,6 @@ var storyMessages=["Pancakes is ready!",
 "Mighty large number you got there! Sorry, but it's mandatory operation to reset it.",
 "Now you've gotta do it all over again. But you are <i>stronger</i>. Get out there! Make me proud!",
 "Congratulations! You just beat the game! (for now...)<br>Why not you play other games like the inspiration at the title screen until the next update comes out?"]
-var failsafe = 0
-var gameFucked = false
 
 function updateElement(elementID,value) {
   document.getElementById(elementID).innerHTML=value
@@ -515,6 +513,12 @@ function buyWarUpg(id) {
 }
 
 function gameTick() {
+  // Some save self testing (hope it dont slow the game down)
+  if (player.prestiges.length != defaultPlayer.prestiges.length) {
+    console.log("Something is wrong with prestiges, trying to fix it...")
+    player.prestiges = defaultPlayer.prestiges
+  }
+  
   if (player.time>0) {
     s=(new Date().getTime()-player.time)/1000 // number of seconds since last tick
     player.errors = player.errors.add(getEPS().mul(s));
@@ -794,20 +798,30 @@ function load(savefile) {
     savefile.totalErrors = new Decimal(savefile.totalErrors)
     savefile.warnings = new Decimal(savefile.warnings)
     savefile.totalWarnings = new Decimal(savefile.totalWarnings)
+    // final check to see if any var missing in savefile
+    Object.keys(defaultPlayer).forEach((foo) => { // Can't use var for name :(
+      if (!foo in savefile) {
+        savefile[foo] = defaultPlayer[foo]
+        console.log("Added missing "+foo+" data into savefile")
+      }
+    })
     
     player=savefile
-    //And then safety put the save file to player!
-    
-    percentage=Math.min(player.errors.add(1).log10()*0.32440704,100)
-    realPercentage=percentage
-    
-    updateCosts()
-    updateStory()
-    updateElement("notationID",notationArray[player.options.notation])
     console.log('Game loaded!')
   } catch (e) {
-    console.log('Your save failed to load:\n'+e)
+    if (savefile != "default") {
+      console.log('Your save failed to load:\n'+e+'\nWe will load the default save now')
+    }
+    player=defaultPlayer
   }
+  //And then safety put the save file to player!
+  
+  percentage=Math.min(player.errors.add(1).log10()*0.32440704,100)
+  realPercentage=percentage
+    
+  updateCosts()
+  updateStory()
+  updateElement("notationID",notationArray[player.options.notation])
 }
 
 function exportSave() {
@@ -947,6 +961,10 @@ function move() {
     updateElement('percentToWarningProgress',realPercentage.toFixed(2)+'%')
 } 
 
+var failsafe = 0
+var gameFucked = false
+var triedFix = false
+var lastError = "Nothing"
 function gameInit() {
   failsafe = 0
   gameFucked = false
@@ -957,11 +975,8 @@ function gameInit() {
   updated=true
   setInterval(function()
   { 
-    if (!gameFucked) {
-      if (failsafe >= 5) {
-        console.log('Sorry! Something is wrong with the game! Stopping the game, you can restart the game with recover() if you think you fixed it')
-        gameFucked = true
-      } else if (updated) {
+    if (!gameFucked) {  
+      if (updated) {
         updated=false
         setTimeout(function(){
           var startTime=new Date().getTime()
@@ -970,21 +985,13 @@ function gameInit() {
           } catch (e) {
             console.log('A game error has occured:')
             console.error(e)
-            if (e.message.split(".")[0] == "player") {
-              console.log('Detected save error, trying to fix...')
-              toFix = e.message.split(".")[1].split(" ")[0]
-              player[toFix] = defaultPlayer[toFix]
-              console.log("Tried to fix " + toFix)
-              if (toFix == "errors") {
-                console.log("(Yeah I know that seems to be weird, fix errors in a game about errors)")
-              }
-            }
-            failsafe++
+            tryFix(e)
           } finally {
-            if (failsafe != 0) {
+            if (triedFix) {
               console.log("YAY it works now")
+              recover()
             }
-            failsafe = 0
+            failsafe = Math.max(0, failsafe-1)
           }
           tickspeed=(new Date().getTime()-startTime)*0.2+tickspeed*0.8
           updated=true
@@ -998,4 +1005,45 @@ function gameInit() {
 function recover() {
   failsafe = 0
   gameFucked = false
+  triedFix = false
+  lastError = "Nothing"
+}
+function tryFix(e) {
+  if (triedFix) {
+    console.log("ANOTHER error? ahhhh")
+  }
+  messages = e.message.split(" ")
+  if (e.message == lastError) {
+    console.log("SAME ERROR?")
+    console.log('Sorry! Something is wrong with the game! Stopping the game, you can restart the game with recover() if you think you fixed it')
+    gameFucked = true
+    return false
+  }
+  if (messages[0].split(".")[0] == "player") {
+    console.log('Detected save error, trying to fix it...')
+    if (typeof player != 'object') {
+      console.log('Sorry! the whole save if ruined! loading default save...')
+      load("default")
+      return
+    }
+    
+    Object.keys(defaultPlayer).forEach((foo) => { // Can't use var for name :(
+      if (!(foo in player)) {
+        player[foo] = defaultPlayer[foo]
+        console.log("Added missing "+foo+" data into savefile")
+      }
+    })
+    
+    toFix = messages[0].split(".")[1]
+    player[toFix] = defaultPlayer[toFix]
+    console.log("Tried to fix " + toFix)
+    if (toFix == "errors") {
+      console.log("(yeah I know that seems to be weird, fix errors in a game about errors)")
+    }
+    console.log("Done, hope this works...")
+  } else {
+    console.log("I have no idea what happened, hope this wont happen again...")
+  }
+  lastError = e.message
+  triedFix = true
 }

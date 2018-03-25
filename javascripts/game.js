@@ -302,7 +302,7 @@ function prestige(tier,challid=0) {
     else if (player.errors.lt(Number.MAX_VALUE) && tier == 4) return;
     else if (tier == Infinity && !confirm('Are you really sure to reset? You will lose everything you have!')) return;
   } else {
-      if (tier==2 && challid>0 && !confirm('If you start the challenge, you will reset as normal. These challenges will not reset on I.P. change but reset when you reach the required amount of errors!')) return;
+      if (tier==2 && challid>0 && !confirm('If you start the challenge, you will reset as normal. These challenges will not reset on prestiges but reset when you reach the required amount of errors!')) return;
   }
   if (tier==Infinity) {
     //Highest tier - Hard reset
@@ -970,9 +970,21 @@ function gameInit() {
           } catch (e) {
             console.log('A game error has occured:')
             console.error(e)
+            if (e.message.split(".")[0] == "player") {
+              console.log('Detected save error, trying to fix...')
+              toFix = e.message.split(".")[1].split(" ")[0]
+              player[toFix] = defaultPlayer[toFix]
+              console.log("Tried to fix " + toFix)
+              if (toFix == "errors") {
+                console.log("(Yeah I know that seems to be weird, fix errors in a game about errors)")
+              }
+            }
             failsafe++
           } finally {
-            failSafe = 0
+            if (failsafe != 0) {
+              console.log("YAY it works now")
+            }
+            failsafe = 0
           }
           tickspeed=(new Date().getTime()-startTime)*0.2+tickspeed*0.8
           updated=true

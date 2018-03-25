@@ -948,8 +948,6 @@ function move() {
 } 
 
 function gameInit() {
-  failsafe = 0
-  gameFucked = false
   setupRoman()
   load(localStorage.getItem('errorSave'))
   var tickspeed=0
@@ -959,7 +957,7 @@ function gameInit() {
   { 
     if (!gameFucked) {
       if (failsafe >= 5) {
-        console.log('Sorry! Something is wrong with the game! Stopping the game, you can restart the game with GameInit() if you think you fixed it')
+        console.log('Sorry! Something is wrong with the game! Stopping the game, you can restart the game with recover() if you think you fixed it')
         gameFucked = true
       } else if (updated) {
         updated=false
@@ -983,3 +981,7 @@ function gameInit() {
   setInterval(save,1000);
 }
 
+function recover() {
+  failsafe = 0
+  gameFucked = false
+}

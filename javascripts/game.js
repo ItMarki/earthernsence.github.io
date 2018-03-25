@@ -948,6 +948,8 @@ function move() {
 } 
 
 function gameInit() {
+  failsafe = 0
+  gameFucked = false
   setupRoman()
   load(localStorage.getItem('errorSave'))
   var tickspeed=0

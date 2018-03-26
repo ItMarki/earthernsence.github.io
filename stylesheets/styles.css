@@ -20,7 +20,6 @@ table.prestiges thead {
 text-align:center;
 display: table;
 table-layout: fixed;
-width: calc(100% - 16px); /*for scrollbar i guess */
 }
 table.prestiges tbody {
     text-align: center;

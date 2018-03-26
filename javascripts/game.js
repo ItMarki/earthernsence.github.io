@@ -24,7 +24,6 @@ const defaultPlayer = {
     notation:0 //notation setting, see options
   }
 }
-updateElement('title','CEG: '+realPercentage.toFixed(2)+'%') 
 player = defaultPlayer
 tab='computers'
 oldtab=tab

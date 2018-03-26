@@ -10,7 +10,7 @@ const defaultPlayer = {
   story: -1, //amount of story.
   upgrades: [], //see lines 261-274
   downtimeChallenge: 0,
-  dtChallCompleted: {},
+  dtChallCompleted: [],
   warnings: new Decimal(0), //displayed on the bottom bar
   totalWarnings: new Decimal(0), //displayed in stats
   warningUpgrades: [],
@@ -286,9 +286,9 @@ function buyGenUpgrade() {
 
 function maxGenUpgrade() {
   while (player.errors.gte(costs.boost)) {
-    player.errors=player.errors.sub(costs.boost)
-    player.boostPower+=1
-    updateCosts()
+    player.errors=player.errors.sub(costs.boost);
+    player.boostPower+=1;
+    updateCosts();
   }
 }
 

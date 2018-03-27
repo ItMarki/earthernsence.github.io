@@ -345,8 +345,8 @@ function prestige(tier,challid=0) {
     player.prestiges[0] = 0
   }
   if (tier==2) {
-    if (challid==-1) player.prestiges[1]=0
-    else player.prestiges++
+    if (challid==-1) player.prestiges[1]=0;
+    else player.prestiges[1]++;
     player.downtimeChallenge=Math.max(challid,0)
     switch (player.prestiges[1]) {
       case 1: newStory(8); break;
@@ -363,8 +363,7 @@ function prestige(tier,challid=0) {
   player.downtimeChallenge=0
   }
   if (tier==3) {
-    if (challid==-1) player.prestiges[2]=0
-    else player.prestiges[2]++;
+    player.prestiges[2]++;
     switch(player.prestiges[2]) {
       case 1: newStory(17); break;
       case 2: newStory(22); break;

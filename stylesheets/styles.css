@@ -16,7 +16,7 @@ table.prestiges thead,
 table.prestiges tbody {
 	width: 100%
 }
-table.prestiges thead {
+table.prestiges thead
 text-align:center;
 display: table;
 table-layout: fixed;
@@ -26,23 +26,6 @@ table.prestiges tbody {
     overflow: auto;
     height: 125px;
     display: block;
-}
-table.dc {
-	display: table;
-	width: 100%;
-		font-size: 14px;
-}
-table.dc thead,
-table.dc tbody {
-	width:100%;
-}
-table.dc thead {
-	text-align:center;
-	display: table;
-	table-layout: fixed;
-}
-table.dc tbody {
-	text-align:center; 
 }
 table.sidebar tr {
     height:0%;

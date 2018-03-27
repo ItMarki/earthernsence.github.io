@@ -24,6 +24,7 @@ const defaultPlayer = {
     notation:0 //notation setting, see options
   }
 }
+Object.freeze(defaultPlayer) //I will want to die if defaultPlayer gets edited by game again...
 player = defaultPlayer
 tab='computers'
 oldtab=tab

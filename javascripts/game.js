@@ -84,8 +84,7 @@ function hideElement(elementID) {
 }
 function exitChall() {
   if (!player.downtimeChallenge>0) return
-  prestige(3,-1)
-  completeChall(false)
+  prestige(2,-1)
 }
 
 var notationArray = ["Standard","Scientific","Engineering","Logarithm","Letters","Mixed"]
@@ -384,9 +383,8 @@ function prestige(tier,challid=0) {
   updateCosts()
 }
 
-function completeChall(id,success=true) {
+function completeChall(id) {
   prestige(2,-1)
-  if (!success) return
   if (player.dtChallCompleted[id]==undefined) player.dtChallCompleted[id]=1
   else player.dtChallCompleted[id]++
 }

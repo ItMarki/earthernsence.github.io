@@ -83,8 +83,8 @@ function hideElement(elementID) {
   document.getElementById(elementID).style.display='none'
 }
 function exitChall() {
-  if (!player.downtimeChallenge>0) return
-  prestige(2,-1)
+  if (!player.downtimeChallenge>0) return;
+  prestige(3,-1)
 }
 
 var notationArray = ["Standard","Scientific","Engineering","Logarithm","Letters","Mixed"]
@@ -300,7 +300,7 @@ function prestige(tier,challid=0) {
     else if (player.errors.lt(Number.MAX_VALUE) && tier == 4) return;
     else if (tier == Infinity && !confirm('Are you really sure to reset? You will lose everything you have!')) return;
   } else {
-      if (tier==2 && challid>0 && !confirm('If you start the challenge, you will reset as normal. These challenges will not reset on prestiges but reset when you reach the required amount of errors!')) return;
+      if (tier==3 && challid>0 && !confirm('If you start the challenge, you will reset as normal. These challenges will not reset on prestiges but reset when you reach the required amount of errors!')) return;
   }
   if (tier==Infinity) {
     //Highest tier - Hard reset
@@ -344,9 +344,7 @@ function prestige(tier,challid=0) {
     player.prestiges[0] = 0
   }
   if (tier==2) {
-    if (challid==-1) player.prestiges[1]=0;
-    else player.prestiges[1]++;
-    player.downtimeChallenge=Math.max(challid,0)
+    player.prestiges[1]++;
     switch (player.prestiges[1]) {
       case 1: newStory(8); break;
       case 2: newStory(10); break;
@@ -359,10 +357,10 @@ function prestige(tier,challid=0) {
     if (player.prestiges[2]==1) newStory(21);
   } else if (tier>2) {
     player.prestiges[1] = 0
-  player.downtimeChallenge=0
   }
   if (tier==3) {
-    player.prestiges[2]++;
+    player.downtimeChallenge=Math.max(challid,0)
+    if (challid==0) player.prestiges[2]++;
     switch(player.prestiges[2]) {
       case 1: newStory(17); break;
       case 2: newStory(22); break;
@@ -370,6 +368,7 @@ function prestige(tier,challid=0) {
     }
   } else if (tier>3) {
     player.prestiges[2] = 0
+    player.downtimeChallenge=0
   }
   if (tier==4) {
     player.prestiges[3]++;
@@ -384,9 +383,9 @@ function prestige(tier,challid=0) {
 }
 
 function completeChall(id) {
-  prestige(2,-1)
-  if (player.dtChallCompleted[id]==undefined) player.dtChallCompleted[id]=1
-  else player.dtChallCompleted[id]++
+  prestige(3,-1)
+  if (player.dtChallCompleted[id-1]==undefined) player.dtChallCompleted[id-1]=1
+  else player.dtChallCompleted[id-1]++
 }
 
 function getMultTier(tier) {  let ret = new Decimal.pow(10,tier-1)
@@ -522,7 +521,7 @@ function gameTick() {
     player.errors = player.errors.add(getEPS().mul(s));
     player.totalErrors = player.totalErrors.add(getEPS().mul(s));
     player.playtime+=s
-    if (player.downtimeChallenge==1) if (player.errors.gte(1e30)) completeChall()
+    if (player.downtimeChallenge==1) if (player.errors.gte(1e30)) completeChall(1)
     if (player.errors.gte(Number.MAX_VALUE)) prestige(4)
     move()
   }

@@ -530,9 +530,9 @@ function gameTick() {
   updateElement('eps',format(getEPS()))
   if (player.compAmount.slice(2,9).reduce((a, b) => a + b, 0) > 0) {
     showElement('genUpgrade','block');
-    updateElement('genIncrease',(4+player.prestiges[2])/2);
+    updateElement('genIncrease',(Math.pow(2+0.5*player.prestiges[2],(player.downtimeChallenge==1)?0.5:1).toFixed(1)));
     updateElement('genIncreaseCost','Cost: ' + format(costs.boost));
-    updateElement('genBoost',format(Math.pow(2+0.5*player.prestiges[2],(player.downtimeChallenge==1)?0.5:1)));
+    updateElement('genBoost',format(Decimal.pow(Math.pow(2+0.5*player.prestiges[2],(player.downtimeChallenge==1)?0.5:1),player.boostPower)));
     if (player.errors.lt(costs.boost)) updateClass('genIncreaseCost','cantBuy')
     else updateClass('genIncreaseCost','')
   } else {

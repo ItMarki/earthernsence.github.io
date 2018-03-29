@@ -160,7 +160,9 @@ function letter(label) {
 }
 
 function formatTime(s) {
-  if (s < Infinity) {
+  if (s < 1) {
+    return "a short time"
+  } else if (s < Infinity) {
     times = {'year':31556952,
     'month':2592000,
     'day':86400,
@@ -305,8 +307,8 @@ function prestige(tier,challid=0) {
   if (tier==Infinity) {
     //Highest tier - Hard reset
     localStorage.clear('errorSave')
-    player = defaultPlayer
-    updateStory()
+    load(btoa(JSON.stringify(defaultPlayer)))
+    save()
   }
   if (tier>3) {
     //Tier 4 - Warnings

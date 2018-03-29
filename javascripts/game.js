@@ -421,6 +421,8 @@ function getMultTier(tier) {  let ret = new Decimal.pow(10,tier-1)
   if (player.warningUpgrades.includes(2)) ret = ret.mul(getUpgradeMultiplier(2))
   if (player.warningUpgrades.includes(3)) ret = ret.mul(getUpgradeMultiplier(3,tier))
   if (player.warningUpgrades.includes(4)) ret = ret.mul(getUpgradeMultiplier(4))
+  // Insert DT stuffs here
+  if (tier >= 8 && player.downtimeChallenge==2) ret = ret.mul(0)
   return ret
 }
 
@@ -523,7 +525,8 @@ function gameTick() {
     player.errors = player.errors.add(getEPS().mul(s));
     player.totalErrors = player.totalErrors.add(getEPS().mul(s));
     player.playtime+=s
-    if (player.downtimeChallenge==1) if (player.errors.gte(1e30)) completeChall(1)
+    if (player.downtimeChallenge==1 && player.errors.gte(1e30)) completeChall(1);
+    if (player.downtimeChallenge==2 && player.errors.gte(1e50)) completeChall(2);
     if (player.errors.gte(Number.MAX_VALUE)) prestige(4)
     move()
   }

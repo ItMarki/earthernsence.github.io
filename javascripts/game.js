@@ -708,6 +708,11 @@ function gameTick() {
       hideElement('statsPrestige4')
     }
   }
+  if (tab=='downtime') {
+    for (i=0;i<4;i++) {
+      document.getElementById('dt'+(i+1).toString()).className = (typeof player.dtChallCompleted[i] == 'undefined')?'downtimeButton':'greenDTbutton'
+    }
+  }
 }
 
 function save() {

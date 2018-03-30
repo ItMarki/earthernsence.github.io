@@ -125,6 +125,7 @@ function abbreviate(i) {
 }
 
 function format(num,decimalPoints=0,offset=0) {
+  if (num<10) return num.toFixed(1);
   num=new Decimal(num)
   if (isNaN(num.mantissa)) {
     return '?'

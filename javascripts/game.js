@@ -530,7 +530,7 @@ function gameTick() {
     player.errors = player.errors.add(getEPS().mul(s));
     player.totalErrors = player.totalErrors.add(getEPS().mul(s));
     player.playtime+=s
-    if (player.downtimeChallenge!=0 && player.errors.gte(Math.pow(10,player.downtimeChallenge*30-10))) completeChall();
+    if (player.downtimeChallenge!=0 && player.errors.gte(Math.pow(10,player.downtimeChallenge*30-20))) completeChall();
     if (player.errors.gte(Number.MAX_VALUE)) prestige(4);
     move()
   }

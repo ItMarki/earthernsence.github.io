@@ -125,7 +125,7 @@ function abbreviate(i) {
 }
 
 function format(num,decimalPoints=0,offset=0) {
-  if (num<10) return num.toFixed(1);
+  if (num<10) return +(num).toFixed(1);
   num=new Decimal(num)
   if (isNaN(num.mantissa)) {
     return '?'
@@ -425,7 +425,7 @@ function getMultTier(tier) {  let ret = new Decimal.pow(player.downtimeChallenge
   if (player.warningUpgrades.includes(3)) ret = ret.mul(getUpgradeMultiplier(3,tier))
   if (player.warningUpgrades.includes(4)) ret = ret.mul(getUpgradeMultiplier(4))
   // Insert DT stuffs here
-  if (tier >= 8 && player.downtimeChallenge==2) ret = ret.mul(0)
+  if (tier >= 5 && player.downtimeChallenge==2) ret = ret.mul(0)
   if (player.downtimeChallenge==3) ret = ret.div(1+(player.compAmount.reduce((a, b) => a + b, 0)/10))
   return ret
 }

@@ -712,6 +712,8 @@ function gameTick() {
   if (tab=='downtime') {
     for (i=0;i<4;i++) {
       document.getElementById('dt'+(i+1).toString()).className = (typeof player.dtChallCompleted[i] == 'undefined')?'normDTbutton':'greenDTbutton'
+      document.getElementById('du'+(i*2+1).toString()).className = (typeof player.dtChallCompleted[i] == 'undefined')?'redDTbutton':'normDTbutton' // Need insert if bought here soon
+      document.getElementById('du'+(i*2+2).toString()).className = (typeof player.dtChallCompleted[i] == 'undefined')?'redDTbutton':'normDTbutton' // Same for this
     }
   }
 }
@@ -975,6 +977,7 @@ function move() {
 var gameFucked = false
 var triedFix = false
 var lastError = "Nothing"
+var testing = 0
 function gameInit() {
   setupRoman()
   load(localStorage.getItem('errorSave'))
@@ -995,7 +998,8 @@ function gameInit() {
             console.error(e)
             tryFix(e)
           } finally {
-            if (triedFix) {
+            testing = Math.max(0,testing-1)
+            if (triedFix && testing == 0) {
               console.log("YAY it works now")
               recover()
             }
@@ -1013,6 +1017,7 @@ function recover() {
   gameFucked = false
   triedFix = false
   lastError = "Nothing"
+  testing = 0
 }
 function tryFix(e) {
   if (triedFix) {
@@ -1052,4 +1057,5 @@ function tryFix(e) {
   }
   lastError = e.message
   triedFix = true
+  testing = 50
 }

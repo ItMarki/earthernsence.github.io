@@ -18,7 +18,7 @@ const defaultPlayer = {
   playtime: 0, //total time spent online ingame
   time: 0, //total time displayed in stats
   version: 1.5, //very important
-  build: 15, //used for us to communicate commits, helps a lot
+  build: 16, //used for us to communicate commits, helps a lot
   hotfix: 1, //another way to use commits
   options: {
     hotkeys:true, //whether or not hotkeys are enabled (on by default)
@@ -125,15 +125,18 @@ function abbreviate(i) {
   return result
 }
 
-function format(num,decimalPoints=0,offset=0) {
-  if (num<10) return +(num).toFixed(1);
+function format(num,decimalPoints=0,offset=0,rounded=true) {
   num=new Decimal(num)
+  if (num.lt(10)&&!rounded) {
+	  var sub10=num.toFixed(decimalPoints)
+	  if (parseFloat(sub10)<10) return sub10
+  }
   if (isNaN(num.mantissa)) {
     return '?'
   } else if (num.gte(1/0)) {
     return 'Infinite'
   } else if (num.lt(999.5)) {
-    return num.round()
+    return Math.round(num.toNumber())
   } else {
     var abbid=Math.max(Math.floor(num.e/3)-offset,0)
     var mantissa=num.div(Decimal.pow(1000,abbid)).toFixed((abbid>0&&decimalPoints<2)?2:decimalPoints)
@@ -304,7 +307,10 @@ function prestige(tier,challid=0) {
     else if (player.errors.lt(Number.MAX_VALUE) && tier == 4) return;
     else if (tier == Infinity && !confirm('Are you really sure to reset? You will lose everything you have!')) return;
   } else {
-      if (tier==3 && challid>0 && !confirm('If you start the challenge, you will reset as normal. These challenges will not reset on prestiges but reset when you reach the required amount of errors!')) return;
+		if (tier==3) {
+			if (challid==-1 && !confirm('If you exit the challenge, you return to the normal world but lose everything except your networks.')) return;
+			if (challid>0 && !confirm('If you start the challenge, you will reset as normal. These challenges will not reset on prestiges but reset when you reach the required amount of errors!')) return;
+		}
   }
   if (tier==Infinity) {
     //Highest tier - Hard reset
@@ -389,7 +395,7 @@ function prestige(tier,challid=0) {
 
 function completeChall() {
   id = player.downtimeChallenge
-  prestige(3,-1)
+  prestige(3,-2)
   if (player.dtChallCompleted[id-1]==undefined) player.dtChallCompleted[id-1]=1
   else player.dtChallCompleted[id-1]++
 }
@@ -520,12 +526,6 @@ function buyWarUpg(id) {
 }
 
 function gameTick() {
-  // Some save self testing (hope it dont slow the game down)
-  if (player.prestiges.length != defaultPlayer.prestiges.length) {
-    console.log("Something is wrong with prestiges, trying to fix it...")
-    player.prestiges = defaultPlayer.prestiges
-  }
-  
   if (player.time>0) {
     s=(new Date().getTime()-player.time)/1000 // number of seconds since last tick
     player.errors = player.errors.add(getEPS().mul(s));
@@ -536,11 +536,12 @@ function gameTick() {
     move()
   }
   player.time = new Date().getTime()
+  var ePS=getEPS()
   updateElement('errors',format(player.errors)) //this is the base, except in the parentheses add the HTML tag of the thing you're changing
-  updateElement('eps',format(getEPS()))
+  updateElement('eps',(ePS.eq(0))?0:format(ePS,1,0,false))
   if (player.compAmount.slice(2,9).reduce((a, b) => a + b, 0) > 0) {
     showElement('genUpgrade','block');
-    updateElement('genIncrease',(Math.pow(2+0.5*player.prestiges[2],(player.downtimeChallenge==1)?0.5:1).toFixed(1)));
+    updateElement('genIncrease',Math.pow(2+0.5*player.prestiges[2],(player.downtimeChallenge==1)?0.5:1).toPrecision(1));
     updateElement('genIncreaseCost','Cost: ' + format(costs.boost));
     updateElement('genBoost',format(Decimal.pow(Math.pow(2+0.5*player.prestiges[2],(player.downtimeChallenge==1)?0.5:1),player.boostPower)));
     if (player.errors.lt(costs.boost)) updateClass('genIncreaseCost','cantBuy')
@@ -723,7 +724,7 @@ function save() {
   localStorage.setItem('errorSave',btoa(JSON.stringify(player)))
 }
 
-function load(savefile) {
+function load(savefile,firstTime=true) {
   try {
     savefile=JSON.parse(atob(savefile));
     //To prevent to trying to load a save file with glitches.
@@ -804,6 +805,16 @@ function load(savefile) {
       if (savefile.build < 15) {
         savefile.dtUpgrades = []
       }
+      if (savefile.build < 16) {
+        if (savefile.prestiges[3]==undefined) savefile.prestiges[3]=0
+        if (typeof(savefile.dtChallCompleted)=='array') {
+			var newArray={}
+			for (i=0;i<savefile.dtChallCompleted.length;i++) {
+				newArray[i]=savefile.dtChallCompleted[i]
+			}
+			savefile.dtChallCompleted=newArray
+		}
+      }
     }
     savefile.version = player.version
     savefile.build = player.build
@@ -818,11 +829,15 @@ function load(savefile) {
     
     player=savefile
     console.log('Game loaded!')
+	return false
   } catch (e) {
-    if (savefile != "default") {
-      console.log('Your save failed to load:\n'+e+'\nWe will load the default save now')
-    }
-    player=defaultPlayer
+    console.log('Your save failed to load:')
+	console.error(e)
+	if (firstTime) {
+		console.log('We will load the default savefile instead now.')
+		player=defaultPlayer
+	}
+	return true
   }
   //And then safety put the save file to player!
   
@@ -842,7 +857,7 @@ function exportSave() {
 
 function importSave() {
   var input=prompt('Copy and paste in your exported file and press enter.')
-  if (load(input)) {
+  if (load(input,false)) {
     if (input!=null) {
       alert('Your save was invalid or caused a game-breaking bug. :(')
       load(localStorage.getItem('errorSave'))
@@ -1061,7 +1076,7 @@ function tryFix(e) {
 function buyDTU(id) {
   if (player.dtUpgrades.includes(id)) return;
   DTUcosts = [1e50,1e30,1e40,1e35,1e40,1e40,1e75,1e45]
-  if (player.errors.gte(DTUcosts[id-1])) {
+  if (player.errors.gte(DTUcosts[id-1])&&player.dtChallCompleted[Math.floor((id-1)/2)]!=undefined) {
     player.errors = player.errors.sub(DTUcosts[id-1])
     player.dtUpgrades.push(id)
   }

@@ -10,6 +10,7 @@ const defaultPlayer = {
   story: -1, //amount of story.
   upgrades: [], //see lines 261-274
   downtimeChallenge: 0,
+  dtUpgrades: [],
   dtChallCompleted: [],
   warnings: new Decimal(0), //displayed on the bottom bar
   totalWarnings: new Decimal(0), //displayed in stats
@@ -17,7 +18,7 @@ const defaultPlayer = {
   playtime: 0, //total time spent online ingame
   time: 0, //total time displayed in stats
   version: 1.5, //very important
-  build: 14, //used for us to communicate commits, helps a lot
+  build: 15, //used for us to communicate commits, helps a lot
   hotfix: 1, //another way to use commits
   options: {
     hotkeys:true, //whether or not hotkeys are enabled (on by default)
@@ -800,6 +801,9 @@ function load(savefile) {
       savefile.downtimeChallenge=0
       savefile.dtChallCompleted={}
     }
+      if (savefile.build < 15) {
+        savefile.dtUpgrades = []
+      }
     }
     savefile.version = player.version
     savefile.build = player.build
@@ -811,13 +815,6 @@ function load(savefile) {
     savefile.totalErrors = new Decimal(savefile.totalErrors)
     savefile.warnings = new Decimal(savefile.warnings)
     savefile.totalWarnings = new Decimal(savefile.totalWarnings)
-    // final check to see if any var missing in savefile
-    Object.keys(defaultPlayer).forEach((foo) => { // Can't use var for name :(
-      if (!foo in savefile) {
-        savefile[foo] = defaultPlayer[foo]
-        console.log("Added missing "+foo+" data into savefile")
-      }
-    })
     
     player=savefile
     console.log('Game loaded!')

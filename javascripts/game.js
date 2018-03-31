@@ -386,7 +386,8 @@ function prestige(tier,challid=0) {
   updateCosts()
 }
 
-function completeChall(id) {
+function completeChall() {
+  id = player.downtimeChallenge
   prestige(3,-1)
   if (player.dtChallCompleted[id-1]==undefined) player.dtChallCompleted[id-1]=1
   else player.dtChallCompleted[id-1]++
@@ -529,11 +530,8 @@ function gameTick() {
     player.errors = player.errors.add(getEPS().mul(s));
     player.totalErrors = player.totalErrors.add(getEPS().mul(s));
     player.playtime+=s
-    if (player.downtimeChallenge==1 && player.errors.gte(1e30)) completeChall(1);
-    if (player.downtimeChallenge==2 && player.errors.gte(1e50)) completeChall(2);
-    if (player.downtimeChallenge==3 && player.errors.gte(1e75)) completeChall(3);
-    if (player.downtimeChallenge==4 && player.errors.gte(1e75)) completeChall(4);
-    if (player.errors.gte(Number.MAX_VALUE)) prestige(4)
+    if (player.downtimeChallenge!=0 && player.errors.gte(Math.pow(10,player.downtimeChallenge*30-10))) completeChall();
+    if (player.errors.gte(Number.MAX_VALUE)) prestige(4);
     move()
   }
   player.time = new Date().getTime()

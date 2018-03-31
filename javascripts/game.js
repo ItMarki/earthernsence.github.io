@@ -11,7 +11,7 @@ const defaultPlayer = {
   upgrades: [], //see lines 261-274
   downtimeChallenge: 0,
   dtUpgrades: [],
-  dtChallCompleted: [],
+  dtChallCompleted: {},
   warnings: new Decimal(0), //displayed on the bottom bar
   totalWarnings: new Decimal(0), //displayed in stats
   warningUpgrades: [],
@@ -713,8 +713,8 @@ function gameTick() {
   if (tab=='downtime') {
     for (i=0;i<4;i++) {
       document.getElementById('dt'+(i+1).toString()).className = (typeof player.dtChallCompleted[i] == 'undefined')?'normDTbutton':'greenDTbutton'
-      document.getElementById('du'+(i*2+1).toString()).className = (typeof player.dtChallCompleted[i] == 'undefined')?'redDTbutton':'normDTbutton' // Need insert if bought here soon
-      document.getElementById('du'+(i*2+2).toString()).className = (typeof player.dtChallCompleted[i] == 'undefined')?'redDTbutton':'normDTbutton' // Same for this
+      document.getElementById('du'+(i*2+1).toString()).className = (typeof player.dtChallCompleted[i] == 'undefined')?'redDTbutton':player.dtUpgrades.includes(i*2+1)?'greenDTbutton':'normDTbutton'
+      document.getElementById('du'+(i*2+2).toString()).className = (typeof player.dtChallCompleted[i] == 'undefined')?'redDTbutton':player.dtUpgrades.includes(i*2+2)?'greenDTbutton':'normDTbutton'
     }
   }
 }
@@ -1056,4 +1056,13 @@ function tryFix(e) {
   lastError = e.message
   triedFix = true
   testing = 50
+}
+
+function buyDTU(id) {
+  if (player.dtUpgrades.includes(id)) return;
+  DTUcosts = [1e50,1e30,1e40,1e35,1e40,1e40,1e75,1e45]
+  if (player.errors.gte(DTUcosts[id-1])) {
+    player.errors = player.errors.sub(DTUcosts[id-1])
+    player.dtUpgrades.push(id)
+  }
 }

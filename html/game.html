@@ -6,8 +6,9 @@
 	<link rel="loading" type="image/png" href="../images/loading.png"></link>
 	<style>
 		body {
-			margin:0;
-			font-family:'Montserrat';
+		  margin:0;
+		  font-family:'Montserrat';
+          padding-bottom: 100px;
 		}
 		button {background-color: #e5e5e5; font-family:'Montserrat'; margin-left:5px; border:none; border-radius:5px}
 		button:hover {cursor:pointer; background-color:white;}
@@ -142,17 +143,17 @@ border-radius:20px;
 	<div id='downtimeUpgradesTab' style='display:none'>
         <table id="du" align=center><tr><td>
 		<h3>DC1 Upgrades</h3>
-	<button id="du1" class='normDTbutton'>Production boost boosts everything more.<br>Cost: 1e50 errors.</button>
-<button id="du2" class='normDTbutton'>T1 is better (2x).<br>Cost: 1e30 errors.</button>
+	<button id="du1" class='normDTbutton' onclick='buyDTU(1)'>Production boost boosts everything more.<br>Cost: 1e50 errors.</button>
+<button id="du2" class='normDTbutton' onclick='buyDTU(2)'>T1 is better (2x).<br>Cost: 1e30 errors.</button>
 		<h3>DC2 Upgrades</h3>
-<button id="du3" class='normDTbutton'>When you buy T9, it multiplies it's own production by 1.0001x.<br>Cost: 1e40 errors.</button>
-<button id="du4" class='normDTbutton'>T2 is better (2x).<br>Cost: 1e35 errors.</button>
+<button id="du3" class='normDTbutton' onclick='buyDTU(3)'>When you buy T9, it multiplies it's own production by 1.0001x.<br>Cost: 1e40 errors.</button>
+<button id="du4" class='normDTbutton' onclick='buyDTU(4)'>T2 is better (2x).<br>Cost: 1e35 errors.</button>
 		<h3>DC3 Upgrades</h3>
-		<button id="du5" class='normDTbutton'>You get a free TI, TII, & TIII computer after any prestige (except warning).<br>Cost: 1e40 errors.</button>
-		<button id="du6" class='normDTbutton'>T3 is better (2x).<br>Cost: 1e40 errors.</button>
+		<button id="du5" class='normDTbutton' onclick='buyDTU(5)'>You get a free TI, TII, & TIII computer after any prestige (except warning).<br>Cost: 1e40 errors.</button>
+		<button id="du6" class='normDTbutton' onclick='buyDTU(6)'>T3 is better (2x).<br>Cost: 1e40 errors.</button>
 			<h3>DC4 Upgrades</h3>
-			<button id="du7" class='normDTbutton'>Every prestige is better. (Except networks, of course) (UCs give 3x, IPs give the next tier as well as a 2x multiplier, and IBs give 3x.)<br>Cost: 1e75.</button>
-		<button id="du8" class='normDTbutton'>T4 is better (2x).<br>Cost: 1e45 errors.</button>
+			<button id="du7" class='normDTbutton' onclick='buyDTU(7)'>Every prestige is better. (Except networks, of course) (UCs give 3x, IPs give the next tier as well as a 2x multiplier, and IBs give 3x.)<br>Cost: 1e75.</button>
+		<button id="du8" class='normDTbutton' onclick='buyDTU(8)'>T4 is better (2x).<br>Cost: 1e45 errors.</button>
 </td></tr></table>
 	</div>
   </div>

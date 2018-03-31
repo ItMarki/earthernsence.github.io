@@ -845,6 +845,7 @@ function importSave() {
   if (load(input)) {
     if (input!=null) {
       alert('Your save was invalid or caused a game-breaking bug. :(')
+      load(localStorage.getItem('errorSave'))
     }
   }
 }

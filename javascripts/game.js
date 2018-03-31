@@ -321,7 +321,8 @@ function prestige(tier,challid=0) {
   }
   if (tier>2) {
     //Tier 3 - Networks
-    player.upgrades=[]
+    if (player.upgrades.includes(15)) player.upgrades=[15];
+    else player.upgrades=[];
   }
   
   player.errors = new Decimal(10); //current errors
@@ -391,7 +392,7 @@ function completeChall(id) {
   else player.dtChallCompleted[id-1]++
 }
 
-function getMultTier(tier) {  let ret = new Decimal.pow(10,tier-1)
+function getMultTier(tier) {  let ret = new Decimal.pow(player.downtimeChallenge==4?8:10,tier-1)
   ret = ret.mul(Decimal.pow(Math.pow(1.05 + Math.max((tier-4)/100,0),tier),player.compAmount[tier-1]))
   ret = ret.mul(Decimal.pow(Math.pow(2+0.5*player.prestiges[2],(player.downtimeChallenge==1)?0.5:1),player.boostPower))
   ret = ret.mul(Decimal.pow(2+Math.floor(player.compAmount[8]/5)*0.5,player.prestiges[1]))
@@ -400,6 +401,7 @@ function getMultTier(tier) {  let ret = new Decimal.pow(10,tier-1)
   if (player.upgrades.includes(1)) ret = ret.mul(2)
   if (player.upgrades.includes(2)) ret = ret.mul(5)
   if (player.upgrades.includes(3)) ret = ret.mul(10)
+  if (player.upgrades.includes(15)) ret = ret.mul(10)
   if (player.upgrades.includes(17)) ret = ret.mul(75)
   if (player.upgrades.includes(18)) ret = ret.mul(750)
   if (player.upgrades.includes(19)) ret = ret.mul(7500)
@@ -605,7 +607,7 @@ function gameTick() {
       else if (checkIfAffordable(i)) updateClass('upg'+i+'button','')
       else updateClass('upg'+i+'button','cantBuy')
     }
-    for (i=17;i<=22;i++) {
+    for (i=17;i<=23;i++) {
       if (player.upgrades.includes(i)) updateClass('upg'+i+'button','boughtUpgrade')
       else if (checkIfAffordable(i)) updateClass('upg'+i+'button','')
       else updateClass('upg'+i+'button','cantBuy')

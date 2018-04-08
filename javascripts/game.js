@@ -62,8 +62,8 @@ var storyMessages=["Pancakes is ready!",
 "Computer: Connected.",
 "Finally! Can't wait to test this bad boy out.",
 "Hey, we're off! Got a I.P. Change as well. The end is near.",
-"Another network? I find out your new network was better so I installed it.",
-"A third network? I am getting notifications for that...",
+"You just did a downtime! Congraturation! now there are only 3 left......",
+"You have done ALL these DCs! Those upgrades will bring you higher then you can ever imagine!",
 "Mighty large number you got there! Sorry, but it's mandatory operation to reset it.",
 "Now you've gotta do it all over again. But you are <i>stronger</i>. Get out there! Make me proud!",
 "Congratulations! You just beat the game! (for now...)<br>Why not you play other games like the inspiration at the title screen until the next update comes out?"]
@@ -318,6 +318,7 @@ function prestige(tier,challid=0) {
     //Highest tier - Hard reset
     localStorage.clear('errorSave')
     load(btoa(JSON.stringify(defaultPlayer)))
+    updateStory()
     save()
   }
   if (tier>3) {
@@ -376,8 +377,6 @@ function prestige(tier,challid=0) {
     if (challid==0) player.prestiges[2]++;
     switch(player.prestiges[2]) {
       case 1: newStory(17); break;
-      case 2: newStory(22); break;
-      case 3: newStory(23); break;
     }
   } else if (tier>3) {
     player.prestiges[2] = 0
@@ -410,6 +409,10 @@ function completeChall() {
   prestige(3,-2)
   if (player.dtChallCompleted[id-1]==undefined) player.dtChallCompleted[id-1]=1
   else player.dtChallCompleted[id-1]++
+  switch (Object.keys(player.dtChallCompleted).length) {
+    case 1: newStory(22);break;
+    case 4: newStory(23);break;
+  } 
 }
 
 function getMultTier(tier) {  let ret = new Decimal.pow(player.downtimeChallenge==4?5:10,tier-1)

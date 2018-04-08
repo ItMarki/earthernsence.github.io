@@ -18,8 +18,8 @@ const defaultPlayer = {
   playtime: 0, //total time spent online ingame
   time: 0, //total time displayed in stats
   version: 1.5, //very important
-  build: 16, //used for us to communicate commits, helps a lot
-  hotfix: 2, //another way to use commits
+  build: 17, //used for us to communicate commits, helps a lot
+  hotfix: 1, //another way to use commits
   options: {
     hotkeys:true, //whether or not hotkeys are enabled (on by default)
     notation:0 //notation setting, see options
@@ -65,6 +65,7 @@ var storyMessages=["Pancakes is ready!",
 "You just did a downtime! Congraturation! now there are only 3 left......",
 "You have done ALL these DCs! Those upgrades will bring you higher then you can ever imagine!",
 "Mighty large number you got there! Sorry, but it's mandatory operation to reset it.",
+"More downtime? Wait a minute... just do it anyways.",
 "Now you've gotta do it all over again. But you are <i>stronger</i>. Get out there! Make me proud!",
 "Congratulations! You just beat the game! (for now...)<br>Why not you play other games like the inspiration at the title screen until the next update comes out?"]
 
@@ -201,12 +202,14 @@ function switchNotation() {
 }
 
 function toggleHotkeys() {
-  if (player.options.hotkeys==true)player.options.hotkeys=false;
-  else if (player.options.hotkeys==false)player.options.hotkeys=true;
-  let enabled = "enabled";
-  if (!player.options.hotkeys) enabled="disabled";
-  else if (player.options.hotkeys) enabled="enabled";
-  updateElement('hotkeysbtn',"Hotkeys: "+enabled)
+	player.options.hotkeys=!player.options.hotkeys
+	if (player.options.hotkeys) {
+		updateElement('hotkeysbtn',"Hotkeys: Enabled")
+		showElement('hotkeyText','inline-block')
+	} else {
+		updateElement('hotkeysbtn',"Hotkeys: Disabled")
+		hideElement('hotkeyText')
+	}
 }
 
 function switchTab(tabid) {
@@ -303,7 +306,7 @@ function maxGenUpgrade() {
 
 function prestige(tier,challid=0) {
   if (challid==0) {
-    if (player.compAmount[Math.min(player.prestiges[0],8)]<Math.max(player.prestiges[0]*10-70,10) && tier == 1) return;
+    if ((player.compAmount[Math.min(player.prestiges[0],8)]<Math.max(player.prestiges[0]*10-70,10)||player.downtimeChallenge==5) && tier == 1) return;
     else if (player.compAmount[Math.min(player.prestiges[1]+3,8)]<Math.max(player.prestiges[1]*15-40,20) && tier == 2) return;
     else if (player.compAmount[8]<player.prestiges[2]*200+80 && tier == 3) return;
     else if (player.errors.lt(Number.MAX_VALUE) && tier == 4) return;
@@ -318,12 +321,13 @@ function prestige(tier,challid=0) {
     //Highest tier - Hard reset
     localStorage.clear('errorSave')
     load(btoa(JSON.stringify(defaultPlayer)))
+    console.log('I mean \'Game resetted!\', sorry about that.')
     updateStory()
     save()
   }
   if (tier>3) {
     //Tier 4 - Warnings
-    player.dtChallCompleted={}
+    player.dtChallCompleted= {}
     player.dtUpgrades = []
     var warningGain=1
     player.warnings=(tier==4)?player.warnings.add(warningGain):new Decimal(0)
@@ -336,7 +340,7 @@ function prestige(tier,challid=0) {
   }
   
   player.errors = new Decimal(10); //current errors
-  player.compAmount=[0,0,0,0,0,0,0,0,0]
+  player.compAmount=player.dtUpgrades.includes(3)?[1,1,1,1,0,0,0,0]:[0,0,0,0,0,0,0,0,0]
   player.boostPower=0
   player.time=new Date().getTime()
   player.genUpgradeCost=new Decimal(1000)
@@ -385,16 +389,11 @@ function prestige(tier,challid=0) {
   if (tier==4) {
     player.prestiges[3]++;
     switch(player.prestiges[3]) {
-      case 1: newStory(24); break;
-      case 2: newStory(25); break;
+      case 1: newStory(25); break;
+      case 2: newStory(26); break;
     }
   } else if (tier>4) {
     player.prestiges[3] = 0
-  }
-  if (tier<4 && player.dtUpgrades.includes(3)) {
-    for (i=0;i<4;i++) {
-      player.compAmount[i]++
-    }
   }
   updateCosts()
   
@@ -402,6 +401,7 @@ function prestige(tier,challid=0) {
   if (player.downtimeChallenge == 1 && player.prestiges[0]==4) completeChall();
   if (player.downtimeChallenge == 2 && player.prestiges[0]==8) completeChall();
   if (player.downtimeChallenge == 4 && player.prestiges[1]==10) completeChall();
+  if (player.downtimeChallenge == 5 && player.prestiges[2]==2) completeChall();
 }
 
 function completeChall() {
@@ -576,13 +576,18 @@ function gameTick() {
     showElement(dttab+'Tab','block')
     olddttab=dttab
   }
-  if (player.prestiges[0]<Math.min(player.prestiges[1]+4,player.upgrades.includes(16)?Math.max(player.prestiges[1]+4,9):9)) {
-    updateElement('prestige1Gen',Math.max(player.prestiges[0]*10-70,10)+' Tier '+ROMAN_NUMERALS[Math.min(player.prestiges[0]+1,9)])
-    hideElement('maxout')
-    showElement('abletoprestige','inline')
+  if (player.downtimeChallenge==5) {
+	  hideElement('upgradeComputers')
   } else {
-    hideElement('abletoprestige')
-    showElement('maxout','inline')
+	  showElement('upgradeComputers','block')
+	  if (player.prestiges[0]<Math.min(player.prestiges[1]+4,player.upgrades.includes(16)?Math.max(player.prestiges[1]+4,9):9)) {
+		updateElement('prestige1Gen',Math.max(player.prestiges[0]*10-70,10)+' Tier '+ROMAN_NUMERALS[Math.min(player.prestiges[0]+1,9)])
+		hideElement('maxout')
+		showElement('abletoprestige','inline')
+	  } else {
+		hideElement('abletoprestige')
+		showElement('maxout','inline')
+	  }
   }
   updateElement('prestige2Gen',Math.max(player.prestiges[1]*15-40,20)+' Tier '+ROMAN_NUMERALS[Math.min(player.prestiges[1]+4,9)])
   if (player.downtimeChallenge != 0) {
@@ -667,12 +672,13 @@ function gameTick() {
   }
   if (false) {
     showElement('theEndButton','inline')
-    newStory(26)
+    newStory(27)
   } else {
     hideElement('theEndButton')
   }
   if (tab=='computers') {
     for (let i=0;i<Math.min(player.prestiges[1]+4,9);i++) {
+      updateElement("cop"+(i+1)+"mult",player.compAmount[i]==0?'':'('+format(getMultTier(i+1))+'/s)')
       updateElement("cop"+(i+1),"Cost: " + format(costs.comp[i]) + " (" + player.compAmount[i] + ")")
       if (player.errors.lt(costs.comp[i]) || (player.downtimeChallenge==3 && i != 0 && player.compAmount[i] >= player.compAmount[i-1])) updateClass("cop"+(i+1),'cantBuy')
       else {
@@ -732,11 +738,60 @@ function gameTick() {
     }
   }
   if (tab=='downtime') {
-    for (i=0;i<4;i++) {
-      document.getElementById('dt'+(i+1).toString()).className = (typeof player.dtChallCompleted[i] == 'undefined')?'normDTbutton':'greenDTbutton'
-      document.getElementById('du'+(i*2+1).toString()).className = (typeof player.dtChallCompleted[i] == 'undefined')?'redDTbutton':player.dtUpgrades.includes(i*2+1)?'greenDTbutton':'normDTbutton'
-      document.getElementById('du'+(i*2+2).toString()).className = (typeof player.dtChallCompleted[i] == 'undefined')?'redDTbutton':player.dtUpgrades.includes(i*2+2)?'greenDTbutton':'normDTbutton'
-    }
+	  if (dttab=='downtimeChallenges') {
+		  for (i=0;i<4;i++) {
+			  document.getElementById('dt'+(i+1)).className = (player.downtimeChallenge==(i+1))?'redDTbutton':(typeof player.dtChallCompleted[i] == 'undefined')?'normDTbutton':'greenDTbutton'
+		  }
+		  if (player.prestiges[3]>0) {
+			  showElement('postWarnDTchalls','table-row')
+			  document.getElementById('dt5').className = (player.downtimeChallenge==5)?'redDTbutton':(typeof player.dtChallCompleted[4] == 'undefined')?'normDTbutton':'greenDTbutton'
+		  } else {
+			  hideElement('postWarnDTchalls')
+		  }
+	  }
+	  if (dttab=='downtimeUpgrades') {
+		  if (player.dtChallCompleted[0]==undefined) {
+			  hideElement('dc1upgrades')
+		  } else {
+			  showElement('dc1upgrades','block')
+			  updateClass('du1',player.dtUpgrades.includes(1)?'greenDTbutton':'normDTbutton')
+			  updateElement('du1','Production boost boosts everything more.<br>Cost: '+format(1e50))
+		  }
+		  if (player.dtChallCompleted[1]==undefined) {
+			  hideElement('dc2upgrades')
+		  } else {
+			  showElement('dc2upgrades','block')
+			  updateClass('du2',player.dtUpgrades.includes(2)?'greenDTbutton':'normDTbutton')
+			  updateElement('du2','T1 computers produces twice as fast.<br>Cost: '+format(1e30))
+			  updateClass('du3',player.dtUpgrades.includes(3)?'greenDTbutton':'normDTbutton')
+			  updateElement('du3','You start with single T1-T4 computers.<br>Cost: '+format(1e40))
+			  updateClass('du4',player.dtUpgrades.includes(4)?'greenDTbutton':'normDTbutton')
+			  updateElement('du4','T2 computers produces twice as fast.<br>Cost: '+format(1e35))
+		  }
+		  if (player.dtChallCompleted[2]==undefined) {
+			  hideElement('dc3upgrades')
+		  } else {
+			  showElement('dc3upgrades','block')
+			  updateClass('du5',player.dtUpgrades.includes(5)?'greenDTbutton':'normDTbutton')
+			  updateElement('du5','When you buy T9, it multiplies it\'s own production by 1.1x.<br>Cost: '+format(1e40))
+			  updateClass('du6',player.dtUpgrades.includes(6)?'greenDTbutton':'normDTbutton')
+			  updateElement('du6','T3 computers produces twice as fast.<br>Cost: '+format(1e40))
+		  }
+		  if (player.dtChallCompleted[3]==undefined) {
+			  hideElement('dc4upgrades')
+		  } else {
+			  showElement('dc4upgrades','block')
+			  updateClass('du7',player.dtUpgrades.includes(7)?'greenDTbutton':'normDTbutton')
+			  updateElement('du7','All prestiges are better except networks.<br>UCs give 3x multiplier, IPs give the next tier as well as a 2x multiplier, and IBs give 3x.<br>Cost: '+format(1e75))
+			  updateClass('du8',player.dtUpgrades.includes(8)?'greenDTbutton':'normDTbutton')
+			  updateElement('du8','T4 computers produces twice as fast.<br>Cost: '+format(1e40))
+		  }
+		  if (player.dtChallCompleted[4]==undefined) {
+			  hideElement('dc5upgrades')
+		  } else {
+			  showElement('dc5upgrades','block')
+		  }
+	  }
   }
   if (player.downtimeChallenge == 3) showElement("backward");
   else hideElement("backward")
@@ -827,16 +882,9 @@ function load(savefile,firstTime=true) {
       if (savefile.build < 15) {
         savefile.dtUpgrades = []
       }
-      if (savefile.build < 16) {
-        if (savefile.prestiges[3]==undefined) savefile.prestiges[3]=0
-        if (typeof(savefile.dtChallCompleted)=='array') {
-			var newArray={}
-			for (i=0;i<savefile.dtChallCompleted.length;i++) {
-				newArray[i]=savefile.dtChallCompleted[i]
-			}
-			savefile.dtChallCompleted=newArray
-		}
-      }
+      if (savefile.build < 17) {
+        if (savefile.story>23) savefile.story+=1
+	  }
     }
     savefile.version = player.version
     savefile.build = player.build
@@ -850,6 +898,15 @@ function load(savefile,firstTime=true) {
     savefile.totalWarnings = new Decimal(savefile.totalWarnings)
     
     player=savefile
+	updateCosts()
+	if (player.options.hotkeys) {
+		updateElement('hotkeysbtn',"Hotkeys: Enabled")
+		showElement('hotkeyText','inline-block')
+	} else {
+		updateElement('hotkeysbtn',"Hotkeys: Disabled")
+		hideElement('hotkeyText')
+	}
+	
     console.log('Game loaded!')
 	return false
   } catch (e) {

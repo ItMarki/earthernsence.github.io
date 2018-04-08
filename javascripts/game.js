@@ -330,7 +330,7 @@ function prestige(tier,challid=0) {
   }
   if (tier>2) {
     //Tier 3 - Networks
-    if (player.upgrades.includes(15)) player.upgrades=[15];
+    if (tier == 3 && player.upgrades.includes(15)) player.upgrades=[15];
     else player.upgrades=[];
   }
   

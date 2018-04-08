@@ -390,7 +390,7 @@ function prestige(tier,challid=0) {
   } else if (tier>4) {
     player.prestiges[3] = 0
   }
-  if (tier<4 && player.dtUpgrades.includes(5)) {
+  if (tier<4 && player.dtUpgrades.includes(3)) {
     for (i=0;i<4;i++) {
       compAmount[i]++
     }
@@ -445,7 +445,7 @@ function getMultTier(tier) {  let ret = new Decimal.pow(player.downtimeChallenge
   if (player.downtimeChallenge==3) ret = ret.div(1+(player.compAmount.reduce((a, b) => a + b, 0)/10))
   if (tier <= 4 && player.dtUpgrades.includes(tier*2)) ret = ret.mul(2) // For even dt upgrades
   // Insert DTU 1 here, and DTU 7 somewhere
-  if (tier == 9 && player.dtUpgrades.includes(9)) ret = ret.mul(Math.pow(1.1,player.compAmount[8]))
+  if (tier == 9 && player.dtUpgrades.includes(5)) ret = ret.mul(Math.pow(1.1,player.compAmount[8]))
   return ret
 }
 

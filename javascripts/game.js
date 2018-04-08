@@ -243,7 +243,7 @@ function newStory(story) {
 function updateCosts() {
   var baseCosts=[10,100,1e3,1e4,1e6,1e8,1e10,1e13,1e16]
   for (i=0;i<9;i++) {
-    costs.comp[i]=Decimal.times(baseCosts[i],Decimal.pow(costMult[i],player.compAmount[i]))
+    costs.comp[i]=Decimal.times(baseCosts[i],Decimal.pow(costMult[i],player.compAmount[i]+((i<4 && player.dtUpgrades.includes(3))?-1:0)))
   }
   costs.boost=new Decimal(1e3).times(Decimal.pow(4+Math.floor(player.boostPower/100)*2,player.boostPower))
 }
@@ -392,7 +392,7 @@ function prestige(tier,challid=0) {
   }
   if (tier<4 && player.dtUpgrades.includes(3)) {
     for (i=0;i<4;i++) {
-      compAmount[i]++
+      player.compAmount[i]++
     }
   }
   updateCosts()

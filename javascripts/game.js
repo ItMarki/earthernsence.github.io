@@ -396,6 +396,9 @@ function prestige(tier,challid=0) {
     }
   }
   updateCosts()
+  
+  // Insert DT targets here
+  if (player.downtimeChallenge == 1 && player.prestiges[0]==4) completeChall();
 }
 
 function completeChall() {

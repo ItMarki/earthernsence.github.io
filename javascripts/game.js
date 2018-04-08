@@ -305,7 +305,7 @@ function prestige(tier,challid=0) {
   if (challid==0) {
     if (player.compAmount[Math.min(player.prestiges[0],8)]<Math.max(player.prestiges[0]*10-70,10) && tier == 1) return;
     else if (player.compAmount[Math.min(player.prestiges[1]+3,8)]<Math.max(player.prestiges[1]*15-40,20) && tier == 2) return;
-    else if (player.compAmount[8]<player.prestiges[2]*40+80 && tier == 3) return;
+    else if (player.compAmount[8]<player.prestiges[2]*200+80 && tier == 3) return;
     else if (player.errors.lt(Number.MAX_VALUE) && tier == 4) return;
     else if (tier == Infinity && !confirm('Are you really sure to reset? You will lose everything you have!')) return;
   } else {
@@ -653,7 +653,7 @@ function gameTick() {
     else if (checkIfAffordable(22)) updateClass('upg'+22+'button','')
     else updateClass('upg'+22+'button','cantBuy')
   }
-  updateElement('prestige3Req',player.prestiges[2]*40+80)
+  updateElement('prestige3Req',player.prestiges[2]*200+80)
   updateElement('netMulti',(5+player.prestiges[2])/2)
   if (player.prestiges[3]>0||player.warnings.gt(0)) {
     showElement('warningTabButton','inline-block')

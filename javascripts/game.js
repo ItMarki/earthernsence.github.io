@@ -252,6 +252,7 @@ function buyGen(tier,bulk=1) {
   if (player.errors.gte(costs.comp[tier]) || (player.downtimeChallenge==3 && i != 0 && player.compAmount[i] >= player.compAmount[i-1])) {
     player.errors = player.errors.sub(costs.comp[tier])
     player.compAmount[tier]+=1
+    if (player.downtimeChallenge==3 && player.compAmount[8] >= 60) completeChall();
     updateCosts()
 
     switch (tier) {
@@ -401,6 +402,7 @@ function prestige(tier,challid=0) {
   // Insert DT targets here
   if (player.downtimeChallenge == 1 && player.prestiges[0]==4) completeChall();
   if (player.downtimeChallenge == 2 && player.prestiges[0]==8) completeChall();
+  if (player.downtimeChallenge == 4 && player.prestiges[1]==10) completeChall();
 }
 
 function completeChall() {
@@ -410,7 +412,7 @@ function completeChall() {
   else player.dtChallCompleted[id-1]++
 }
 
-function getMultTier(tier) {  let ret = new Decimal.pow(player.downtimeChallenge==4?8:10,tier-1)
+function getMultTier(tier) {  let ret = new Decimal.pow(player.downtimeChallenge==4?5:10,tier-1)
   ret = ret.mul(Decimal.pow(Math.pow(1.05 + Math.max((tier-4)/100,0),tier),player.compAmount[tier-1]))
   ret = ret.mul(Decimal.pow(Math.pow(2+(player.dtUpgrades.includes(1)?0.6:0.5)*player.prestiges[2],(player.downtimeChallenge==1)?0.5:1),player.boostPower))
   ret = ret.mul(Decimal.pow(2+Math.floor(player.compAmount[8]/5)*0.5,player.prestiges[1]))
@@ -444,9 +446,8 @@ function getMultTier(tier) {  let ret = new Decimal.pow(player.downtimeChallenge
   if (player.warningUpgrades.includes(4)) ret = ret.mul(getUpgradeMultiplier(4))
   // Insert DT stuffs here
   if (tier >= 5 && player.downtimeChallenge==2) ret = ret.mul(0)
-  if (player.downtimeChallenge==3) ret = ret.div(1+(player.compAmount.reduce((a, b) => a + b, 0)/10))
+  if (player.downtimeChallenge==3) ret = ret.div(1+(player.compAmount.reduce((a, b) => a + b, 0)/5))
   if (tier <= 4 && player.dtUpgrades.includes(tier*2)) ret = ret.mul(2) // For even dt upgrades
-  // Insert DTU 1 here, and DTU 7 somewhere
   if (tier == 9 && player.dtUpgrades.includes(5)) ret = ret.mul(Math.pow(1.1,player.compAmount[8]))
   return ret
 }
@@ -629,14 +630,14 @@ function gameTick() {
     }
     updateElement('upgradereq','Next at 5 I.P. changes')
   }
+  if (player.prestiges[1]>=5) updateElement('prestige2Type','Internet boost');
+  else updateElement('prestige2Type','I.P. Change');
   if (player.prestiges[1]<5 || player.downtimeChallenge != 0) {
     updateElement('ipChange','Gain Tier '+ROMAN_NUMERALS[player.prestiges[1]+5]+' Computer, but resets everything.')
-    updateElement('prestige2Type','I.P. Change')
     showElement('upgradereq','inline')
     hideElement('upgcate2')
   } else {
     updateElement('ipChange','Gain boost for computers, but resets everything.')
-    updateElement('prestige2Type','Internet boost')
     hideElement('upgradereq')
     showElement('upgcate2','inline')
     for (i=14;i<17;i++) {

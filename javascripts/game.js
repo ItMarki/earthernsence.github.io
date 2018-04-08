@@ -399,6 +399,7 @@ function prestige(tier,challid=0) {
   
   // Insert DT targets here
   if (player.downtimeChallenge == 1 && player.prestiges[0]==4) completeChall();
+  if (player.downtimeChallenge == 2 && player.prestiges[0]==8) completeChall();
 }
 
 function completeChall() {

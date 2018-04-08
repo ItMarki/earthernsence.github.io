@@ -249,7 +249,7 @@ function updateCosts() {
 }
 
 function buyGen(tier,bulk=1) {
-  if (player.errors.gte(costs.comp[tier])) {
+  if (player.errors.gte(costs.comp[tier]) || (player.downtimeChallenge==3 && i != 0 && player.compAmount[i] >= player.compAmount[i-1])) {
     player.errors = player.errors.sub(costs.comp[tier])
     player.compAmount[tier]+=1
     updateCosts()
@@ -265,14 +265,15 @@ function buyGen(tier,bulk=1) {
 }
 
 function maxGen() {
-  for (tier=Math.min(player.prestiges[1]+3,8);tier>-1;tier--) {
-    if (player.errors.gte(costs.comp[tier])) {
-      var bulk=Math.max(Math.floor(player.errors.div(costs.comp[tier]).times(costMult[tier]-1).add(1).log10()/Math.log10(costMult[tier])),0)
-      player.errors=player.errors.sub(Decimal.pow(costMult[tier],bulk).sub(1).div(costMult[tier]-1).times(costs.comp[tier]))
-      player.compAmount[tier]+=bulk
+  for (i=Math.min(player.prestiges[1]+3,8);i>-1;i--) {
+    if (player.errors.gte(costs.comp[i]) && !(player.downtimeChallenge==3 && i != 0 && player.compAmount[i] >= player.compAmount[i-1])) {
+      var bulk=Math.max(Math.floor(player.errors.div(costs.comp[i]).times(costMult[i]-1).add(1).log10()/Math.log10(costMult[i])),0)
+      if (player.downtimeChallenge==3 && i != 0) bulk = Math.min(bulk,player.compAmount[i-1] - player.compAmount[i])
+      player.errors=player.errors.sub(Decimal.pow(costMult[i],bulk).sub(1).div(costMult[i]-1).times(costs.comp[i]))
+      player.compAmount[i]+=bulk
       updateCosts()
 
-      switch (tier) {
+      switch (i) {
         case 0: newStory(0); break;
         case 1: newStory(1); break;
         case 2: newStory(2); break;
@@ -668,7 +669,7 @@ function gameTick() {
   if (tab=='computers') {
     for (let i=0;i<Math.min(player.prestiges[1]+4,9);i++) {
       updateElement("cop"+(i+1),"Cost: " + format(costs.comp[i]) + " (" + player.compAmount[i] + ")")
-      if (player.errors.lt(costs.comp[i])) updateClass("cop"+(i+1),'cantBuy')
+      if (player.errors.lt(costs.comp[i]) || (player.downtimeChallenge==3 && i != 0 && player.compAmount[i] >= player.compAmount[i-1])) updateClass("cop"+(i+1),'cantBuy')
       else {
           updateClass("cop"+(i+1),'')
       }

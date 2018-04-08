@@ -70,7 +70,7 @@ background-color:#00e500
 .cantBuy, .cantBuy:hover {
 	background-color:#424242;
 	color: white;
-	cursor: default;
+	pointer-events: none;
 }
 
 .comp {

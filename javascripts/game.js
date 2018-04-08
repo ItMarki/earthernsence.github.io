@@ -628,7 +628,7 @@ function gameTick() {
     }
     updateElement('upgradereq','Next at 5 I.P. changes')
   }
-  if (player.prestiges[1]<5) {
+  if (player.prestiges[1]<5 || player.downtimeChallenge != 0) {
     updateElement('ipChange','Gain Tier '+ROMAN_NUMERALS[player.prestiges[1]+5]+' Computer, but resets everything.')
     updateElement('prestige2Type','I.P. Change')
     showElement('upgradereq','inline')

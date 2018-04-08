@@ -391,7 +391,7 @@ function prestige(tier,challid=0) {
     player.prestiges[3] = 0
   }
   if (tier<4 && player.dtUpgrades.includes(5)) {
-    for (i=0;i<3;i++) {
+    for (i=0;i<4;i++) {
       compAmount[i]++
     }
   }

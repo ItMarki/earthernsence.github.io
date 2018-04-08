@@ -407,7 +407,7 @@ function completeChall() {
 
 function getMultTier(tier) {  let ret = new Decimal.pow(player.downtimeChallenge==4?8:10,tier-1)
   ret = ret.mul(Decimal.pow(Math.pow(1.05 + Math.max((tier-4)/100,0),tier),player.compAmount[tier-1]))
-  ret = ret.mul(Decimal.pow(Math.pow(2+0.5*player.prestiges[2],(player.downtimeChallenge==1)?0.5:1),player.boostPower))
+  ret = ret.mul(Decimal.pow(Math.pow(2+(player.dtUpgrades.includes(1)?0.6:0.5)*player.prestiges[2],(player.downtimeChallenge==1)?0.5:1),player.boostPower))
   ret = ret.mul(Decimal.pow(2+Math.floor(player.compAmount[8]/5)*0.5,player.prestiges[1]))
   if (player.prestiges[0]>=tier) ret = ret.mul(player.upgrades.includes(14)?2.5:2)
   if (player.prestiges[0]>9&&tier==9) ret = ret.mul(Decimal.pow(player.upgrades.includes(14)?2.5:2,player.prestiges[0]-9))
@@ -549,9 +549,9 @@ function gameTick() {
   updateElement('eps',(ePS.eq(0))?0:format(ePS,1,0,false))
   if (player.compAmount.slice(2,9).reduce((a, b) => a + b, 0) > 0) {
     showElement('genUpgrade','block');
-    updateElement('genIncrease',Math.pow(2+0.5*player.prestiges[2],(player.downtimeChallenge==1)?0.5:1).toPrecision(2));
+    updateElement('genIncrease',Math.pow(2+(player.dtUpgrades.includes(1)?0.6:0.5)*player.prestiges[2],(player.downtimeChallenge==1)?0.5:1).toPrecision(2));
     updateElement('genIncreaseCost','Cost: ' + format(costs.boost));
-    updateElement('genBoost',format(Decimal.pow(Math.pow(2+0.5*player.prestiges[2],(player.downtimeChallenge==1)?0.5:1),player.boostPower),1,0,false));
+    updateElement('genBoost',format(Decimal.pow(Math.pow(2+(player.dtUpgrades.includes(1)?0.6:0.5)*player.prestiges[2],(player.downtimeChallenge==1)?0.5:1),player.boostPower),1,0,false));
     if (player.errors.lt(costs.boost)) updateClass('genIncreaseCost','cantBuy')
     else updateClass('genIncreaseCost','')
   } else {

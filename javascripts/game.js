@@ -76,7 +76,7 @@ function updateClass(elementID,value) {
   document.getElementById(elementID).className=value
 }
   
-function showElement(elementID,style) {
+function showElement(elementID,style="inline-block") {
   document.getElementById(elementID).style.display=style
 }
   
@@ -308,8 +308,8 @@ function prestige(tier,challid=0) {
     else if (tier == Infinity && !confirm('Are you really sure to reset? You will lose everything you have!')) return;
   } else {
 		if (tier==3) {
-			if (challid==-1 && !confirm('If you exit the challenge, you return to the normal world but lose everything except your networks.')) return;
-			if (challid>0 && !confirm('If you start the challenge, you will reset as normal. These challenges will not reset on prestiges but reset when you reach the required amount of errors!')) return;
+		  if (challid==-1 && !confirm('If you exit the challenge, you return to the normal world but lose everything except your networks.')) return;
+		  if (challid>0 && !confirm('If you start the challenge, you will reset as normal. These challenges will not reset on prestiges but reset when you reach the required amount of errors!')) return;
 		}
   }
   if (tier==Infinity) {
@@ -338,7 +338,7 @@ function prestige(tier,challid=0) {
   player.time=new Date().getTime()
   player.genUpgradeCost=new Decimal(1000)
   if (tier==1) {
-    player.prestiges[0]++
+    player.prestiges[0] += (challid == -2?player.prestiges[0]>0?-1:0:1)
     switch(player.prestiges[2]) {
       case 0: switch(player.prestiges[0]) {
         case 1: newStory(4); break;
@@ -732,6 +732,8 @@ function gameTick() {
       document.getElementById('du'+(i*2+2).toString()).className = (typeof player.dtChallCompleted[i] == 'undefined')?'redDTbutton':player.dtUpgrades.includes(i*2+2)?'greenDTbutton':'normDTbutton'
     }
   }
+  if (player.downtimeChallenge == 3) showElement("backward");
+  else hideElement("backward")
 }
 
 function save() {
@@ -1008,6 +1010,7 @@ var testing = 0
 function gameInit() {
   setupRoman()
   load(localStorage.getItem('errorSave'))
+  costs.boost=new Decimal(1e3).times(Decimal.pow(4+Math.floor(player.boostPower/100)*2,player.boostPower))
   var tickspeed=0
   var s=0
   updated=true

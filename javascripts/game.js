@@ -390,6 +390,11 @@ function prestige(tier,challid=0) {
   } else if (tier>4) {
     player.prestiges[3] = 0
   }
+  if (tier<4 && player.dtUpgrades.includes(5)) {
+    for (i=0;i<3;i++) {
+      compAmount[i]++
+    }
+  }
   updateCosts()
 }
 
@@ -425,7 +430,7 @@ function getMultTier(tier) {  let ret = new Decimal.pow(player.downtimeChallenge
   if (player.upgrades.includes(10)&&tier==7) ret = ret.mul(Math.pow(1.15,Math.sqrt(player.compAmount[6])))
   if (player.upgrades.includes(11)&&tier==8) ret = ret.mul(Math.pow(1.15,Math.sqrt(player.compAmount[7])))
   if (player.upgrades.includes(12)&&tier==9) ret = ret.mul(Math.pow(1.15,Math.sqrt(player.compAmount[8])))
-  if (player.upgrades.includes(13)) ret = ret.mul(Math.pow(1.05,Math.sqrt(player.compAmount[0]+player.compAmount[1]+player.compAmount[2]+player.compAmount[3]+player.compAmount[4]+player.compAmount[5]+player.compAmount[6]+player.compAmount[7]+player.compAmount[8])))
+  if (player.upgrades.includes(13)) ret = ret.mul(Math.pow(1.05,Math.sqrt(player.compAmount.reduce((a, b) => a + b, 0)))
   if (player.upgrades.includes(14)&&tier<5) ret = ret.mul(10)
   if (player.upgrades.includes(22)) ret = ret.mul(1000000)
   if (player.warningUpgrades.includes(1)) ret = ret.mul(getUpgradeMultiplier(1))
@@ -435,6 +440,9 @@ function getMultTier(tier) {  let ret = new Decimal.pow(player.downtimeChallenge
   // Insert DT stuffs here
   if (tier >= 5 && player.downtimeChallenge==2) ret = ret.mul(0)
   if (player.downtimeChallenge==3) ret = ret.div(1+(player.compAmount.reduce((a, b) => a + b, 0)/10))
+  if (tier <= 4 && player.dtUpgrades.includes(tier*2)) ret = ret.mul(2) // For even dt upgrades
+  // Insert DTU 1 here, and DTU 7 somewhere
+  if (tier == 9 && player.dtUpgrades.includes(9)) ret = ret.mul(Math.pow(1.1,player.compAmount[8]))
   return ret
 }
 

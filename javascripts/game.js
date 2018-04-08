@@ -578,7 +578,10 @@ function gameTick() {
     showElement('maxout','inline')
   }
   updateElement('prestige2Gen',Math.max(player.prestiges[1]*15-40,20)+' Tier '+ROMAN_NUMERALS[Math.min(player.prestiges[1]+4,9)])
-  if (player.prestiges[1]<3) {
+  if (player.downtimeChallenge != 0) {
+    hideElement('upgcate1')
+    updateElement('upgradereq','Upgrades are unavailable in DC')
+  } else if (player.prestiges[1]<3) {
     hideElement('upgcate1')
     updateElement('upgradereq','Unlocks at 3 I.P. changes')
   } else {

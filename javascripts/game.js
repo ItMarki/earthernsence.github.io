@@ -18,7 +18,7 @@ const defaultPlayer = {
   playtime: 0, //total time spent online ingame
   time: 0, //total time displayed in stats
   version: 1.5, //very important
-  build: 17, //used for us to communicate commits, helps a lot
+  build: 17.1, //used for us to communicate commits, helps a lot
   hotfix: 1, //another way to use commits
   options: {
     hotkeys:true, //whether or not hotkeys are enabled (on by default)
@@ -750,44 +750,46 @@ function gameTick() {
 		  }
 	  }
 	  if (dttab=='downtimeUpgrades') {
-		  if (player.dtChallCompleted[0]==undefined) {
+		  if (false) {
 			  hideElement('dc1upgrades')
 		  } else {
 			  showElement('dc1upgrades','block')
-			  updateClass('du1',player.dtUpgrades.includes(1)?'greenDTbutton':'normDTbutton')
+			  updateClass('du1',(player.dtChallCompleted[0]==undefined)?'redDTbutton':player.dtUpgrades.includes(1)?'greenDTbutton':'normDTbutton')
 			  updateElement('du1','Production boost boosts everything more.<br>Cost: '+format(1e50))
+			  updateClass('du2',(player.dtChallCompleted[0]==undefined)?'redDTbutton':player.dtUpgrades.includes(2)?'greenDTbutton':'normDTbutton')
+			  updateElement('du2','T1 computers produces twice as fast.<br>Cost: '+format(1e30))
 		  }
-		  if (player.dtChallCompleted[1]==undefined) {
+		  if (false) {
 			  hideElement('dc2upgrades')
 		  } else {
 			  showElement('dc2upgrades','block')
-			  updateClass('du2',player.dtUpgrades.includes(2)?'greenDTbutton':'normDTbutton')
-			  updateElement('du2','T1 computers produces twice as fast.<br>Cost: '+format(1e30))
-			  updateClass('du3',player.dtUpgrades.includes(3)?'greenDTbutton':'normDTbutton')
+			  updateClass('du3',(player.dtChallCompleted[1]==undefined)?'redDTbutton':player.dtUpgrades.includes(3)?'greenDTbutton':'normDTbutton')
 			  updateElement('du3','You start with single T1-T4 computers.<br>Cost: '+format(1e40))
-			  updateClass('du4',player.dtUpgrades.includes(4)?'greenDTbutton':'normDTbutton')
+			  updateClass('du4',(player.dtChallCompleted[1]==undefined)?'redDTbutton':player.dtUpgrades.includes(4)?'greenDTbutton':'normDTbutton')
 			  updateElement('du4','T2 computers produces twice as fast.<br>Cost: '+format(1e35))
 		  }
-		  if (player.dtChallCompleted[2]==undefined) {
+		  if (false) {
 			  hideElement('dc3upgrades')
 		  } else {
 			  showElement('dc3upgrades','block')
-			  updateClass('du5',player.dtUpgrades.includes(5)?'greenDTbutton':'normDTbutton')
+			  updateClass('du5',(player.dtChallCompleted[2]==undefined)?'redDTbutton':player.dtUpgrades.includes(5)?'greenDTbutton':'normDTbutton')
 			  updateElement('du5','When you buy T9, it multiplies it\'s own production by 1.1x.<br>Cost: '+format(1e40))
-			  updateClass('du6',player.dtUpgrades.includes(6)?'greenDTbutton':'normDTbutton')
+			  updateClass('du6',(player.dtChallCompleted[2]==undefined)?'redDTbutton':player.dtUpgrades.includes(6)?'greenDTbutton':'normDTbutton')
 			  updateElement('du6','T3 computers produces twice as fast.<br>Cost: '+format(1e40))
 		  }
-		  if (player.dtChallCompleted[3]==undefined) {
+		  if (false) {
 			  hideElement('dc4upgrades')
 		  } else {
 			  showElement('dc4upgrades','block')
-			  updateClass('du7',player.dtUpgrades.includes(7)?'greenDTbutton':'normDTbutton')
+			  updateClass('du7',(player.dtChallCompleted[3]==undefined)?'redDTbutton':player.dtUpgrades.includes(7)?'greenDTbutton':'normDTbutton')
 			  updateElement('du7','All prestiges are better except networks.<br>UCs give 3x multiplier, IPs give the next tier as well as a 2x multiplier, and IBs give 3x.<br>Cost: '+format(1e75))
-			  updateClass('du8',player.dtUpgrades.includes(8)?'greenDTbutton':'normDTbutton')
+			  updateClass('du8',(player.dtChallCompleted[3]==undefined)?'redDTbutton':player.dtUpgrades.includes(8)?'greenDTbutton':'normDTbutton')
 			  updateElement('du8','T4 computers produces twice as fast.<br>Cost: '+format(1e40))
 		  }
-		  if (player.dtChallCompleted[4]==undefined) {
+		  if (false) {
 			  hideElement('dc5upgrades')
+			  updateClass('du9',(player.dtChallCompleted[4]==undefined)?'redDTbutton':'normDTbutton')
+			  updateClass('du10',(player.dtChallCompleted[4]==undefined)?'redDTbutton':'normDTbutton')
 		  } else {
 			  showElement('dc5upgrades','block')
 		  }

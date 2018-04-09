@@ -203,6 +203,10 @@ font-size: 14px
 .tabButton:hover {
 	background-color: lightgray;
 }
+#bugfixes {
+	font-size:8px;
+	color:#404040
+}
 .warUpg1 {
 	width:160px;
 	height:64px

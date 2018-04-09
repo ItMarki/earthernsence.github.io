@@ -12,7 +12,8 @@
 </head>
 <body style="background-color:gray;text-align:center" onload='gameInit()'>
 <div id="game" style='text-align:center'>
-	<h1 id="logo">The Console Error Game</h1>
+  <h1 id="logo">The Console Error Game</h1>
+  <div id='bugfixes' style='display:none'>There are 0 bugfixes.</div>
   <div>You have <text id="errors">10</text> errors.</div>
   <div>You are making <text id="eps">0</text> errors per second.</div>
   <div id='genUpgrade' style='display:none'>Increase the boost by <text id='genIncrease'>2</text>x.<br>
@@ -27,9 +28,9 @@
 	  <div>Tier III Computer: <text id='cop3mult'></text><button id="cop3" class='cantBuy' onClick='buyGen(2)'>Cost: 1.00K (0)</button></div>
 	  <div>Tier IV Computer: <text id='cop4mult'></text><button id="cop4" class='cantBuy' onClick='buyGen(3)'>Cost: 10.00K (0)</button></div>
       <div id='fifthComp' style='display:none'>Tier V Computer: <text id='cop5mult'></text><button id="cop5"  onClick='buyGen(4)'> (<text id="fifthAmt">x</text>)</button></div>
-	  <div id='sixthComp' style='display:none'>Tier VI Computer: <text id='cop6mult'></text><button id="cop6"  onClick='buyGen(5)'> (<text id="sixthAmt">x</text>)</button></div>	  <div id='seventhComp' style='display:none'>Tier VII Computer:<button id="cop7"  onClick='buyGen(6)'> (<text id="seventhAmt">x</text>)</button></div>
-	  <div id='eighthComp' style='display:none'>Tier VIII Computer: <text id='cop7mult'></text><button id="cop8"  onClick='buyGen(7)'> (<text id="eighthAmt">x</text>)</button></div>
-	  <div id='ninthComp' style='display:none'>Tier IX Computer: <text id='cop8mult'></text><button id="cop9"  onClick='buyGen(8)'> (<text id="ninthAmt">x</text>)</button></div>
+	  <div id='sixthComp' style='display:none'>Tier VI Computer: <text id='cop6mult'></text><button id="cop6"  onClick='buyGen(5)'> (<text id="sixthAmt">x</text>)</button></div>	  <div id='seventhComp' style='display:none'>Tier VII Computer: <text id='cop7mult'></text><button id="cop7"  onClick='buyGen(6)'> (<text id="seventhAmt">x</text>)</button></div>
+	  <div id='eighthComp' style='display:none'>Tier VIII Computer: <text id='cop8mult'></text><button id="cop8"  onClick='buyGen(7)'> (<text id="eighthAmt">x</text>)</button></div>
+	  <div id='ninthComp' style='display:none'>Tier IX Computer: <text id='cop9mult'></text><button id="cop9"  onClick='buyGen(8)'> (<text id="ninthAmt">x</text>)</button></div>
   </div>
   <div id='downtimeTab' style='display:none'>
   <button onclick='switchDTTab("downtimeChallenges")' id="tabButton">Downtime Challenges</button><button onclick='switchDTTab("downtimeUpgrades")' id="tabButton">Downtime Upgrades</button>

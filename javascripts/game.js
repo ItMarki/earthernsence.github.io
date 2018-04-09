@@ -12,13 +12,14 @@ const defaultPlayer = {
   downtimeChallenge: 0,
   dtUpgrades: [],
   dtChallCompleted: {},
+  bugfixes: new Decimal(0),
   warnings: new Decimal(0), //displayed on the bottom bar
   totalWarnings: new Decimal(0), //displayed in stats
   warningUpgrades: [],
   playtime: 0, //total time spent online ingame
   time: 0, //total time displayed in stats
   version: 1.5, //very important
-  build: 19, //used for us to communicate commits, helps a lot
+  build: 20, //used for us to communicate commits, helps a lot
   hotfix: 1, //another way to use commits
   options: {
     hotkeys:true, //whether or not hotkeys are enabled (on by default)
@@ -246,7 +247,7 @@ function newStory(story) {
 function updateCosts() {
   var baseCosts=[10,100,1e3,1e4,1e6,1e8,1e10,1e13,1e16]
   for (i=0;i<9;i++) {
-    costs.comp[i]=Decimal.times(baseCosts[i],Decimal.pow(costMult[i],player.compAmount[i]+((i<4 && player.dtUpgrades.includes(3))?-1:0)))
+    costs.comp[i]=Decimal.times(baseCosts[i],Decimal.pow(costMult[i],player.compAmount[i]+((i<4&&player.dtUpgrades.includes(3)&&player.downtimeChallenge==0)?-1:0)))
   }
   costs.boost=new Decimal(1e3).times(Decimal.pow(4+Math.floor(player.boostPower/100)*2,player.boostPower))
 }
@@ -320,7 +321,7 @@ function maxGenUpgrade() {
 function prestige(tier,challid=0) {
   if (challid==0) {
     if ((player.compAmount[Math.min(player.prestiges[0],8)]<Math.max(player.prestiges[0]*10-70,10)||player.downtimeChallenge==11) && tier == 1) return;
-    else if (player.compAmount[Math.min(player.prestiges[1]+3,8)]<Math.max(player.prestiges[1]*15-40,20) && tier == 2) return;
+    else if (player.compAmount[Math.min(player.prestiges[1]+3,8)]<((player.dtUpgrades.includes(15)&&player.downtimeChallenge==0)?15:20) && tier == 2) return;
     else if ((player.compAmount[8]<player.prestiges[2]*200+80||(player.downtimeChallenge==9&&challid==0)) && tier == 3) return;
     else if (player.errors.lt(Number.MAX_VALUE) && tier == 4) return;
     else if (tier == Infinity && !confirm('Are you really sure to reset? You will lose everything you have!')) return;
@@ -353,10 +354,11 @@ function prestige(tier,challid=0) {
   }
   
   player.errors = new Decimal(10); //current errors
-  player.compAmount=player.dtUpgrades.includes(3)?[1,1,1,1,0,0,0,0]:[0,0,0,0,0,0,0,0,0]
+  player.compAmount=(tier<4&&player.dtUpgrades.includes(3)&&((player.downtimeChallenge==0&&challid==0)||(tier==3&&player.downtimeChallenge!=0&&challid<1)))?[1,1,1,1,0,0,0,0]:[0,0,0,0,0,0,0,0,0]
   player.boostPower=0
   player.time=new Date().getTime()
   player.genUpgradeCost=new Decimal(1000)
+  player.bugfixes=new Decimal(0)
   if (tier==1) {
     player.prestiges[0] += (challid == -2?player.prestiges[0]>0?-1:0:1)
     switch(player.prestiges[2]) {
@@ -375,6 +377,7 @@ function prestige(tier,challid=0) {
     player.prestiges[0] = 0
   }
   if (tier==2) {
+    player.prestiges[1] += (challid == -2?player.prestiges[1]>0?-1:0:1)
     player.prestiges[1]++;
     switch (player.prestiges[1]) {
       case 1: newStory(8); break;
@@ -392,7 +395,7 @@ function prestige(tier,challid=0) {
   if (tier==3) {
     player.downtimeChallenge=Math.max(challid,0)
     if (challid==0) player.prestiges[2]++;
-	if (challid==6||challid==11) player.prestiges[2]=0
+	if (challid==5||challid==6||challid==11) player.prestiges[2]=0
     switch(player.prestiges[2]) {
       case 1: newStory(17); break;
     }
@@ -414,8 +417,8 @@ function prestige(tier,challid=0) {
   // Insert DT targets here
   if (player.downtimeChallenge == 1 && player.prestiges[0]==4) completeChall();
   if (player.downtimeChallenge == 2 && player.prestiges[0]==8) completeChall();
-  if ((player.downtimeChallenge == 4 || player.downtimeChallenge == 5) && player.prestiges[1]==10) completeChall();
-  if (player.downtimeChallenge == 6 && player.prestiges[2]==1) completeChall();
+  if (player.downtimeChallenge == 4 && player.prestiges[1]==10) completeChall();
+  if ((player.downtimeChallenge == 5||player.downtimeChallenge == 6) && player.prestiges[2]==1) completeChall();
   if (player.downtimeChallenge == 7 && player.prestiges[0]==9) completeChall();
   if (player.downtimeChallenge == 8 && player.prestiges[1]==5) completeChall();
   if (player.downtimeChallenge == 11 && player.prestiges[2]==2) completeChall();
@@ -432,9 +435,9 @@ function completeChall() {
   } 
 }
 
-function getMultTier(tier) {  let ret = new Decimal.pow(((player.downtimeChallenge==4&&tier>5)||(player.downtimeChallenge==5&&tier<=5)||player.downtimeChallenge==6)?5:10,tier-1)
+function getMultTier(tier) {  let ret = new Decimal.pow(((player.downtimeChallenge==4&&tier>5)||player.downtimeChallenge==6)?5:10,tier-1)
   ret = ret.mul(Decimal.pow(Math.pow(1.05 + Math.max((tier-4)/100,0),tier),player.compAmount[tier-1]))
-  ret = ret.mul(Decimal.pow(Math.pow(2+(player.dtUpgrades.includes(1)?0.6:0.5)*(player.downtimeChallenge==9?0:player.prestiges[2]),(player.downtimeChallenge==1)?0.5:1),player.boostPower))
+  ret = ret.mul(Decimal.pow(Math.pow(2+((player.dtUpgrades.includes(1)&&player.downtimeChallenge==0)?0.6:0.5)*(player.downtimeChallenge==9?0:player.prestiges[2]),(player.downtimeChallenge==1)?0.5:1),player.boostPower))
   ret = ret.mul(Decimal.pow(2+Math.floor(player.compAmount[8]/5)*0.5,player.prestiges[1]))
   if (player.prestiges[0]>=tier) ret = ret.mul(player.dtUpgrades.includes(7)?3:player.upgrades.includes(14)?2.5:2)
   if (player.prestiges[0]>9&&tier==9) ret = ret.mul(Decimal.pow(player.upgrades.includes(14)?2.5:2,player.prestiges[0]-9))
@@ -465,11 +468,16 @@ function getMultTier(tier) {  let ret = new Decimal.pow(((player.downtimeChallen
   if (player.warningUpgrades.includes(3)) ret = ret.mul(getUpgradeMultiplier(3,tier))
   if (player.warningUpgrades.includes(4)) ret = ret.mul(getUpgradeMultiplier(4))
   // Insert DT stuffs here
+  if (player.downtimeChallenge==0) {
+	  if (player.dtUpgrades.includes(Math.ceil(tier/2)*2)) ret = ret.mul(2)
+	  if (tier == 9 && player.dtUpgrades.includes(5)) ret = ret.mul(Math.pow(1.1,player.compAmount[8]))
+	  if (player.dtUpgrades.includes(7)) ret = ret.mul(Math.pow(2,Math.min(player.prestiges[1],5)))
+	  if (player.dtUpgrades.includes(10)) ret = ret.mul(2)
+	  if (player.dtUpgrades.includes(Math.ceil(tier/2)*2+10)) ret = ret.mul(10)
+	  if (player.dtUpgrades.includes(20)) ret = ret.mul(10)
+  }
   if (tier >= 5 && player.downtimeChallenge==2) ret = ret.mul(0)
   if (player.downtimeChallenge==3) ret = ret.div(1+(player.compAmount.reduce((a, b) => a + b, 0)/5))
-  if (tier <= 4 && player.dtUpgrades.includes(tier*2)) ret = ret.mul(2) // For even dt upgrades
-  if (tier == 9 && player.dtUpgrades.includes(5)) ret = ret.mul(Math.pow(1.1,player.compAmount[8]))
-  if (player.dtUpgrades.includes(7)) ret = ret.mul(Math.pow(2,Math.min(player.prestiges[1],5)))
   return ret
 }
 
@@ -569,14 +577,24 @@ function gameTick() {
     player.totalErrors = player.totalErrors.add(addAmount);
     player.playtime+=s
     if (player.errors.gte(Number.MAX_VALUE)) prestige(4);
+	if (player.downtimeChallenge==5) if (ePS.gt(0)) {
+		player.bugfixes=player.bugfixes.add(player.bugfixes.div(100).max(0.1).times(s))
+		if (player.bugfixes.gt(player.errors)) prestige(2,-2)
+	}
     move()
   }
   player.time = new Date().getTime()
   updateElement('errors',format(player.errors)) //this is the base, except in the parentheses add the HTML tag of the thing you're changing
   updateElement('eps',(ePS.eq(0))?0:format(ePS,1,0,false))
+  if (player.downtimeChallenge==5) {
+	  showElement('bugfixes','block')
+	  updateElement('bugfixes','There are '+format(player.bugfixes)+' bugfixes.')
+  } else {
+	  hideElement('bugfixes','block')
+  }
   if (player.compAmount.slice(2,9).reduce((a, b) => a + b, 0) > 0||player.boostPower>0) {
     showElement('genUpgrade','block');
-    updateElement('genIncrease',Math.pow(2+(player.dtUpgrades.includes(1)?0.6:0.5)*(player.downtimeChallenge==9?0:player.prestiges[2]),(player.downtimeChallenge==1)?0.5:1).toPrecision(2));
+    updateElement('genIncrease',Math.pow(2+((player.dtUpgrades.includes(1)&&player.downtimeChallenge==0)?0.6:0.5)*(player.downtimeChallenge==9?0:player.prestiges[2]),(player.downtimeChallenge==1)?0.5:1).toPrecision(2));
     updateElement('genIncreaseCost','Cost: ' + format(costs.boost));
     updateElement('genBoost',format(Decimal.pow(Math.pow(2+(player.dtUpgrades.includes(1)?0.6:0.5)*player.prestiges[2],(player.downtimeChallenge==1)?0.5:1),player.boostPower),1,0,false));
     if (player.errors.lt(costs.boost)) updateClass('genIncreaseCost','cantBuy')
@@ -607,7 +625,7 @@ function gameTick() {
 		showElement('maxout','inline')
 	  }
   }
-  updateElement('prestige2Gen',Math.max(player.prestiges[1]*15-40,20)+' Tier '+ROMAN_NUMERALS[Math.min(player.prestiges[1]+4,9)])
+  updateElement('prestige2Gen',(Math.max(player.prestiges[1]-4,0)*15+((player.dtUpgrades.includes(15)&&player.downtimeChallenge==0)?15:20))+' Tier '+ROMAN_NUMERALS[Math.min(player.prestiges[1]+4,9)])
   if (player.downtimeChallenge != 0) {
     hideElement('upgcate1')
     updateElement('upgradereq','Upgrades are unavailable in DC')
@@ -659,7 +677,7 @@ function gameTick() {
   }
   if (player.prestiges[1]>=5) updateElement('prestige2Type','Internet boost');
   else updateElement('prestige2Type','I.P. Change');
-  if (player.prestiges[1]<5 || player.downtimeChallenge != 0) {
+  if (player.prestiges[1]<5) {
     updateElement('ipChange','Gain Tier '+ROMAN_NUMERALS[player.prestiges[1]+5]+' Computer, but resets everything.')
     showElement('upgradereq','inline')
     hideElement('upgcate2')
@@ -814,9 +832,9 @@ function gameTick() {
 		  } else {
 			  showElement('dc5upgrades','block')
 			  updateClass('du9',(player.dtChallCompleted[4]==undefined)?'redDTbutton':player.dtUpgrades.includes(9)?'greenDTbutton':'normDTbutton')
-			 updateElement('du9','Start with IP1.<br>Cost: '+format(1e50))
+			  updateElement('du9','Start with IP1.<br>Cost: '+format(1e50))
 			  updateClass('du10',(player.dtChallCompleted[4]==undefined)?'redDTbutton':player.dtUpgrades.includes(10)?'greenDTbutton':'normDTbutton')
-		  updateElement('du10','T9 & all computers produces twice as fast.<br>Cost: '+format(1e45))
+			  updateElement('du10','T9 & all computers produces twice as fast.<br>Cost: '+format(1e45))
 		  }
 		  if (false) {
 			  hideElement('dc6upgrades')
@@ -825,7 +843,7 @@ function gameTick() {
 			  updateClass('du11',(player.dtChallCompleted[5]==undefined)?'redDTbutton':player.dtUpgrades.includes(11)?'greenDTbutton':'normDTbutton')
 			  updateElement('du11','All computers have a 1.25x multiplier.<br>Cost: '+format(1e50))
 			  updateClass('du12',(player.dtChallCompleted[5]==undefined)?'redDTbutton':player.dtUpgrades.includes(12)?'greenDTbutton':'normDTbutton')
-		  updateElement('du12','T1 & T2 Computers produces 10x as fast.<br>Cost: '+format(1e50))
+			  updateElement('du12','T1 & T2 Computers produces 10x as fast.<br>Cost: '+format(1e50))
 		  }
 		  if (false) {
 			  hideElement('dc7upgrades')
@@ -834,12 +852,34 @@ function gameTick() {
 			  updateClass('du13',(player.dtChallCompleted[6]==undefined)?'redDTbutton':player.dtUpgrades.includes(13)?'greenDTbutton':'normDTbutton')
 			  updateElement('du13','Every production boost you buy multiplies each computer\'s power by 1.01x. Additive.<br>Cost: '+format(1e60))
 			  updateClass('du14',(player.dtChallCompleted[6]==undefined)?'redDTbutton':player.dtUpgrades.includes(14)?'greenDTbutton':'normDTbutton')
-		  updateElement('du14','T3 & T4 Computers produces 10x as fast.<br>Cost: '+format(1e55))
+			  updateElement('du14','T3 & T4 Computers produces 10x as fast.<br>Cost: '+format(1e55))
 		  }
 		  if (false) {
 			  hideElement('dc8upgrades')
 		  } else {
 			  showElement('dc8upgrades','block')
+			  updateClass('du15',(player.dtChallCompleted[7]==undefined)?'redDTbutton':player.dtUpgrades.includes(15)?'greenDTbutton':'normDTbutton')
+			  updateElement('du15','Reduce first I.P. Change cost to 15.<br>Cost: '+format(1e60))
+			  updateClass('du16',(player.dtChallCompleted[7]==undefined)?'redDTbutton':player.dtUpgrades.includes(16)?'greenDTbutton':'normDTbutton')
+			  updateElement('du16','T5 & T6 Computers produces 10x as fast.<br>Cost: '+format(1e60))
+		  }
+		  if (false) {
+			  hideElement('dc9upgrades')
+		  } else {
+			  showElement('dc9upgrades','block')
+			  updateClass('du17',(player.dtChallCompleted[8]==undefined)?'redDTbutton':player.dtUpgrades.includes(17)?'greenDTbutton':'normDTbutton')
+			  updateElement('du17','Reduce network cost down to 90 for your second one.<br>Cost: 1e75.<br>Cost: '+format(1e75))
+			  updateClass('du18',(player.dtChallCompleted[8]==undefined)?'redDTbutton':player.dtUpgrades.includes(18)?'greenDTbutton':'normDTbutton')
+			  updateElement('du18','T7 & T8 Computers produces 10x as fast.<br>Cost: '+format(1e65))
+		  }
+		  if (false) {
+			  hideElement('dc10upgrades')
+		  } else {
+			  showElement('dc10upgrades','block')
+			  updateClass('du19',(player.dtChallCompleted[9]==undefined)?'redDTbutton':player.dtUpgrades.includes(19)?'greenDTbutton':'normDTbutton')
+			  updateElement('du19','You have a 1% chance to get a 100x production boost.<br>Cost: '+format(1e100))
+			  updateClass('du20',(player.dtChallCompleted[9]==undefined)?'redDTbutton':player.dtUpgrades.includes(20)?'greenDTbutton':'normDTbutton')
+			  updateElement('du20','T9 & all computers produces 10x as fast.<br>Cost: '+format(1e70))
 		  }
 	  }
   }
@@ -935,6 +975,9 @@ function load(savefile,firstTime=true) {
       if (savefile.build < 17) {
         if (savefile.story>23) savefile.story+=1
 	  }
+      if (savefile.build < 20) {
+        savefile.bugfixes=0
+	  }
     }
     savefile.version = player.version
     savefile.build = player.build
@@ -942,8 +985,10 @@ function load(savefile,firstTime=true) {
     //if the value is a Decimal, set it to be a Decimal here.
     if (savefile.errors=='NaN') savefile.errors = new Decimal(10)
     else savefile.errors = new Decimal(savefile.errors)
-  
     savefile.totalErrors = new Decimal(savefile.totalErrors)
+	
+    savefile.bugfixes=new Decimal(savefile.bugfixes)
+  
     savefile.warnings = new Decimal(savefile.warnings)
     savefile.totalWarnings = new Decimal(savefile.totalWarnings)
     
@@ -1205,7 +1250,7 @@ function tryFix(e) {
 
 function buyDTU(id) {
   if (player.dtUpgrades.includes(id)) return;
-  DTUcosts = [1e50,1e30,1e40,1e35,1e40,1e40,1e75,1e45]
+  DTUcosts = [1e50,1e30,1e40,1e35,1e40,1e40,1e75,1e40,1e50,1e45,1e50,1e50,1e60,1e55,1e60,1e60,1e75,1e65,1e100,1e70]
   if (player.errors.gte(DTUcosts[id-1])&&player.dtChallCompleted[Math.floor((id-1)/2)]!=undefined) {
     player.errors = player.errors.sub(DTUcosts[id-1])
     player.dtUpgrades.push(id)

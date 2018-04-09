@@ -18,7 +18,7 @@ const defaultPlayer = {
   playtime: 0, //total time spent online ingame
   time: 0, //total time displayed in stats
   version: 1.5, //very important
-  build: 18, //used for us to communicate commits, helps a lot
+  build: 19, //used for us to communicate commits, helps a lot
   hotfix: 1, //another way to use commits
   options: {
     hotkeys:true, //whether or not hotkeys are enabled (on by default)
@@ -256,6 +256,7 @@ function buyGen(tier,bulk=1) {
     player.errors = player.errors.sub(costs.comp[tier])
     player.compAmount[tier]+=1
     if (player.downtimeChallenge==3 && player.compAmount[8] >= 60) completeChall();
+    if (player.downtimeChallenge==9&&player.compAmount[8]>99) completeChall();
     updateCosts()
 
     switch (tier) {
@@ -275,6 +276,8 @@ function maxGen() {
       if (player.downtimeChallenge==3 && i != 0) bulk = Math.min(bulk,player.compAmount[i-1] - player.compAmount[i])
       player.errors=player.errors.sub(Decimal.pow(costMult[i],bulk).sub(1).div(costMult[i]-1).times(costs.comp[i]))
       player.compAmount[i]+=bulk
+      if (player.downtimeChallenge==3 && player.compAmount[8] >= 60) completeChall();
+      if (player.downtimeChallenge==9&&player.compAmount[8]>99) completeChall();
       updateCosts()
 
       switch (i) {
@@ -292,6 +295,11 @@ function buyGenUpgrade() {
   if (player.errors.gte(costs.boost)) {
     player.errors=player.errors.sub(costs.boost)
     player.boostPower+=1
+    if (player.downtimeChallenge==7) {
+		for (i=0;i<9;i++) {
+			player.compAmount[i]=Math.max(player.compAmount[i]-1,0)
+		}
+    }
     updateCosts()
   }
 }
@@ -300,6 +308,11 @@ function maxGenUpgrade() {
   while (player.errors.gte(costs.boost)) {
     player.errors=player.errors.sub(costs.boost);
     player.boostPower+=1;
+    if (player.downtimeChallenge==7) {
+		for (i=0;i<9;i++) {
+			player.compAmount[i]=Math.max(player.compAmount[i]-1,0)
+		}
+    }
     updateCosts();
   }
 }
@@ -308,7 +321,7 @@ function prestige(tier,challid=0) {
   if (challid==0) {
     if ((player.compAmount[Math.min(player.prestiges[0],8)]<Math.max(player.prestiges[0]*10-70,10)||player.downtimeChallenge==11) && tier == 1) return;
     else if (player.compAmount[Math.min(player.prestiges[1]+3,8)]<Math.max(player.prestiges[1]*15-40,20) && tier == 2) return;
-    else if (player.compAmount[8]<player.prestiges[2]*200+80 && tier == 3) return;
+    else if ((player.compAmount[8]<player.prestiges[2]*200+80||(player.downtimeChallenge==9&&challid==0)) && tier == 3) return;
     else if (player.errors.lt(Number.MAX_VALUE) && tier == 4) return;
     else if (tier == Infinity && !confirm('Are you really sure to reset? You will lose everything you have!')) return;
   } else {
@@ -379,6 +392,7 @@ function prestige(tier,challid=0) {
   if (tier==3) {
     player.downtimeChallenge=Math.max(challid,0)
     if (challid==0) player.prestiges[2]++;
+	if (challid==6||challid==11) player.prestiges[2]=0
     switch(player.prestiges[2]) {
       case 1: newStory(17); break;
     }
@@ -400,7 +414,10 @@ function prestige(tier,challid=0) {
   // Insert DT targets here
   if (player.downtimeChallenge == 1 && player.prestiges[0]==4) completeChall();
   if (player.downtimeChallenge == 2 && player.prestiges[0]==8) completeChall();
-  if (player.downtimeChallenge == 4 && player.prestiges[1]==10) completeChall();
+  if ((player.downtimeChallenge == 4 || player.downtimeChallenge == 5) && player.prestiges[1]==10) completeChall();
+  if (player.downtimeChallenge == 6 && player.prestiges[2]==1) completeChall();
+  if (player.downtimeChallenge == 7 && player.prestiges[0]==9) completeChall();
+  if (player.downtimeChallenge == 8 && player.prestiges[1]==5) completeChall();
   if (player.downtimeChallenge == 11 && player.prestiges[2]==2) completeChall();
 }
 
@@ -415,9 +432,9 @@ function completeChall() {
   } 
 }
 
-function getMultTier(tier) {  let ret = new Decimal.pow(player.downtimeChallenge==4?5:10,tier-1)
+function getMultTier(tier) {  let ret = new Decimal.pow(((player.downtimeChallenge==4&&tier>5)||(player.downtimeChallenge==5&&tier<=5)||player.downtimeChallenge==6)?5:10,tier-1)
   ret = ret.mul(Decimal.pow(Math.pow(1.05 + Math.max((tier-4)/100,0),tier),player.compAmount[tier-1]))
-  ret = ret.mul(Decimal.pow(Math.pow(2+(player.dtUpgrades.includes(1)?0.6:0.5)*player.prestiges[2],(player.downtimeChallenge==1)?0.5:1),player.boostPower))
+  ret = ret.mul(Decimal.pow(Math.pow(2+(player.dtUpgrades.includes(1)?0.6:0.5)*(player.downtimeChallenge==9?0:player.prestiges[2]),(player.downtimeChallenge==1)?0.5:1),player.boostPower))
   ret = ret.mul(Decimal.pow(2+Math.floor(player.compAmount[8]/5)*0.5,player.prestiges[1]))
   if (player.prestiges[0]>=tier) ret = ret.mul(player.dtUpgrades.includes(7)?3:player.upgrades.includes(14)?2.5:2)
   if (player.prestiges[0]>9&&tier==9) ret = ret.mul(Decimal.pow(player.upgrades.includes(14)?2.5:2,player.prestiges[0]-9))
@@ -544,21 +561,22 @@ function buyWarUpg(id) {
 }
 
 function gameTick() {
+  var ePS=getEPS()
   if (player.time>0) {
     s=(new Date().getTime()-player.time)/1000 // number of seconds since last tick
-    player.errors = player.errors.add(getEPS().mul(s));
-    player.totalErrors = player.totalErrors.add(getEPS().mul(s));
+    var addAmount=ePS.mul(s*(player.downtimeChallenge==8?0.1:1)).min(Decimal.sub(Number.MAX_VALUE,player.errors))
+    player.errors = player.errors.add(addAmount);
+    player.totalErrors = player.totalErrors.add(addAmount);
     player.playtime+=s
     if (player.errors.gte(Number.MAX_VALUE)) prestige(4);
     move()
   }
   player.time = new Date().getTime()
-  var ePS=getEPS()
   updateElement('errors',format(player.errors)) //this is the base, except in the parentheses add the HTML tag of the thing you're changing
   updateElement('eps',(ePS.eq(0))?0:format(ePS,1,0,false))
-  if (player.compAmount.slice(2,9).reduce((a, b) => a + b, 0) > 0) {
+  if (player.compAmount.slice(2,9).reduce((a, b) => a + b, 0) > 0||player.boostPower>0) {
     showElement('genUpgrade','block');
-    updateElement('genIncrease',Math.pow(2+(player.dtUpgrades.includes(1)?0.6:0.5)*player.prestiges[2],(player.downtimeChallenge==1)?0.5:1).toPrecision(2));
+    updateElement('genIncrease',Math.pow(2+(player.dtUpgrades.includes(1)?0.6:0.5)*(player.downtimeChallenge==9?0:player.prestiges[2]),(player.downtimeChallenge==1)?0.5:1).toPrecision(2));
     updateElement('genIncreaseCost','Cost: ' + format(costs.boost));
     updateElement('genBoost',format(Decimal.pow(Math.pow(2+(player.dtUpgrades.includes(1)?0.6:0.5)*player.prestiges[2],(player.downtimeChallenge==1)?0.5:1),player.boostPower),1,0,false));
     if (player.errors.lt(costs.boost)) updateClass('genIncreaseCost','cantBuy')
@@ -658,8 +676,13 @@ function gameTick() {
     else if (checkIfAffordable(22)) updateClass('upg'+22+'button','')
     else updateClass('upg'+22+'button','cantBuy')
   }
-  updateElement('prestige3Req',player.prestiges[2]*200+80)
-  updateElement('netMulti',(5+player.prestiges[2])/2)
+  if (player.downtimeChallenge==9) {
+	  hideElement('networks')
+  } else {
+	  showElement('networks','block')
+	  updateElement('prestige3Req',player.prestiges[2]*200+80)
+	  updateElement('netMulti',(5+player.prestiges[2])/2)
+  }
   if (player.prestiges[3]>0||player.warnings.gt(0)) {
     showElement('warningTabButton','inline-block')
     showElement('warnings','block')
@@ -739,12 +762,12 @@ function gameTick() {
   }
   if (tab=='downtime') {
 	  if (dttab=='downtimeChallenges') {
-		  for (i=0;i<4;i++) {
+		  for (i=0;i<10;i++) {
 			  document.getElementById('dt'+(i+1)).className = (player.downtimeChallenge==(i+1))?'redDTbutton':(typeof player.dtChallCompleted[i] == 'undefined')?'normDTbutton':'greenDTbutton'
 		  }
 		  if (player.prestiges[3]>0) {
 			  showElement('postWarnDTchalls','table-row')
-			  document.getElementById('dt5').className = (player.downtimeChallenge==5)?'redDTbutton':(typeof player.dtChallCompleted[4] == 'undefined')?'normDTbutton':'greenDTbutton'
+			  document.getElementById('dt11').className = (player.downtimeChallenge==11)?'redDTbutton':(typeof player.dtChallCompleted[10] == 'undefined')?'normDTbutton':'greenDTbutton'
 		  } else {
 			  hideElement('postWarnDTchalls')
 		  }

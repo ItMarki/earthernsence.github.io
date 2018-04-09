@@ -35,16 +35,23 @@
   <button onclick='switchDTTab("downtimeChallenges")' id="tabButton">Downtime Challenges</button><button onclick='switchDTTab("downtimeUpgrades")' id="tabButton">Downtime Upgrades</button>
 	  <div id='downtimeChallengesTab'>
         <button class='commonButton' onclick='exitChall()'>Exit Downtime</button>
-	    <table id="dc" align=center style=''><tr><td>
+		  <div><b><i>DUs are not carried into DCs.</i></b></div>
+	    <table id="d" align=center style=''><tr><td>
           <button id="dt1" class='normDTbutton' onclick='prestige(3,1)'>Production boost effectiveness is halved.<br>Goal: Upgrade your T4 computer.</button>
           <button id="dt2" class='normDTbutton' onclick='prestige(3,2)'>T5 and higher are useless.<br>Goal: Upgrade your T8 computer.</button>
 		  <button id="dt3" class='normDTbutton' onclick='prestige(3,3)'>Your production is divided by 1 + 0.2*x when you have x computers. And your computer amount must be descending order.<br>Goal: 60 T9.</button>
 		  <button id="dt4" class='normDTbutton' onclick='prestige(3,4)'>Higher tier computers are nerfed.<br>Goal: 5 IBs.</button>
-		</td></tr><tr id='postWarnDTchalls' style='display:none'><td><h3>Post-warning challenges</h3>
-          <button id="dt5" class='normDTbutton' onclick='prestige(3,5)'>Upgrade computers is useless.<br>Goal: 2 Networks.</button>
-          <button id="dt6" class='normDTbutton'>???<br>Goal: ???</button>
-		  <button id="dt7" class='normDTbutton'>???<br>Goal: ???</button>
-		  <button id="dt8" class='normDTbutton'>???<br>Goal: ???</button>
+		    <button id="dt5" class='normDTbutton'>Lower tier computers are nerfed.<br>Goal: 5 IBs.</button><br><br>
+		    <button id="dt6" class='normDTbutton'>All computers are nerfed.<br>Goal: 1 N.</button>
+		    <button id="dt7" class='normDTbutton'>If you buy production boost, you lose 1 of every computer, down to 0.<br>Goal: T9 UC.</button>
+		    <button id="dt8" class='normDTbutton'>All game functions are 10x slower.<br>Goal: IP5.</button>
+		    <button id="dt9" class='normDTbutton'>Networks are useless.<br>Goal: 100 T9.</button>
+		    <button id="dt10" class='normDTbutton'>You can sacrifice for 100x production boost upgrade but lose all your IPs. You can sacrifice once per UC and doesn't reset on UC. UCs are also nerfed.<br>Goal: IP5 and UC9.</button>
+		    </td></tr><tr id='postWarnDTchalls' style='display:none'><td><h3>Post-warning challenges</h3>
+          <button id="dt11" class='normDTbutton' onclick='prestige(3,11)'>Upgrade computers is useless.<br>Goal: 2 Networks.</button>
+          <button id="dt12" class='normDTbutton'>???<br>Goal: ???</button>
+		  <button id="dt13" class='normDTbutton'>???<br>Goal: ???</button>
+		  <button id="dt14" class='normDTbutton'>???<br>Goal: ???</button>
 		</td></tr></table>
 	  </div>
 	<div id='downtimeUpgradesTab' style='display:none'>
@@ -67,8 +74,18 @@
 			<button id="du8" class='normDTbutton' onclick='buyDTU(8)'></button>
 		</div><div id='dc5upgrades' style='display:none'>
 			<h3>DC5 Upgrades</h3>
-			<button id="du9" class='normDTbutton'>???<br>Cost: ???</button>
-			<button id="du10" class='normDTbutton'>???<br>Cost: ???</button>
+			<button id="du9" class='normDTbutton'>Start with IP1.<br>Cost: 1e50</button>
+			<button id="du10" class='normDTbutton'>T5 computers produces twice as fast.<br>Cost: 1e45</button>
+		</div><div id='dc6upgrades' style='display:none'>
+		<h3>DC6 Upgrades</h3>
+		<button id="du11" class='normDTbutton'>All computers have a 1.25x multiplier.<br>Cost: 1e50</button>
+		<button id="du12" class='normDtbutton'>T6 Computers produces twice as fast.<br>Cost: 1e50</button>
+		</div><div id='dc7upgrades' style='display:none'>
+		<h3>DC7 Upgrades</h3>
+		<button id="du13" class='normDTbutton'>Every production boost you buy multiplies each computer's power by 1.01x. Additive.<br>Cost: 1e60</button>
+		<button id="du14" class='normDTbutton'>T7 Computers produces twice as fast.<br>Cost: 1e55</button>
+		</div><div id='dc8upgrades' style='display:none'>
+		<h3>DC8 Upgrades</h3>
 		</div>
 		</td></tr></table>
 	</div>

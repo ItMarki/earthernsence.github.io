@@ -780,7 +780,7 @@ function gameTick() {
 			  updateClass('du1',(player.dtChallCompleted[0]==undefined)?'redDTbutton':player.dtUpgrades.includes(1)?'greenDTbutton':'normDTbutton')
 			  updateElement('du1','Production boost boosts everything more.<br>Cost: '+format(1e50))
 			  updateClass('du2',(player.dtChallCompleted[0]==undefined)?'redDTbutton':player.dtUpgrades.includes(2)?'greenDTbutton':'normDTbutton')
-			  updateElement('du2','T1 computers produces twice as fast.<br>Cost: '+format(1e30))
+			  updateElement('du2','T1 & T2 computers produces twice as fast.<br>Cost: '+format(1e30))
 		  }
 		  if (false) {
 			  hideElement('dc2upgrades')
@@ -789,7 +789,7 @@ function gameTick() {
 			  updateClass('du3',(player.dtChallCompleted[1]==undefined)?'redDTbutton':player.dtUpgrades.includes(3)?'greenDTbutton':'normDTbutton')
 			  updateElement('du3','You start with single T1-T4 computers.<br>Cost: '+format(1e40))
 			  updateClass('du4',(player.dtChallCompleted[1]==undefined)?'redDTbutton':player.dtUpgrades.includes(4)?'greenDTbutton':'normDTbutton')
-			  updateElement('du4','T2 computers produces twice as fast.<br>Cost: '+format(1e35))
+			  updateElement('du4','T3 & T4 computers produces twice as fast.<br>Cost: '+format(1e35))
 		  }
 		  if (false) {
 			  hideElement('dc3upgrades')
@@ -798,7 +798,7 @@ function gameTick() {
 			  updateClass('du5',(player.dtChallCompleted[2]==undefined)?'redDTbutton':player.dtUpgrades.includes(5)?'greenDTbutton':'normDTbutton')
 			  updateElement('du5','When you buy T9, it multiplies it\'s own production by 1.1x.<br>Cost: '+format(1e40))
 			  updateClass('du6',(player.dtChallCompleted[2]==undefined)?'redDTbutton':player.dtUpgrades.includes(6)?'greenDTbutton':'normDTbutton')
-			  updateElement('du6','T3 computers produces twice as fast.<br>Cost: '+format(1e40))
+			  updateElement('du6','T5 & T6 computers produces twice as fast.<br>Cost: '+format(1e40))
 		  }
 		  if (false) {
 			  hideElement('dc4upgrades')
@@ -807,28 +807,34 @@ function gameTick() {
 			  updateClass('du7',(player.dtChallCompleted[3]==undefined)?'redDTbutton':player.dtUpgrades.includes(7)?'greenDTbutton':'normDTbutton')
 			  updateElement('du7','All prestiges are better except networks.<br>UCs give 3x multiplier, IPs give the next tier as well as a 2x multiplier, and IBs give 3x.<br>Cost: '+format(1e75))
 			  updateClass('du8',(player.dtChallCompleted[3]==undefined)?'redDTbutton':player.dtUpgrades.includes(8)?'greenDTbutton':'normDTbutton')
-			  updateElement('du8','T4 computers produces twice as fast.<br>Cost: '+format(1e40))
+			  updateElement('du8','T7 & T8 computers produces twice as fast.<br>Cost: '+format(1e40))
 		  }
 		  if (false) {
 			  hideElement('dc5upgrades')
 		  } else {
 			  showElement('dc5upgrades','block')
 			  updateClass('du9',(player.dtChallCompleted[4]==undefined)?'redDTbutton':player.dtUpgrades.includes(9)?'greenDTbutton':'normDTbutton')
+			 updateElement('du9','Start with IP1.<br>Cost: '+format(1e50))
 			  updateClass('du10',(player.dtChallCompleted[4]==undefined)?'redDTbutton':player.dtUpgrades.includes(10)?'greenDTbutton':'normDTbutton')
+		  updateElement('du10','T9 & all computers produces twice as fast.<br>Cost: '+format(1e45))
 		  }
 		  if (false) {
 			  hideElement('dc6upgrades')
 		  } else {
 			  showElement('dc6upgrades','block')
 			  updateClass('du11',(player.dtChallCompleted[5]==undefined)?'redDTbutton':player.dtUpgrades.includes(11)?'greenDTbutton':'normDTbutton')
+			  updateElement('du11','All computers have a 1.25x multiplier.<br>Cost: '+format(1e50))
 			  updateClass('du12',(player.dtChallCompleted[5]==undefined)?'redDTbutton':player.dtUpgrades.includes(12)?'greenDTbutton':'normDTbutton')
+		  updateElement('du12','T1 & T2 Computers produces 10x as fast.<br>Cost: '+format(1e50))
 		  }
 		  if (false) {
 			  hideElement('dc7upgrades')
 		  } else {
 			  showElement('dc7upgrades','block')
 			  updateClass('du13',(player.dtChallCompleted[6]==undefined)?'redDTbutton':player.dtUpgrades.includes(13)?'greenDTbutton':'normDTbutton')
+			  updateElement('du13','Every production boost you buy multiplies each computer\'s power by 1.01x. Additive.<br>Cost: '+format(1e60))
 			  updateClass('du14',(player.dtChallCompleted[6]==undefined)?'redDTbutton':player.dtUpgrades.includes(14)?'greenDTbutton':'normDTbutton')
+		  updateElement('du14','T3 & T4 Computers produces 10x as fast.<br>Cost: '+format(1e55))
 		  }
 		  if (false) {
 			  hideElement('dc8upgrades')

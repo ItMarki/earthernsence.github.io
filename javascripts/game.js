@@ -18,7 +18,7 @@ const defaultPlayer = {
   playtime: 0, //total time spent online ingame
   time: 0, //total time displayed in stats
   version: 1.5, //very important
-  build: 17.1, //used for us to communicate commits, helps a lot
+  build: 18, //used for us to communicate commits, helps a lot
   hotfix: 1, //another way to use commits
   options: {
     hotkeys:true, //whether or not hotkeys are enabled (on by default)
@@ -306,7 +306,7 @@ function maxGenUpgrade() {
 
 function prestige(tier,challid=0) {
   if (challid==0) {
-    if ((player.compAmount[Math.min(player.prestiges[0],8)]<Math.max(player.prestiges[0]*10-70,10)||player.downtimeChallenge==5) && tier == 1) return;
+    if ((player.compAmount[Math.min(player.prestiges[0],8)]<Math.max(player.prestiges[0]*10-70,10)||player.downtimeChallenge==11) && tier == 1) return;
     else if (player.compAmount[Math.min(player.prestiges[1]+3,8)]<Math.max(player.prestiges[1]*15-40,20) && tier == 2) return;
     else if (player.compAmount[8]<player.prestiges[2]*200+80 && tier == 3) return;
     else if (player.errors.lt(Number.MAX_VALUE) && tier == 4) return;
@@ -401,7 +401,7 @@ function prestige(tier,challid=0) {
   if (player.downtimeChallenge == 1 && player.prestiges[0]==4) completeChall();
   if (player.downtimeChallenge == 2 && player.prestiges[0]==8) completeChall();
   if (player.downtimeChallenge == 4 && player.prestiges[1]==10) completeChall();
-  if (player.downtimeChallenge == 5 && player.prestiges[2]==2) completeChall();
+  if (player.downtimeChallenge == 11 && player.prestiges[2]==2) completeChall();
 }
 
 function completeChall() {
@@ -576,7 +576,7 @@ function gameTick() {
     showElement(dttab+'Tab','block')
     olddttab=dttab
   }
-  if (player.downtimeChallenge==5) {
+  if (player.downtimeChallenge==11) {
 	  hideElement('upgradeComputers')
   } else {
 	  showElement('upgradeComputers','block')
@@ -788,10 +788,29 @@ function gameTick() {
 		  }
 		  if (false) {
 			  hideElement('dc5upgrades')
-			  updateClass('du9',(player.dtChallCompleted[4]==undefined)?'redDTbutton':'normDTbutton')
-			  updateClass('du10',(player.dtChallCompleted[4]==undefined)?'redDTbutton':'normDTbutton')
 		  } else {
 			  showElement('dc5upgrades','block')
+			  updateClass('du9',(player.dtChallCompleted[4]==undefined)?'redDTbutton':player.dtUpgrades.includes(9)?'greenDTbutton':'normDTbutton')
+			  updateClass('du10',(player.dtChallCompleted[4]==undefined)?'redDTbutton':player.dtUpgrades.includes(10)?'greenDTbutton':'normDTbutton')
+		  }
+		  if (false) {
+			  hideElement('dc6upgrades')
+		  } else {
+			  showElement('dc6upgrades','block')
+			  updateClass('du11',(player.dtChallCompleted[5]==undefined)?'redDTbutton':player.dtUpgrades.includes(11)?'greenDTbutton':'normDTbutton')
+			  updateClass('du12',(player.dtChallCompleted[5]==undefined)?'redDTbutton':player.dtUpgrades.includes(12)?'greenDTbutton':'normDTbutton')
+		  }
+		  if (false) {
+			  hideElement('dc7upgrades')
+		  } else {
+			  showElement('dc7upgrades','block')
+			  updateClass('du13',(player.dtChallCompleted[6]==undefined)?'redDTbutton':player.dtUpgrades.includes(13)?'greenDTbutton':'normDTbutton')
+			  updateClass('du14',(player.dtChallCompleted[6]==undefined)?'redDTbutton':player.dtUpgrades.includes(14)?'greenDTbutton':'normDTbutton')
+		  }
+		  if (false) {
+			  hideElement('dc8upgrades')
+		  } else {
+			  showElement('dc8upgrades','block')
 		  }
 	  }
   }

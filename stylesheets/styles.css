@@ -1,5 +1,102 @@
-html * {
-	font-weight:bold !important
+body{
+	margin:0;
+	font-family:'Montserrat';
+	padding-bottom:100px;
+}
+button {
+	background-color:#e5e5e5;
+	font-family:'Montserrat';
+	margin-left:5px;
+	border:none;
+	border-radius:5px
+}
+button:hover {
+	cursor:pointer;
+	background-color:white
+}
+.optionButton {
+	height:48px;
+	width:72px;
+	font-family:'Montserrat';
+	color:black;
+	background-color:white;
+}
+.commonButton {
+	background-color:black;
+	border:solid;
+	border-width:2px;
+	color:white;
+	padding:7.5px16px;
+	text-align:center;
+	text-decoration:none;
+	display:inline-block;
+	font-size:14px;
+	font-family:'Montserrat';
+}
+.commonButton:hover{
+	background-color:white;
+	border:solid;
+	border-width:2px;
+	color:black;
+	padding:7.5px16px;
+	text-align:center;
+	text-decoration:none;
+	display:inline-block;
+	font-size:14px;
+	font-family:'Montserrat';
+}
+#warUpg{
+	text-align:center;
+	font-size:14px;
+	background-color:black;
+	color:white;
+	height:150px;
+	width:150px;
+	border-radius:20px;
+}
+#warUpg:hover{
+	text-align:center;
+	font-size:14px;
+	background-color:lightgray;
+	color:black;
+	height:150px;
+	width:150px;
+	border-radius:20px;
+}
+.normDTbutton{
+	text-align:center;
+	font-size:14px;
+	background-color:darkgray;
+	color:red;
+	height:150px;
+	width:150px;
+	border-radius:20px;
+	vertical-align:middle;
+}
+.normDTbutton:hover {
+	background-color:red;
+	color:black;
+}
+.greenDTbutton{
+	text-align:center;
+	font-size:14px;
+	background-color:lightgreen;
+	color:red;
+	height:150px;
+	width:150px;
+	border-radius:20px;
+	vertical-align:middle;
+}
+.redDTbutton{
+	text-align:center;
+	font-size:14px;
+	background-color:red;
+	color:#f8f8ff;
+	height:150px;
+	width:150px;
+	border-radius:20px;
+	vertical-align:middle;
+	pointer-events:none;
 }
 table.prestiges tr {
 	height:0%;
@@ -23,7 +120,6 @@ table.prestiges thead
 text-align:center;
 display: table;
 table-layout: fixed;
-width: calc(100% - 16px); /*for scrollbar i guess */
 }
 table.prestiges tbody {
     text-align: center;
@@ -71,9 +167,10 @@ width: 100%;
 .boughtUpgrade {
 background-color:#00e500
 }
-.cantBuy {
+.cantBuy, .cantBuy:hover {
 	background-color:#424242;
-		text-color: white;
+	color: white;
+	pointer-events: none;
 }
 
 .comp {

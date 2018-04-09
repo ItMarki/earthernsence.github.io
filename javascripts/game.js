@@ -234,10 +234,12 @@ function buyGenUpgrade() {
   }
 }
 function maxGenUpgrade() {
-  while (player.errors.gte(costs.boost)) {
-    player.errors=player.errors.sub(costs.boost)
-    player.boostPower+=1
-    updateCosts()
+  if (player.compAmount[2]>0) {
+    while (player.errors.gte(costs.boost)) {
+      player.errors=player.errors.sub(costs.boost)
+      player.boostPower+=1
+      updateCosts()
+    }
   }
 }
 

@@ -247,7 +247,7 @@ function newStory(story) {
 function updateCosts() {
   var baseCosts=[10,100,1e3,1e4,1e6,1e8,1e10,1e13,1e16]
   for (i=0;i<9;i++) {
-    costs.comp[i]=Decimal.times(baseCosts[i],Decimal.pow(costMult[i],player.compAmount[i]+((i<4&&player.dtUpgrades.includes(3)&&player.downtimeChallenge==0)?-1:0)))
+    costs.comp[i]=Decimal.times(baseCosts[i],Decimal.pow(costMult[i],player.compAmount[i]+((i<4&&haveDU(3)&&player.downtimeChallenge==0)?-1:0)))
   }
   costs.boost=new Decimal(1e3).times(Decimal.pow(4+Math.floor(player.boostPower/100)*2,player.boostPower))
 }
@@ -321,7 +321,7 @@ function maxGenUpgrade() {
 function prestige(tier,challid=0) {
   if (challid==0) {
     if ((player.compAmount[Math.min(player.prestiges[0],8)]<Math.max(player.prestiges[0]*10-70,10)||player.downtimeChallenge==11) && tier == 1) return;
-    else if (player.compAmount[Math.min(player.prestiges[1]+3,8)]<((player.dtUpgrades.includes(15)&&player.downtimeChallenge==0)?15:20)*Math.max(player.prestiges[1]-5,1) && tier == 2) return;
+    else if (player.compAmount[Math.min(player.prestiges[1]+3,8)]<((haveDU(15)&&player.downtimeChallenge==0)?15:20)*Math.max(player.prestiges[1]-5,1) && tier == 2) return;
     else if ((player.compAmount[8]<player.prestiges[2]*200+80||(player.downtimeChallenge==9&&challid==0)) && tier == 3) return;
     else if (player.errors.lt(Number.MAX_VALUE) && tier == 4) return;
     else if (tier == Infinity && !confirm('Are you really sure to reset? You will lose everything you have!')) return;
@@ -354,7 +354,7 @@ function prestige(tier,challid=0) {
   }
   
   player.errors = new Decimal(10); //current errors
-  player.compAmount=(tier<4&&player.dtUpgrades.includes(3)&&((player.downtimeChallenge==0&&challid==0)||(tier==3&&player.downtimeChallenge!=0&&challid<1)))?[1,1,1,1,0,0,0,0]:[0,0,0,0,0,0,0,0,0]
+  player.compAmount=(tier<4&&haveDU(3)&&((player.downtimeChallenge==0&&challid==0)||(tier==3&&player.downtimeChallenge!=0&&challid<1)))?[1,1,1,1,0,0,0,0]:[0,0,0,0,0,0,0,0,0]
   player.boostPower=0
   player.time=new Date().getTime()
   player.genUpgradeCost=new Decimal(1000)
@@ -437,9 +437,9 @@ function completeChall() {
 
 function getMultTier(tier) {  let ret = new Decimal.pow(((player.downtimeChallenge==4&&tier>5)||player.downtimeChallenge==6)?5:10,tier-1)
   ret = ret.mul(Decimal.pow(Math.pow(1.05 + Math.max((tier-4)/100,0),tier),player.compAmount[tier-1]))
-  ret = ret.mul(Decimal.pow(Math.pow(2+((player.dtUpgrades.includes(1)&&player.downtimeChallenge==0)?0.6:0.5)*(player.downtimeChallenge==9?0:player.prestiges[2]),(player.downtimeChallenge==1)?0.5:1),player.boostPower))
+  ret = ret.mul(Decimal.pow(Math.pow(2+((haveDU(1)&&player.downtimeChallenge==0)?0.6:0.5)*(player.downtimeChallenge==9?0:player.prestiges[2]),(player.downtimeChallenge==1)?0.5:1),player.boostPower))
   ret = ret.mul(Decimal.pow(2+Math.floor(player.compAmount[8]/5)*0.5,player.prestiges[1]))
-  if (player.prestiges[0]>=tier) ret = ret.mul(player.dtUpgrades.includes(7)?3:player.upgrades.includes(14)?2.5:2)
+  if (player.prestiges[0]>=tier) ret = ret.mul(haveDU(7)?3:player.upgrades.includes(14)?2.5:2)
   if (player.prestiges[0]>9&&tier==9) ret = ret.mul(Decimal.pow(player.upgrades.includes(14)?2.5:2,player.prestiges[0]-9))
   if (player.upgrades.includes(1)) ret = ret.mul(2)
   if (player.upgrades.includes(2)) ret = ret.mul(5)
@@ -469,12 +469,12 @@ function getMultTier(tier) {  let ret = new Decimal.pow(((player.downtimeChallen
   if (player.warningUpgrades.includes(4)) ret = ret.mul(getUpgradeMultiplier(4))
   // Insert DT stuffs here
   if (player.downtimeChallenge==0) {
-	  if (player.dtUpgrades.includes(Math.ceil(tier/2)*2)) ret = ret.mul(2)
-	  if (tier == 9 && player.dtUpgrades.includes(5)) ret = ret.mul(Math.pow(1.1,player.compAmount[8]))
-	  if (player.dtUpgrades.includes(7)) ret = ret.mul(Math.pow(2,Math.min(player.prestiges[1],5)))
-	  if (player.dtUpgrades.includes(10)) ret = ret.mul(2)
-	  if (player.dtUpgrades.includes(Math.ceil(tier/2)*2+10)) ret = ret.mul(10)
-	  if (player.dtUpgrades.includes(20)) ret = ret.mul(10)
+	  if (haveDU(Math.ceil(tier/2)*2)) ret = ret.mul(2)
+	  if (tier == 9 && haveDU(5)) ret = ret.mul(Math.pow(1.1,player.compAmount[8]))
+	  if (haveDU(7)) ret = ret.mul(Math.pow(2,Math.min(player.prestiges[1],5)))
+	  if (haveDU(10)) ret = ret.mul(2)
+	  if (haveDU(Math.ceil(tier/2)*2+10)) ret = ret.mul(10)
+	  if (haveDU(20)) ret = ret.mul(10)
   }
   if (tier >= 5 && player.downtimeChallenge==2) ret = ret.mul(0)
   if (player.downtimeChallenge==3) ret = ret.div(1+(player.compAmount.reduce((a, b) => a + b, 0)/5))
@@ -594,9 +594,9 @@ function gameTick() {
   }
   if (player.compAmount.slice(2,9).reduce((a, b) => a + b, 0) > 0||player.boostPower>0) {
     showElement('genUpgrade','block');
-    updateElement('genIncrease',Math.pow(2+((player.dtUpgrades.includes(1)&&player.downtimeChallenge==0)?0.6:0.5)*(player.downtimeChallenge==9?0:player.prestiges[2]),(player.downtimeChallenge==1)?0.5:1).toPrecision(2));
+    updateElement('genIncrease',Math.pow(2+((haveDU(1)&&player.downtimeChallenge==0)?0.6:0.5)*(player.downtimeChallenge==9?0:player.prestiges[2]),(player.downtimeChallenge==1)?0.5:1).toPrecision(2));
     updateElement('genIncreaseCost','Cost: ' + format(costs.boost));
-    updateElement('genBoost',format(Decimal.pow(Math.pow(2+(player.dtUpgrades.includes(1)?0.6:0.5)*player.prestiges[2],(player.downtimeChallenge==1)?0.5:1),player.boostPower),1,0,false));
+    updateElement('genBoost',format(Decimal.pow(Math.pow(2+(haveDU(1)?0.6:0.5)*player.prestiges[2],(player.downtimeChallenge==1)?0.5:1),player.boostPower),1,0,false));
     if (player.errors.lt(costs.boost)) updateClass('genIncreaseCost','cantBuy')
     else updateClass('genIncreaseCost','')
   } else {
@@ -625,7 +625,7 @@ function gameTick() {
 		showElement('maxout','inline')
 	  }
   }
-  updateElement('prestige2Gen',(Math.max(player.prestiges[1]-4,0)*15+((player.dtUpgrades.includes(15)&&player.downtimeChallenge==0)?15:20))+' Tier '+ROMAN_NUMERALS[Math.min(player.prestiges[1]+4,9)])
+  updateElement('prestige2Gen',(Math.max(player.prestiges[1]-4,0)*15+((haveDU(15)&&player.downtimeChallenge==0)?15:20))+' Tier '+ROMAN_NUMERALS[Math.min(player.prestiges[1]+4,9)])
   if (player.downtimeChallenge != 0) {
     hideElement('upgcate1')
     updateElement('upgradereq','Upgrades are unavailable in DC')
@@ -795,90 +795,90 @@ function gameTick() {
 			  hideElement('dc1upgrades')
 		  } else {
 			  showElement('dc1upgrades','block')
-			  updateClass('du1',(player.dtChallCompleted[0]==undefined)?'redDTbutton':player.dtUpgrades.includes(1)?'greenDTbutton':'normDTbutton')
+			  updateClass('du1',(player.dtChallCompleted[0]==undefined)?'redDTbutton':haveDU(1)?'greenDTbutton':'normDTbutton')
 			  updateElement('du1','Production boost boosts everything more.<br>Cost: '+format(1e50))
-			  updateClass('du2',(player.dtChallCompleted[0]==undefined)?'redDTbutton':player.dtUpgrades.includes(2)?'greenDTbutton':'normDTbutton')
+			  updateClass('du2',(player.dtChallCompleted[0]==undefined)?'redDTbutton':haveDU(2)?'greenDTbutton':'normDTbutton')
 			  updateElement('du2','T1 & T2 computers produces twice as fast.<br>Cost: '+format(1e30))
 		  }
 		  if (false) {
 			  hideElement('dc2upgrades')
 		  } else {
 			  showElement('dc2upgrades','block')
-			  updateClass('du3',(player.dtChallCompleted[1]==undefined)?'redDTbutton':player.dtUpgrades.includes(3)?'greenDTbutton':'normDTbutton')
+			  updateClass('du3',(player.dtChallCompleted[1]==undefined)?'redDTbutton':haveDU(3)?'greenDTbutton':'normDTbutton')
 			  updateElement('du3','You start with single T1-T4 computers.<br>Cost: '+format(1e40))
-			  updateClass('du4',(player.dtChallCompleted[1]==undefined)?'redDTbutton':player.dtUpgrades.includes(4)?'greenDTbutton':'normDTbutton')
+			  updateClass('du4',(player.dtChallCompleted[1]==undefined)?'redDTbutton':haveDU(4)?'greenDTbutton':'normDTbutton')
 			  updateElement('du4','T3 & T4 computers produces twice as fast.<br>Cost: '+format(1e35))
 		  }
 		  if (false) {
 			  hideElement('dc3upgrades')
 		  } else {
 			  showElement('dc3upgrades','block')
-			  updateClass('du5',(player.dtChallCompleted[2]==undefined)?'redDTbutton':player.dtUpgrades.includes(5)?'greenDTbutton':'normDTbutton')
+			  updateClass('du5',(player.dtChallCompleted[2]==undefined)?'redDTbutton':haveDU(5)?'greenDTbutton':'normDTbutton')
 			  updateElement('du5','When you buy T9, it multiplies it\'s own production by 1.1x.<br>Cost: '+format(1e40))
-			  updateClass('du6',(player.dtChallCompleted[2]==undefined)?'redDTbutton':player.dtUpgrades.includes(6)?'greenDTbutton':'normDTbutton')
+			  updateClass('du6',(player.dtChallCompleted[2]==undefined)?'redDTbutton':haveDU(6)?'greenDTbutton':'normDTbutton')
 			  updateElement('du6','T5 & T6 computers produces twice as fast.<br>Cost: '+format(1e40))
 		  }
 		  if (false) {
 			  hideElement('dc4upgrades')
 		  } else {
 			  showElement('dc4upgrades','block')
-			  updateClass('du7',(player.dtChallCompleted[3]==undefined)?'redDTbutton':player.dtUpgrades.includes(7)?'greenDTbutton':'normDTbutton')
+			  updateClass('du7',(player.dtChallCompleted[3]==undefined)?'redDTbutton':haveDU(7)?'greenDTbutton':'normDTbutton')
 			  updateElement('du7','All prestiges are better except networks.<br>UCs give 3x multiplier, IPs give the next tier as well as a 2x multiplier, and IBs give 3x.<br>Cost: '+format(1e75))
-			  updateClass('du8',(player.dtChallCompleted[3]==undefined)?'redDTbutton':player.dtUpgrades.includes(8)?'greenDTbutton':'normDTbutton')
+			  updateClass('du8',(player.dtChallCompleted[3]==undefined)?'redDTbutton':haveDU(8)?'greenDTbutton':'normDTbutton')
 			  updateElement('du8','T7 & T8 computers produces twice as fast.<br>Cost: '+format(1e40))
 		  }
 		  if (false) {
 			  hideElement('dc5upgrades')
 		  } else {
 			  showElement('dc5upgrades','block')
-			  updateClass('du9',(player.dtChallCompleted[4]==undefined)?'redDTbutton':player.dtUpgrades.includes(9)?'greenDTbutton':'normDTbutton')
+			  updateClass('du9',(player.dtChallCompleted[4]==undefined)?'redDTbutton':haveDU(9)?'greenDTbutton':'normDTbutton')
 			  updateElement('du9','Start with IP1.<br>Cost: '+format(1e50))
-			  updateClass('du10',(player.dtChallCompleted[4]==undefined)?'redDTbutton':player.dtUpgrades.includes(10)?'greenDTbutton':'normDTbutton')
+			  updateClass('du10',(player.dtChallCompleted[4]==undefined)?'redDTbutton':haveDU(10)?'greenDTbutton':'normDTbutton')
 			  updateElement('du10','T9 & all computers produces twice as fast.<br>Cost: '+format(1e45))
 		  }
 		  if (false) {
 			  hideElement('dc6upgrades')
 		  } else {
 			  showElement('dc6upgrades','block')
-			  updateClass('du11',(player.dtChallCompleted[5]==undefined)?'redDTbutton':player.dtUpgrades.includes(11)?'greenDTbutton':'normDTbutton')
+			  updateClass('du11',(player.dtChallCompleted[5]==undefined)?'redDTbutton':haveDU(11)?'greenDTbutton':'normDTbutton')
 			  updateElement('du11','All computers have a 1.25x multiplier.<br>Cost: '+format(1e50))
-			  updateClass('du12',(player.dtChallCompleted[5]==undefined)?'redDTbutton':player.dtUpgrades.includes(12)?'greenDTbutton':'normDTbutton')
+			  updateClass('du12',(player.dtChallCompleted[5]==undefined)?'redDTbutton':haveDU(12)?'greenDTbutton':'normDTbutton')
 			  updateElement('du12','T1 & T2 Computers produces 10x as fast.<br>Cost: '+format(1e50))
 		  }
 		  if (false) {
 			  hideElement('dc7upgrades')
 		  } else {
 			  showElement('dc7upgrades','block')
-			  updateClass('du13',(player.dtChallCompleted[6]==undefined)?'redDTbutton':player.dtUpgrades.includes(13)?'greenDTbutton':'normDTbutton')
+			  updateClass('du13',(player.dtChallCompleted[6]==undefined)?'redDTbutton':haveDU(13)?'greenDTbutton':'normDTbutton')
 			  updateElement('du13','Every production boost you buy multiplies each computer\'s power by 1.01x. Additive.<br>Cost: '+format(1e60))
-			  updateClass('du14',(player.dtChallCompleted[6]==undefined)?'redDTbutton':player.dtUpgrades.includes(14)?'greenDTbutton':'normDTbutton')
+			  updateClass('du14',(player.dtChallCompleted[6]==undefined)?'redDTbutton':haveDU(14)?'greenDTbutton':'normDTbutton')
 			  updateElement('du14','T3 & T4 Computers produces 10x as fast.<br>Cost: '+format(1e55))
 		  }
 		  if (false) {
 			  hideElement('dc8upgrades')
 		  } else {
 			  showElement('dc8upgrades','block')
-			  updateClass('du15',(player.dtChallCompleted[7]==undefined)?'redDTbutton':player.dtUpgrades.includes(15)?'greenDTbutton':'normDTbutton')
+			  updateClass('du15',(player.dtChallCompleted[7]==undefined)?'redDTbutton':haveDU(15)?'greenDTbutton':'normDTbutton')
 			  updateElement('du15','Reduce first I.P. Change cost to 15.<br>Cost: '+format(1e60))
-			  updateClass('du16',(player.dtChallCompleted[7]==undefined)?'redDTbutton':player.dtUpgrades.includes(16)?'greenDTbutton':'normDTbutton')
+			  updateClass('du16',(player.dtChallCompleted[7]==undefined)?'redDTbutton':haveDU(16)?'greenDTbutton':'normDTbutton')
 			  updateElement('du16','T5 & T6 Computers produces 10x as fast.<br>Cost: '+format(1e60))
 		  }
 		  if (false) {
 			  hideElement('dc9upgrades')
 		  } else {
 			  showElement('dc9upgrades','block')
-			  updateClass('du17',(player.dtChallCompleted[8]==undefined)?'redDTbutton':player.dtUpgrades.includes(17)?'greenDTbutton':'normDTbutton')
+			  updateClass('du17',(player.dtChallCompleted[8]==undefined)?'redDTbutton':haveDU(17)?'greenDTbutton':'normDTbutton')
 			  updateElement('du17','Reduce network cost down to 90 for your second one.<br>Cost: 1e75.<br>Cost: '+format(1e75))
-			  updateClass('du18',(player.dtChallCompleted[8]==undefined)?'redDTbutton':player.dtUpgrades.includes(18)?'greenDTbutton':'normDTbutton')
+			  updateClass('du18',(player.dtChallCompleted[8]==undefined)?'redDTbutton':haveDU(18)?'greenDTbutton':'normDTbutton')
 			  updateElement('du18','T7 & T8 Computers produces 10x as fast.<br>Cost: '+format(1e65))
 		  }
 		  if (false) {
 			  hideElement('dc10upgrades')
 		  } else {
 			  showElement('dc10upgrades','block')
-			  updateClass('du19',(player.dtChallCompleted[9]==undefined)?'redDTbutton':player.dtUpgrades.includes(19)?'greenDTbutton':'normDTbutton')
+			  updateClass('du19',(player.dtChallCompleted[9]==undefined)?'redDTbutton':haveDU(19)?'greenDTbutton':'normDTbutton')
 			  updateElement('du19','You have a 1% chance to get a 100x production boost.<br>Cost: '+format(1e100))
-			  updateClass('du20',(player.dtChallCompleted[9]==undefined)?'redDTbutton':player.dtUpgrades.includes(20)?'greenDTbutton':'normDTbutton')
+			  updateClass('du20',(player.dtChallCompleted[9]==undefined)?'redDTbutton':haveDU(20)?'greenDTbutton':'normDTbutton')
 			  updateElement('du20','T9 & all computers produces 10x as fast.<br>Cost: '+format(1e70))
 		  }
 	  }
@@ -1249,10 +1249,14 @@ function tryFix(e) {
 }
 
 function buyDTU(id) {
-  if (player.dtUpgrades.includes(id)) return;
+  if (haveDU(id)) return;
   DTUcosts = [1e50,1e30,1e40,1e35,1e40,1e40,1e75,1e40,1e50,1e45,1e50,1e50,1e60,1e55,1e60,1e60,1e75,1e65,1e100,1e70]
   if (player.errors.gte(DTUcosts[id-1])&&player.dtChallCompleted[Math.floor((id-1)/2)]!=undefined) {
     player.errors = player.errors.sub(DTUcosts[id-1])
     player.dtUpgrades.push(id)
   }
+}
+
+function haveDU(id) {
+  return player.dtUpgrades.includes(id) && player.downtimeChallenge == 0
 }

@@ -203,9 +203,13 @@ font-size: 14px
 .tabButton:hover {
 	background-color: lightgray;
 }
-#bugfixes {
+.bugfixes {
 	font-size:8px;
 	color:#404040
+}
+.hurryUp {
+	font-size:8px;
+	color:#e50000
 }
 .warUpg1 {
 	width:160px;

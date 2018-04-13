@@ -19,7 +19,7 @@ const defaultPlayer = {
   playtime: 0, //total time spent online ingame
   time: 0, //total time displayed in stats
   version: 1.5, //very important
-  build: 20, //used for us to communicate commits, helps a lot
+  build: 21, //used for us to communicate commits, helps a lot
   hotfix: 1, //another way to use commits
   options: {
     hotkeys:true, //whether or not hotkeys are enabled (on by default)
@@ -326,10 +326,10 @@ function prestige(tier,challid=0) {
     else if (player.errors.lt(Number.MAX_VALUE) && tier == 4) return;
     else if (tier == Infinity && !confirm('Are you really sure to reset? You will lose everything you have!')) return;
   } else {
-		if (tier==3) {
-		  if (challid==-1 && !confirm('If you exit the challenge, you return to the normal world but lose everything except your networks.')) return;
-		  if (challid>0 && !confirm('If you start the challenge, you will reset as normal. These challenges will not reset on prestiges but reset when you reach the required amount of errors!')) return;
-		}
+	if (tier==3) {
+	  if (challid==-1) if (!confirm('If you exit the challenge, you return to the normal world but lose everything except your networks.')) return;
+	  if (challid>0) if (!confirm('If you start the challenge, you will reset as normal. These challenges will not reset on prestiges but reset when you reach the required amount of errors!')) return;
+	}
   }
   if (tier==Infinity) {
     //Highest tier - Hard reset
@@ -570,6 +570,7 @@ function buyWarUpg(id) {
 
 function gameTick() {
   var ePS=getEPS()
+  var errorstobugfixesRatio=new Decimal(0)
   if (player.time>0) {
     s=(new Date().getTime()-player.time)/1000 // number of seconds since last tick
     var addAmount=ePS.mul(s*(player.downtimeChallenge==8?0.1:1)).min(Decimal.sub(Number.MAX_VALUE,player.errors))
@@ -578,8 +579,9 @@ function gameTick() {
     player.playtime+=s
     if (player.errors.gte(Number.MAX_VALUE)) prestige(4);
 	if (player.downtimeChallenge==5 && ePS.gt(0)) {
-        player.bugfixes=player.bugfixes.add(player.bugfixes.div(player.errors.gte(1e80)?3:10).max(1).times(s))
-		if (player.bugfixes.gt(player.errors)) prestige(2,-2)
+		player.bugfixes=player.bugfixes.add(player.bugfixes.div(Math.min(80-player.errors.log10(),10)).max(1).times(s))
+		errorstobugfixesRatio=player.errors.div(player.bugfixes)
+		if (errorstobugfixesRatio.lt(1)) prestige(2,-2)
 	}
     move()
   }
@@ -588,7 +590,15 @@ function gameTick() {
   updateElement('eps',(ePS.eq(0))?0:format(ePS,1,0,false))
   if (player.downtimeChallenge==5) {
 	  showElement('bugfixes','block')
-	  updateElement('bugfixes','There are '+format(player.bugfixes,1,0,false)+' bugfixes.'+(player.errors.gte(1e80)?' (He\'s catching up! HURRY!)':''))
+	  var hurryUp=false
+	  if (player.errors.gt(1e70)) hurryUp=errorstobugfixesRatio.lt(1e10)
+	  if (hurryUp) {
+		  updateElement('bugfixes','<b>There are '+format(player.bugfixes,1,0,false)+' bugfixes. (He\'s catching up! HURRY!)</b>')
+		  updateClass('bugfixes','hurryUp')
+	  } else {
+		  updateElement('bugfixes','There are '+format(player.bugfixes,1,0,false)+' bugfixes.')
+		  updateClass('bugfixes','bugfixes')
+	  }
   } else {
 	  hideElement('bugfixes','block')
   }

@@ -360,7 +360,7 @@ function prestige(tier,challid=0) {
   player.genUpgradeCost=new Decimal(1000)
   player.bugfixes=new Decimal(0)
   if (tier==1) {
-    player.prestiges[0] += (challid == -2?player.prestiges[0]>0?-1:0:1)
+    player.prestiges[0] += (challid == -2?player.prestiges[0]>0?-player.prestiges[0]:0:1)
     switch(player.prestiges[2]) {
       case 0: switch(player.prestiges[0]) {
         case 1: newStory(4); break;
@@ -417,7 +417,7 @@ function prestige(tier,challid=0) {
   if (player.downtimeChallenge == 1 && player.prestiges[0]==4) completeChall();
   if (player.downtimeChallenge == 2 && player.prestiges[0]==8) completeChall();
   if (player.downtimeChallenge == 4 && player.prestiges[1]==10) completeChall();
-  if (player.downtimeChallenge == 4 && player.prestiges[1]==8) completeChall();
+  if (player.downtimeChallenge == 5 && player.prestiges[1]==8) completeChall();
   if (player.downtimeChallenge == 7 && player.prestiges[0]==9) completeChall();
   if (player.downtimeChallenge == 8 && player.prestiges[1]==5) completeChall();
   if (player.downtimeChallenge == 11 && player.prestiges[2]==2) completeChall();

@@ -378,7 +378,6 @@ function prestige(tier,challid=0) {
   }
   if (tier==2) {
     player.prestiges[1] += (challid == -2?player.prestiges[1]>0?-1:0:1)
-    player.prestiges[1]++;
     switch (player.prestiges[1]) {
       case 1: newStory(8); break;
       case 2: newStory(10); break;
@@ -578,7 +577,7 @@ function gameTick() {
     player.playtime+=s
     if (player.errors.gte(Number.MAX_VALUE)) prestige(4);
 	if (player.downtimeChallenge==5 && ePS.gt(0)) {
-        player.bugfixes=player.bugfixes.add(player.bugfixes.div(20).max(0.1).times(s))
+        player.bugfixes=player.bugfixes.add(player.bugfixes.div(10).max(1).times(s))
 		if (player.bugfixes.gt(player.errors)) prestige(2,-2)
 	}
     move()

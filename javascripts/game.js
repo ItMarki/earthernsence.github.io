@@ -432,6 +432,7 @@ function completeChall() {
     case 1: newStory(22);break;
     case 4: newStory(23);break;
   } 
+  player.bugfixes = 0
 }
 
 function getMultTier(tier) {  let ret = new Decimal.pow(((player.downtimeChallenge==4&&tier>5)||player.downtimeChallenge==6)?5:10,tier-1)
@@ -577,7 +578,7 @@ function gameTick() {
     player.playtime+=s
     if (player.errors.gte(Number.MAX_VALUE)) prestige(4);
 	if (player.downtimeChallenge==5 && ePS.gt(0)) {
-        player.bugfixes=player.bugfixes.add(player.bugfixes.div(100).max(0.1).times(s))
+        player.bugfixes=player.bugfixes.add(player.bugfixes.div(20).max(0.1).times(s))
 		if (player.bugfixes.gt(player.errors)) prestige(2,-2)
 	}
     move()
@@ -587,7 +588,7 @@ function gameTick() {
   updateElement('eps',(ePS.eq(0))?0:format(ePS,1,0,false))
   if (player.downtimeChallenge==5) {
 	  showElement('bugfixes','block')
-	  updateElement('bugfixes','There are '+format(player.bugfixes)+' bugfixes.')
+	  updateElement('bugfixes','There are '+format(player.bugfixes,1,0,false)+' bugfixes.')
   } else {
 	  hideElement('bugfixes','block')
   }

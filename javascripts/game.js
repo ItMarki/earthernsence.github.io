@@ -674,14 +674,12 @@ function gameTick() {
     }
     updateElement('upgradereq','Next at 5 I.P. changes')
   }
-  if (player.prestiges[1]>=5) updateElement('prestige2Type','Internet boost');
-  else updateElement('prestige2Type','I.P. Change');
-  if (player.prestiges[1]<5) {
-    updateElement('ipChange','Gain Tier '+ROMAN_NUMERALS[player.prestiges[1]+5]+' Computer, but resets everything.')
+  if (player.prestiges[1]<5) updateElement('ipChange','Gain Tier '+ROMAN_NUMERALS[player.prestiges[1]+5]+' Computer, but resets everything.');
+  else updateElement('ipChange','Gain boost for computers, but resets everything.');
+  if (player.prestiges[1]<5 || player.downtimeChallenge != 0) {
     showElement('upgradereq','inline')
     hideElement('upgcate2')
   } else {
-    updateElement('ipChange','Gain boost for computers, but resets everything.')
     hideElement('upgradereq')
     showElement('upgcate2','inline')
     for (i=14;i<17;i++) {
@@ -693,6 +691,8 @@ function gameTick() {
     else if (checkIfAffordable(22)) updateClass('upg'+22+'button','')
     else updateClass('upg'+22+'button','cantBuy')
   }
+  if (player.prestiges[1]>=5) updateElement('prestige2Type','Internet boost');
+  else updateElement('prestige2Type','I.P. Change');
   if (player.downtimeChallenge==9) {
 	  hideElement('networks')
   } else {

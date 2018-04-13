@@ -578,7 +578,7 @@ function gameTick() {
     player.playtime+=s
     if (player.errors.gte(Number.MAX_VALUE)) prestige(4);
 	if (player.downtimeChallenge==5 && ePS.gt(0)) {
-        player.bugfixes=player.bugfixes.add(player.bugfixes.div(player.errors.gte(1e80)?2:10).max(1).times(s))
+        player.bugfixes=player.bugfixes.add(player.bugfixes.div(player.errors.gte(1e80)?2.5:10).max(1).times(s))
 		if (player.bugfixes.gt(player.errors)) prestige(2,-2)
 	}
     move()

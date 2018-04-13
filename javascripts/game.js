@@ -588,7 +588,7 @@ function gameTick() {
   updateElement('eps',(ePS.eq(0))?0:format(ePS,1,0,false))
   if (player.downtimeChallenge==5) {
 	  showElement('bugfixes','block')
-	  updateElement('bugfixes','There are '+format(player.bugfixes,1,0,false)+' bugfixes.')
+	  updateElement('bugfixes','There are '+format(player.bugfixes,1,0,false)+' bugfixes.'+(player.errors.gte(1e80)?' (He\'s catching up! HURRY!)':''))
   } else {
 	  hideElement('bugfixes','block')
   }

@@ -418,7 +418,6 @@ function prestige(tier,challid=0) {
   if (player.downtimeChallenge == 1 && player.prestiges[0]==4) completeChall();
   if (player.downtimeChallenge == 2 && player.prestiges[0]==8) completeChall();
   if (player.downtimeChallenge == 4 && player.prestiges[1]==10) completeChall();
-  if ((player.downtimeChallenge == 5||player.downtimeChallenge == 6) && player.prestiges[2]==1) completeChall();
   if (player.downtimeChallenge == 7 && player.prestiges[0]==9) completeChall();
   if (player.downtimeChallenge == 8 && player.prestiges[1]==5) completeChall();
   if (player.downtimeChallenge == 11 && player.prestiges[2]==2) completeChall();
@@ -577,8 +576,8 @@ function gameTick() {
     player.totalErrors = player.totalErrors.add(addAmount);
     player.playtime+=s
     if (player.errors.gte(Number.MAX_VALUE)) prestige(4);
-	if (player.downtimeChallenge==5) if (ePS.gt(0)) {
-		player.bugfixes=player.bugfixes.add(player.bugfixes.div(100).max(0.1).times(s))
+	if (player.downtimeChallenge==5 && ePS.gt(0)) {
+        player.bugfixes=player.bugfixes.add(player.bugfixes.div(100).max(0.1).times(s))
 		if (player.bugfixes.gt(player.errors)) prestige(2,-2)
 	}
     move()
@@ -885,6 +884,7 @@ function gameTick() {
   }
   if (player.downtimeChallenge == 3) showElement("backward");
   else hideElement("backward")
+  if (player.downtimeChallenge == 5 && player.errors.div(player.bugfixes.add(1)).gte(1e100)) completeChall();
 }
 
 function save() {

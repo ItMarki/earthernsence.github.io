@@ -20,7 +20,7 @@ const defaultPlayer = {
   time: 0, //total time displayed in stats
   version: 1.5, //very important
   build: 21, //used for us to communicate commits, helps a lot
-  hotfix: 1, //another way to use commits
+  hotfix: 2, //another way to use commits
   options: {
     hotkeys:true, //whether or not hotkeys are enabled (on by default)
     notation:0 //notation setting, see options
@@ -579,7 +579,7 @@ function gameTick() {
     player.playtime+=s
     if (player.errors.gte(Number.MAX_VALUE)) prestige(4);
 	if (player.downtimeChallenge==5 && ePS.gt(0)) {
-		player.bugfixes=player.bugfixes.add(player.bugfixes.div(Math.min(80-player.errors.log10(),10)).max(1).times(s))
+		player.bugfixes=player.bugfixes.add(player.bugfixes.div(Math.max(Math.min(80-player.errors.log10(),10),3)).max(1).times(s))
 		errorstobugfixesRatio=player.errors.div(player.bugfixes)
 		if (errorstobugfixesRatio.lt(1)) prestige(2,-2)
 	}

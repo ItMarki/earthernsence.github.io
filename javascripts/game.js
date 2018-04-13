@@ -377,7 +377,7 @@ function prestige(tier,challid=0) {
     player.prestiges[0] = 0
   }
   if (tier==2) {
-    player.prestiges[1] += (challid == -2?player.prestiges[1]>0?-1:0:1)
+    player.prestiges[1] += (challid == -2?(player.prestiges[1]>0?-1:0):1)
     switch (player.prestiges[1]) {
       case 1: newStory(8); break;
       case 2: newStory(10); break;

@@ -1246,7 +1246,6 @@ function tryFix(e,manual=false) {
       } else {
         switch (typeof defaultPlayer[foo]) {
           case "object":
-            console.log('HI')
             if (player[foo].constructor.name == "e" && (isNaN(player[foo].mantissa) || isNaN(player[foo].exponent))) {
               player[foo] = defaultPlayer[foo]
               console.log("Resetting "+foo+" to default valve due to NaN's everywhere")

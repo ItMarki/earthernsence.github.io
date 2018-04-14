@@ -1217,45 +1217,53 @@ function recover() {
   lastError = "Nothing"
   testing = 0
 }
-function tryFix(e) {
-  if (triedFix) {
+function tryFix(e,manual=false) {
+  if (!manual && triedFix) {
     console.log("ANOTHER error? ahhhh")
   }
-  messages = e.message.split(" ")
-  if (e.message == lastError) {
+  if (!manual) messages = e.message.split(" ")
+  if (!manual && e.message == lastError) {
     console.log("SAME ERROR?")
     console.log('Sorry! Something is wrong with the game! Stopping the game, you can restart the game with recover() if you think you fixed it')
     gameFucked = true
     return false
   }
-  if (messages[0].split(".")[0] == "player") {
-    console.log('Detected save error, trying to fix it...')
+  if (manual || messages[0].split(".")[0] == "player") {
+    if (!manual) console.log('Detected save error, trying to fix it...')
+    else console.log('Trying to fix your save...')
     if (typeof player != 'object') {
       console.log('Sorry! the whole save is ruined! loading default save...')
       load("default")
       return
     }
-    
     Object.keys(defaultPlayer).forEach((foo) => { // Can't use var for name :(
       if (!(foo in player)) {
         player[foo] = defaultPlayer[foo]
         console.log("Added missing "+foo+" data into savefile")
+      } else if (typeof player[foo] != typeof defaultPlayer[foo]) {
+        player[foo] = defaultPlayer[foo]
+        console.log("Resetting "+foo+" to default valve")
+      } else {
+        switch (typeof defaultPlayer[foo]) {
+          case "object":
+            console.log('HI')
+            if (player[foo].constructor.name == "e" && (isNaN(player[foo].mantissa) || isNaN(player[foo].exponent))) {
+              player[foo] = defaultPlayer[foo]
+              console.log("Resetting "+foo+" to default valve due to NaN's everywhere")
+            }
+            break;
+        }
       }
     })
-    
-    toFix = messages[0].split(".")[1]
-    player[toFix] = defaultPlayer[toFix]
-    console.log("Tried to fix " + toFix)
-    if (toFix == "errors") {
-      console.log("(yeah I know that seems to be weird, fix errors in a game about errors)")
-    }
     console.log("Done, hope this works...")
   } else {
     console.log("I have no idea what happened, hope this wont happen again...")
   }
-  lastError = e.message
-  triedFix = true
-  testing = 50
+  if (!manual) {
+    lastError = e.message
+    triedFix = true
+    testing = 50
+  }
 }
 
 function buyDTU(id) {

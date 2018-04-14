@@ -253,7 +253,7 @@ function updateCosts() {
 }
 
 function buyGen(tier,bulk=1) {
-  if (player.errors.gte(costs.comp[tier]) && !(player.downtimeChallenge==3 && tier != 0 && player.compAmount[tier] >= player.compAmount[tier])) {
+  if (player.errors.gte(costs.comp[tier]) && !(player.downtimeChallenge==3 && tier != 0 && player.compAmount[tier] >= player.compAmount[tier-1])) {
     player.errors = player.errors.sub(costs.comp[tier])
     player.compAmount[tier]+=1
     if (player.downtimeChallenge==3 && player.compAmount[8] >= 60) completeChall();

@@ -32,13 +32,14 @@ tab='computers'
 oldtab=tab
 dttab='downtimeChallenges'
 olddttab=dttab
+wartab='warUpgTab'
+oldwartab=wartab
 percentage=0
 realPercentage=0
 const story = ['','','','','']
 const TIER_NAMES = ['first','second','third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 'ninth']; // can add more if more gens/story elements, cuz that uses this too
 const ROMAN_NUMERALS=[]
 const costMult=[2,2.5,3,4,5,6,8,10,12]
-const warUpgCosts = [1,1,2,1,2]
 
 var costs={comp:[new Decimal(10),new Decimal(100),new Decimal(1e3),new Decimal(1e4),new Decimal(1e6),new Decimal(1e8),new Decimal(1e10),new Decimal(1e13),new Decimal(1e16)],boost:new Decimal(0),upgs:[new Decimal(0)]}
 var storyMessages=["Pancakes is ready!",
@@ -221,6 +222,10 @@ function switchDTTab(tabid) {
   dttab=tabid
 }
 
+function switchWarTab(tabid) {
+  wartab=tabid
+}
+
 function changeMults() {
   if (player.buyMult == 1) {
     player.buyMult = 5;
@@ -277,7 +282,7 @@ function maxGen() {
       if (player.downtimeChallenge==3 && i != 0) bulk = Math.min(bulk,player.compAmount[i-1] - player.compAmount[i])
       player.errors=player.errors.sub(Decimal.pow(costMult[i],bulk).sub(1).div(costMult[i]-1).times(costs.comp[i]))
       player.compAmount[i]+=bulk
-      if (player.downtimeChallenge==3 && player.compAmount[8] >= 60) completeChall();
+      if (player.downtimeChallenge==3 && player.compAmount[8] >= 55) completeChall();
       if (player.downtimeChallenge==9&&player.compAmount[8]>99) completeChall();
       updateCosts()
 
@@ -559,6 +564,7 @@ function getUpgradeMultiplier(id,tier) {
 }
 
 function buyWarUpg(id) {
+  const warUpgCosts = [1,1,2,1,2,5,10,15,20,30,30,60,120]
   if (!player.warningUpgrades.includes(id)) {
     var warnCost = warUpgCosts[id-1]
     if (player.warnings.gte(warnCost)) {
@@ -621,6 +627,11 @@ function gameTick() {
     hideElement(olddttab+'Tab')
     showElement(dttab+'Tab','block')
     olddttab=dttab
+  }
+  if (wartab!=oldwartab) {
+    hideElement(oldwartab)
+    showElement(wartab)
+    oldwartab=wartab
   }
   if (player.downtimeChallenge==11) {
 	  hideElement('upgradeComputers')

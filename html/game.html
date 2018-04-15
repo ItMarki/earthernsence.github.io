@@ -40,7 +40,7 @@
 	    <table id="d" align=center style=''><tr><td>
           <button id="dt1" class='normDTbutton' onclick='prestige(3,1)'>Production boost effectiveness is halved.<br>Goal: UC4.</button>
           <button id="dt2" class='normDTbutton' onclick='prestige(3,2)'>T5 and higher are useless.<br>Goal: UC8.</button>
-		  <button id="dt3" class='normDTbutton' onclick='prestige(3,3)'>Your production is divided by 1 + 0.2*x when you have x computers. And your computer amount must be descending order.<br>Goal: 60 T9.</button>
+		  <button id="dt3" class='normDTbutton' onclick='prestige(3,3)'>Your production is divided by 1 + 0.2*x when you have x computers. And your computer amount must be descending order.<br>Goal: 55 T9.</button>
 		  <button id="dt4" class='normDTbutton' onclick='prestige(3,4)'>Higher tier computers are nerfed.<br>Goal: IB5.</button>
 		    <button id="dt5" class='normDTbutton' onclick='prestige(3,5)' style='font-size:10px'>There is another "player" playing along side you. They generate "Bugfixes." If the amount of bugfixes exceeds your amount of errors, you lose an I.P. Change.<br>Goal: IB3.</button><br><br>
 <button id="dt6" class='normDTbutton' onclick='prestige(3,6)'>All computers are nerfed.<br>Goal: N1.</button>
@@ -135,8 +135,8 @@
 			  
   </div>
 <div id='warningTab' style='display:none'>
-	<button onclick='switchTab("warUpgTab")'>Warning Upgrades</button><button onclick='switchTab("errorExpansionTab")'>Error Expansion</button>
-	<div id='warUpgTab' style='display:none'>
+  <div id='warTabbuttons'><button onclick='switchWarTab("warUpgTab")'>Warning Upgrades</button><button onclick='switchWarTab("errorExpansionTab")'>Error Expansion</button></div>
+	<div id='warUpgTab' style='display:inline'>
 	<h1 id="warningHeader"> Warning Upgrades </h1>
 	<table align=center><tr><td><button class='warUpg1' onClick='buyWarUpg(1)' id="warUpg">Production boost over total time. <br>Cost: 1 W.</br><br> Currently <text id="w1Multi">X</text>x.</button></td></tr></table>
 	<table align=center><tr><td><button class='warUpg2' onClick='buyWarUpg(2)' id="warUpg">Production boost based on how many warning upgrades you have. (warUpg*2) <br>Cost: 1 W.</br><br> Currently <text id="w2Multi">X</text>x.</button></td></tr></table>
@@ -148,9 +148,9 @@
 	<table align=center><tr><td><button class='warUpg8' id="warUpg">Begin the generation of TIII Computers (1 per 8 seconds)<br>Cost: 15 W</button</td></tr></br></table>
 	<table align=center><tr><td><button class='warUpg9' id="warUpg">Begin the generation of TIV Computers (1 per 16 seconds)<br>Cost: 20 W</button></td></tr></br></table>
 	<table align=center><tr><td><button class='warUpg10' id="warUpg">Begin the generation of Warnings based on your fastest warn. (fastest warn time * 1000)<br>Cost: 30 W</button></td></tr></br></table>
-	<table align=center><tr><td><button class='warUpg11' id="warUpg">You start with T1-T6 unlocked.<br>Cost: 30 W</td></tr></br></button></table>
-	<table align=center><tr><td><button class='warUpg12' id="warUpg">You start with T1-T9 unlocked.<br>Cost: 60 W</td></tr></br></button></table>
-	<table align=center><tr><td><button class='warUpg13' id="warUpg">You start with T1-T9 unlocked and a Network.<br>Cost: 120 W</td></tr></br></button></table>
+	<table align=center><tr><td><button class='warUpg11' id="warUpg">You start with IP3.<br>Cost: 30 W</td></tr></br></button></table>
+	<table align=center><tr><td><button class='warUpg12' id="warUpg">You start with IP6.<br>Cost: 60 W</td></tr></br></button></table>
+	<table align=center><tr><td><button class='warUpg13' id="warUpg">You start with a Network.<br>Cost: 120 W</td></tr></br></button></table>
 </div>	
 <div id='errorExpansionTab' style='display:none'>
 	<h1 id="warningHeader">Error Expanion</h1>

@@ -36,6 +36,10 @@ wartab='warUpgTab'
 oldwartab=wartab
 percentage=0
 realPercentage=0
+warUpg6ready = false
+warUpg7ready = false
+warUpg8ready = false
+warUpg9ready = false
 const story = ['','','','','']
 const TIER_NAMES = ['first','second','third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 'ninth']; // can add more if more gens/story elements, cuz that uses this too
 const ROMAN_NUMERALS=[]
@@ -591,6 +595,26 @@ function gameTick() {
 		errorstobugfixesRatio=player.errors.div(player.bugfixes)
 		if (errorstobugfixesRatio.lt(1)) prestige(2,-2)
 	}
+    if (warUpg6ready && player.warningUpgradaes.includes(6)) {
+      player.compAmount[0]++
+      warUpg6ready = false
+      setTimeout(function() { warUpg6ready = true},2000)
+    }
+    if (warUpg7ready && player.warningUpgradaes.includes(7)) {
+      player.compAmount[1]++
+      warUpg7ready = false
+      setTimeout(function() { warUpg7ready = true},4000)
+    }
+    if (warUpg8ready && player.warningUpgradaes.includes(8)) {
+      player.compAmount[2]++
+      warUpg8ready = false
+      setTimeout(function() { warUpg8ready = true},8000)
+    }
+    if (warUpg9ready && player.warningUpgradaes.includes(9)) {
+      player.compAmount[3]++
+      warUpg9ready = false
+      setTimeout(function() { warUpg9ready = true},16000)
+    }
     move()
   }
   player.time = new Date().getTime()
@@ -1290,3 +1314,9 @@ function buyDTU(id) {
 function haveDU(id) {
   return player.dtUpgrades.includes(id) && player.downtimeChallenge == 0
 }
+
+//Insert all time based shits down here
+setTimeout(function() { warUpg6ready = true},2000)
+setTimeout(function() { warUpg7ready = true},4000)
+setTimeout(function() { warUpg8ready = true},8000)
+setTimeout(function() { warUpg9ready = true},16000)

@@ -13,14 +13,19 @@ const defaultPlayer = {
   dtUpgrades: [],
   dtChallCompleted: {},
   bugfixes: new Decimal(0),
+  warningPlaytime: 0,
+  fastestWarning: Number.MAX_VALUE,
+  lastWarnings: [],
   warnings: new Decimal(0), //displayed on the bottom bar
   totalWarnings: new Decimal(0), //displayed in stats
   warningUpgrades: [],
+  warnUpgsGenerationLastTick: {},
+  generatedCompAmount: [0,0,0,0,0,0,0,0,0],
   playtime: 0, //total time spent online ingame
   time: 0, //total time displayed in stats
   version: 1.5, //very important
-  build: 21, //used for us to communicate commits, helps a lot
-  hotfix: 2, //another way to use commits
+  build: 22, //used for us to communicate commits, helps a lot
+  hotfix: 1, //another way to use commits
   options: {
     hotkeys:true, //whether or not hotkeys are enabled (on by default)
     notation:0 //notation setting, see options
@@ -32,14 +37,12 @@ tab='computers'
 oldtab=tab
 dttab='downtimeChallenges'
 olddttab=dttab
+statsTab='statisticsTab'
+oldStatsTab=statsTab
 wartab='warUpgTab'
 oldwartab=wartab
 percentage=0
 realPercentage=0
-warUpg6ready = false
-warUpg7ready = false
-warUpg8ready = false
-warUpg9ready = false
 const story = ['','','','','']
 const TIER_NAMES = ['first','second','third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 'ninth']; // can add more if more gens/story elements, cuz that uses this too
 const ROMAN_NUMERALS=[]
@@ -74,6 +77,7 @@ var storyMessages=["Pancakes is ready!",
 "More downtime? Wait a minute... just do it anyways.",
 "Now you've gotta do it all over again. But you are <i>stronger</i>. Get out there! Make me proud!",
 "Congratulations! You just beat the game! (for now...)<br>Why not you play other games like the inspiration at the title screen until the next update comes out?"]
+var warnUpgsGenerationDuration={6:2,7:4,8:8,9:16,10:Number.MAX_VALUE}
 
 function updateElement(elementID,value) {
   document.getElementById(elementID).innerHTML=value
@@ -230,6 +234,10 @@ function switchWarTab(tabid) {
   wartab=tabid
 }
 
+function switchStatsTab(tabid) {
+  statsTab=tabid
+}
+
 function changeMults() {
   if (player.buyMult == 1) {
     player.buyMult = 5;
@@ -346,6 +354,7 @@ function prestige(tier,challid=0) {
     load(btoa(JSON.stringify(defaultPlayer)))
     console.log('I mean \'Game resetted!\', sorry about that.')
     updateStory()
+    warnUpgsGenerationDuration[10]=Number.MAX_VALUE
     save()
   }
   if (tier>3) {
@@ -353,6 +362,16 @@ function prestige(tier,challid=0) {
     player.dtChallCompleted= {}
     player.dtUpgrades = []
     var warningGain=1
+    if (tier==4) {
+    	if (player.fastestWarning>player.warningPlaytime) {
+    		player.fastestWarning=player.warningPlaytime
+    		warnUpgsGenerationDuration[10]=player.fastestWarning*1000
+    	}
+    	if (challid==0?player.lastWarnings.unshift([player.warningPlaytime,warningGain])>5:false) {
+    		player.lastWarnings.pop()
+    	}
+    }
+    player.warningPlaytime=0
     player.warnings=(tier==4)?player.warnings.add(warningGain):new Decimal(0)
     player.totalWarnings=(tier==Infinity)?new Decimal(0):player.totalWarnings.add(warningGain)
   }
@@ -364,6 +383,7 @@ function prestige(tier,challid=0) {
   
   player.errors = new Decimal(10); //current errors
   player.compAmount=(tier<4&&haveDU(3)&&((player.downtimeChallenge==0&&challid==0)||(tier==3&&player.downtimeChallenge!=0&&challid<1)))?[1,1,1,1,0,0,0,0]:[0,0,0,0,0,0,0,0,0]
+  player.generatedCompAmount=[0,0,0,0,0,0,0,0,0]
   player.boostPower=0
   player.time=new Date().getTime()
   player.genUpgradeCost=new Decimal(1000)
@@ -495,7 +515,7 @@ function getMultTier(tier) {  let ret = new Decimal.pow(((player.downtimeChallen
 function getEPS() {
   let ret = new Decimal(0);
   for (let i=0;i<9;i++) {
-    ret = ret.add(Decimal.mul(getMultTier(i+1),player.compAmount[i]))
+    ret = ret.add(Decimal.mul(getMultTier(i+1),player.compAmount[i]+player.generatedCompAmount[i]))
   }
   return ret;
 }
@@ -576,6 +596,7 @@ function buyWarUpg(id) {
     if (player.warnings.gte(warnCost)) {
       player.warnings=player.warnings.sub(warnCost)
       player.warningUpgrades.push(id)
+      if (id>5&&id<11) player.warnUpgsGenerationLastTick[id]=player.playtime
     }
   }
 }
@@ -589,31 +610,24 @@ function gameTick() {
     player.errors = player.errors.add(addAmount);
     player.totalErrors = player.totalErrors.add(addAmount);
     player.playtime+=s
+    player.warningPlaytime+=s
     if (player.errors.gte(Number.MAX_VALUE)) prestige(4);
-	if (player.downtimeChallenge==5 && ePS.gt(0)) {
-		player.bugfixes=player.bugfixes.add(player.bugfixes.div(Math.max(Math.min(80-player.errors.log10(),10),3)).max(1).times(s))
-		errorstobugfixesRatio=player.errors.div(player.bugfixes)
-		if (errorstobugfixesRatio.lt(1)) prestige(2,-2)
-	}
-    if (warUpg6ready && player.warningUpgradaes.includes(6)) {
-      player.compAmount[0]++
-      warUpg6ready = false
-      setTimeout(function() { warUpg6ready = true},2000)
+    if (player.downtimeChallenge==5 && ePS.gt(0)) {
+    	player.bugfixes=player.bugfixes.add(player.bugfixes.div(Math.max(Math.min(80-player.errors.log10(),10),3)).max(1).times(s))
+    	errorstobugfixesRatio=player.errors.div(player.bugfixes)
+    	if (errorstobugfixesRatio.lt(1)) prestige(2,-2)
     }
-    if (warUpg7ready && player.warningUpgradaes.includes(7)) {
-      player.compAmount[1]++
-      warUpg7ready = false
-      setTimeout(function() { warUpg7ready = true},4000)
-    }
-    if (warUpg8ready && player.warningUpgradaes.includes(8)) {
-      player.compAmount[2]++
-      warUpg8ready = false
-      setTimeout(function() { warUpg8ready = true},8000)
-    }
-    if (warUpg9ready && player.warningUpgradaes.includes(9)) {
-      player.compAmount[3]++
-      warUpg9ready = false
-      setTimeout(function() { warUpg9ready = true},16000)
+    for (i in player.warnUpgsGenerationLastTick) {
+		i=parseInt(i)
+    	var occurrences=Math.floor((player.playtime-player.warnUpgsGenerationLastTick[i])/warnUpgsGenerationDuration[i])
+    	if (occurrences>0) {
+			player.warnUpgsGenerationLastTick[i]+=occurrences*warnUpgsGenerationDuration[i]
+			if (i==10) {
+				player.warnings=player.warnings.add(occurrences)
+			} else {
+				player.generatedCompAmount[i-6]+=occurrences
+			}
+    	}
     }
     move()
   }
@@ -658,6 +672,11 @@ function gameTick() {
     hideElement(oldwartab)
     showElement(wartab)
     oldwartab=wartab
+  }
+  if (statsTab!=oldStatsTab) {
+    hideElement(oldStatsTab)
+    showElement(statsTab)
+    oldStatsTab=statsTab
   }
   if (player.downtimeChallenge==11) {
 	  hideElement('upgradeComputers')
@@ -766,8 +785,8 @@ function gameTick() {
   }
   if (tab=='computers') {
     for (let i=0;i<Math.min(player.prestiges[1]+4,9);i++) {
-      updateElement("cop"+(i+1)+"mult",player.compAmount[i]==0?'':'('+format(getMultTier(i+1))+'/s)')
-      updateElement("cop"+(i+1),"Cost: " + format(costs.comp[i]) + " (" + player.compAmount[i] + ")")
+      updateElement("cop"+(i+1)+"mult",(player.compAmount[i]+player.generatedCompAmount[i])==0?'':'('+format(getMultTier(i+1).times(player.compAmount[i]+player.generatedCompAmount[i]))+'/s)')
+      updateElement("cop"+(i+1),"Cost: " + format(costs.comp[i]) + " (" + player.compAmount[i] + (player.generatedCompAmount[i]==0?'':' + '+player.generatedCompAmount[i]) + ")")
       if (player.errors.lt(costs.comp[i]) || (player.downtimeChallenge==3 && i != 0 && player.compAmount[i] >= player.compAmount[i-1])) updateClass("cop"+(i+1),'cantBuy')
       else {
           updateClass("cop"+(i+1),'')
@@ -788,42 +807,62 @@ function gameTick() {
     updateElement("w5Multi",getUpgradeMultiplier(5).toFixed(2))
   }
   if (tab=='stats') {
-    updateElement('statsTotal','You have gained a total of '+format(player.totalErrors)+' errors.')
-    updateElement('statsPlaytime','You have played for '+formatTime(player.playtime)+'.')
-    if (player.prestiges[0]>0) {
-      showElement('statsPrestige1','block')
-      updateElement('statsPrestige1','You upgraded your computers, '+format(player.prestiges[0],0,1)+' times.')
-    } else {
-      hideElement('statsPrestige1')
-    }
-    if (player.prestiges[1]>0) {
-      showElement('statsPrestige2','block')
-      if (player.prestiges[1]<6) {
-        updateElement('statsPrestige2','You have '+player.prestiges[1]+' new computers.')
-      } else {
-        updateElement('statsPrestige2','You have 5 new computers and boosted your computers '+format(player.prestiges[1]-5,0,1)+' times.')
-      }
-    } else {
-      hideElement('statsPrestige2')
-    }
-    if (player.prestiges[2]>0) {
-      showElement('statsPrestige3','block')
-      updateElement('statsPrestige3','You have '+format(player.prestiges[2],0,1)+' networks.')
-    } else {
-      hideElement('statsPrestige3')
-    }
-    if (player.prestiges[3]>0||player.totalWarnings.gt(0)) {
-      showElement('statsPrestige4','block')
-      if (player.prestiges[3]>0) {
-        showElement('statsP4times','block')
-        updateElement('statsP4times','You have warned '+format(player.prestiges[3],0,1)+' times.')
-      } else {
-        hideElement('statsP4times')
-      }
-      updateElement('statsP4totalWarnings','You have gained a total of '+format(player.totalWarnings)+' warnings.')
-    } else {
-      hideElement('statsPrestige4')
-    }
+	if (player.prestiges[3]>0||player.warnings.gt(0)) {
+		showElement('statsTabButtons','block')
+	} else {
+		hideElement('statsTabButtons')
+	}
+	if (statsTab=='statisticsTab') {
+		updateElement('statsTotal','You have gained a total of '+format(player.totalErrors)+' errors.')
+		updateElement('statsPlaytime','You have played for '+formatTime(player.playtime)+'.')
+		if (player.prestiges[0]>0) {
+		  showElement('statsPrestige1','block')
+		  updateElement('statsPrestige1','You upgraded your computers, '+format(player.prestiges[0],0,1)+' times.')
+		} else {
+		  hideElement('statsPrestige1')
+		}
+		if (player.prestiges[1]>0) {
+		  showElement('statsPrestige2','block')
+		  if (player.prestiges[1]<6) {
+			updateElement('statsPrestige2','You have '+player.prestiges[1]+' new computers.')
+		  } else {
+			updateElement('statsPrestige2','You have 5 new computers and boosted your computers '+format(player.prestiges[1]-5,0,1)+' times.')
+		  }
+		} else {
+		  hideElement('statsPrestige2')
+		}
+		if (player.prestiges[2]>0) {
+		  showElement('statsPrestige3','block')
+		  updateElement('statsPrestige3','You have '+format(player.prestiges[2],0,1)+' networks.')
+		} else {
+		  hideElement('statsPrestige3')
+		}
+		if (player.prestiges[3]>0||player.totalWarnings.gt(0)) {
+		  showElement('statsPrestige4','block')
+		  if (player.prestiges[3]>0) {
+			showElement('statsP4times','block')
+			updateElement('statsP4times','You have warned '+format(player.prestiges[3],0,1)+' times.')
+		  } else {
+			hideElement('statsP4times')
+		  }
+		  if (player.fastestWarning<Number.MAX_VALUE) {
+			showElement('statsP4fastestTime','block')
+			updateElement('statsP4fastestTime','Your fastest warning is in '+formatTime(player.fastestWarning)+'.')
+		  } else {
+			hideElement('statsP4fastestTime')
+		  }
+		  updateElement('statsP4totalWarnings','You have gained a total of '+format(player.totalWarnings)+' warnings.')
+		  updateElement('statsP4playtime','Your time in this current warning is '+formatTime(player.warningPlaytime)+'.')
+		} else {
+		  hideElement('statsPrestige4')
+		}
+	}
+	if (statsTab=='lastWarningsTab') {
+		for (i=0;i<5;i++) {
+			if (player.lastWarnings[i]==undefined) updateElement('statsPrevWarning'+(i+1),'')
+			else updateElement('statsPrevWarning'+(i+1),'The '+(i==0?'':TIER_NAMES[i]+' to ')+'last warning took '+formatTime(player.lastWarnings[i][0])+' and earned you '+(Decimal.eq(player.lastWarnings[i][1],1)?'1 warning.':format(player.lastWarnings[i][1])+' warnings.'))
+		}
+	}
   }
   if (tab=='downtime') {
 	  if (dttab=='downtimeChallenges') {
@@ -1025,6 +1064,18 @@ function load(savefile,firstTime=true) {
       if (savefile.build < 20) {
         savefile.bugfixes=0
 	  }
+	  if (savefile.build < 22) {
+		savefile.warningPlaytime=(savefile.prestiges[3]==0?savefile.playtime:0)
+		savefile.fastestWarning=Number.MAX_VALUE
+		savefile.lastWarnings=[]
+		savefile.warnUpgsGenerationLastTick={}
+		savefile.generatedCompAmount=[0,0,0,0,0,0,0,0,0]
+		if (savefile.warningUpgrades.includes(6)) savefile.warnUpgsGenerationLastTick[6]=savefile.playtime
+		if (savefile.warningUpgrades.includes(7)) savefile.warnUpgsGenerationLastTick[7]=savefile.playtime
+		if (savefile.warningUpgrades.includes(8)) savefile.warnUpgsGenerationLastTick[8]=savefile.playtime
+		if (savefile.warningUpgrades.includes(9)) savefile.warnUpgsGenerationLastTick[9]=savefile.playtime
+		if (savefile.warningUpgrades.includes(10)) savefile.warnUpgsGenerationLastTick[10]=savefile.playtime
+	  }
     }
     savefile.version = player.version
     savefile.build = player.build
@@ -1048,6 +1099,7 @@ function load(savefile,firstTime=true) {
 		updateElement('hotkeysbtn',"Hotkeys: Disabled")
 		hideElement('hotkeyText')
 	}
+	if (player.fastestWarning<Number.MAX_VALUE) warnUpgsGenerationDuration[10]=player.fastestWarning*1000
 	
     console.log('Game loaded!')
 	return false

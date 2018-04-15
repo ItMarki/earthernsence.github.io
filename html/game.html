@@ -108,7 +108,7 @@
 	  <td><button class='optionButton' id='hotkeysbtn' onclick='toggleHotkeys()'>Hotkeys: Enabled</button></td>
 	  <td><button class='optionButton' onclick='switchNotation()'>Notation: <div id="notationID">Standard</div></button></td>
       <td><button class='optionButton' onclick='tryFix("idk",true)'>Fix your save</button></td>
-	  <td><button class='optionButton' onClick='prestige(Infinity)'>Reset</button></td></tr></table>
+<td><button class='optionButton' onClick='prestige(Infinity)'>Reset</button></td></tr></table>
 	  <div id='exportSave' style='display:none'> Here is your export save. The dev recommends putting it in a safe spot. <input id='exportText' style='width: 480px'></input></div>
 	  <div id='hotkeyText'>P=Max production boost, U = Upgrade computers, I = I.P Changes & Internet boosts, N = Buy networks,<br>1-9 = Buy a computer with specified tier.</div>
 </div>
@@ -135,6 +135,7 @@
 			  
   </div>
 <div id="warningTab" style="display:none">
+	<div id="warUpgTab" style="display:none">
 	<h1 id="warningHeader"> Warning Upgrades </h1>
 	<table align=center><tr><td><button class='warUpg1' onClick='buyWarUpg(1)' id="warUpg">Production boost over total time. <br>Cost: 1 W.</br><br> Currently <text id="w1Multi">X</text>x.</button></td></tr></table>
 	<table align=center><tr><td><button class='warUpg2' onClick='buyWarUpg(2)' id="warUpg">Production boost based on how many warning upgrades you have. (warUpg*2) <br>Cost: 1 W.</br><br> Currently <text id="w2Multi">X</text>x.</button></td></tr></table>
@@ -150,6 +151,10 @@
 	<table align=center><tr><td><button class='warUpg12' id="warUpg">You start with T1-T9 unlocked.<br>Cost: 60 W</td></tr></br></button></table>
 	<table align=center><tr><td><button class='warUpg13' id="warUpg">You start with T1-T9 unlocked and a Network.<br>Cost: 120 W</td></tr></br></button></table>
 </div>	
+<div id="errorExpansion" style="display:none">
+	<h1 id="warningHeader">Error Expanion</h1>
+</div>
+</div>
   <table class='sidebar' align=right style='position:absolute; height:100%; top:0px; right:15px; width:20%'>
 	  <tr><td>
 		  <table class="storybox">

@@ -394,7 +394,9 @@ function prestige(tier,challid=0) {
     }
     if (player.prestiges[2]==1) newStory(21);
   } else if (tier>2) {
-    player.prestiges[1] = 0
+    if (player.warningUpgrades.includes(12)) player.prestiges[1]=6
+    else if (player.warningUpgrades.includes(11)) player.prestiges[1]=3
+    else player.prestiges[1]=0
   }
   if (tier==3) {
     player.downtimeChallenge=Math.max(challid,0)
@@ -404,7 +406,7 @@ function prestige(tier,challid=0) {
       case 1: newStory(17); break;
     }
   } else if (tier>3) {
-    player.prestiges[2] = 0
+    player.prestiges[2] = player.warningUpgrades.includes(13)?1:0
     player.downtimeChallenge=0
   }
   if (tier==4) {

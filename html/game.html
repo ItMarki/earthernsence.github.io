@@ -108,7 +108,7 @@
 	  <td><button class='optionButton' id='hotkeysbtn' onclick='toggleHotkeys()'>Hotkeys: Enabled</button></td>
 	  <td><button class='optionButton' onclick='switchNotation()'>Notation: <div id="notationID">Standard</div></button></td>
       <td><button class='optionButton' onclick='tryFix("idk",true)'>Fix your save</button></td>
-<td><button class='optionButton' onClick='prestige(Infinity)'>Reset</button></td></tr></table>
+	<td><button class='optionButton' onClick='prestige(Infinity)'>Reset</button></td></tr></table>
 	  <div id='exportSave' style='display:none'> Here is your export save. The dev recommends putting it in a safe spot. <input id='exportText' style='width: 480px'></input></div>
 	  <div id='hotkeyText'>P=Max production boost, U = Upgrade computers, I = I.P Changes & Internet boosts, N = Buy networks,<br>1-9 = Buy a computer with specified tier.</div>
 </div>
@@ -165,6 +165,8 @@
 </div>	
 <div id='errorExpansionTab' style='display:none'>
 	<h1 id="warningHeader">Error Expansion</h1>
+	<div id="EEExplanation">Error Expansion is a duplicative production boost. Depending on how many pieces you have, you gain a production boost. Whenever you gain a 1/1 piece size, you can reset your Expansion to start a new one and gain a large production boost. When you reach certain amounts of Expansions, you can buy upgrades to make getting Expansions easier and buffing them.</div>
+	<button id="pieces">There are 100 pieces.<br>Buy to reduce the amount of pieces by 1.</button>
 </div>
 </div>
   <table class='sidebar' align=right style='position:absolute; height:100%; top:0px; right:15px; width:20%'>

@@ -14,6 +14,13 @@ button:hover {
 	cursor:pointer;
 	background-color:white
 }
+.pieces {
+	background-color:lightblue;
+	color:white;
+	border:solid;
+	border-width:2px;
+	padding:7.5px16px;
+}
 .optionButton {
 	height:48px;
 	width:72px;
@@ -45,7 +52,7 @@ button:hover {
 	font-size:14px;
 	font-family:'Montserrat';
 }
-#warUpg{
+#warUpg {
 	text-align:center;
 	font-size:14px;
 	background-color:black;

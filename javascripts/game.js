@@ -21,10 +21,13 @@ const defaultPlayer = {
   warningUpgrades: [],
   warnUpgsGenerationLastTick: {},
   generatedCompAmount: [0,0,0,0,0,0,0,0,0],
+  errorExpansion:{pieceSize:100,
+	  expansions:0,
+	  upgrades:[]},
   playtime: 0, //total time spent online ingame
   time: 0, //total time displayed in stats
   version: 1.5, //very important
-  build: 22, //used for us to communicate commits, helps a lot
+  build: 23, //used for us to communicate commits, helps a lot
   hotfix: 1, //another way to use commits
   options: {
     hotkeys:true, //whether or not hotkeys are enabled (on by default)
@@ -48,7 +51,7 @@ const TIER_NAMES = ['first','second','third', 'fourth', 'fifth', 'sixth', 'seven
 const ROMAN_NUMERALS=[]
 const costMult=[2,2.5,3,4,5,6,8,10,12]
 
-var costs={comp:[new Decimal(10),new Decimal(100),new Decimal(1e3),new Decimal(1e4),new Decimal(1e6),new Decimal(1e8),new Decimal(1e10),new Decimal(1e13),new Decimal(1e16)],boost:new Decimal(0),upgs:[new Decimal(0)]}
+var costs={comp:[new Decimal(10),new Decimal(100),new Decimal(1e3),new Decimal(1e4),new Decimal(1e6),new Decimal(1e8),new Decimal(1e10),new Decimal(1e13),new Decimal(1e16)],boost:new Decimal(0),warUpgs:[1,1,2,1,2,5,10,15,20,30,30,60,120],DTU:[1e50,1e30,1e40,1e35,1e40,1e40,1e75,1e40,1e50,1e45,1e50,1e50,1e60,1e55,1e60,1e60,1e75,1e65,1e100,1e70],pieceSize:new Decimal(0),eeUpgrades:[]}
 var storyMessages=["Pancakes is ready!",
 "Wakey wakey! Aw, c'mon, you still got the rest of the day to sleep. Get up baby, get up!",
 "Nice! A Tier III Computer. Well deserved.",
@@ -267,6 +270,7 @@ function updateCosts() {
     costs.comp[i]=Decimal.times(baseCosts[i],Decimal.pow(costMult[i],player.compAmount[i]+((i<4&&haveDU(3)&&player.downtimeChallenge==0)?-1:0)))
   }
   costs.boost=new Decimal(1e3).times(Decimal.pow(4+Math.floor(player.boostPower/100)*2,player.boostPower))
+  costs.pieceSize=Decimal.pow(2+player.errorExpansion.expansions*0.5,Math.floor(100/player.errorExpansion.pieceSize))
 }
 
 function buyGen(tier,bulk=1) {
@@ -590,13 +594,21 @@ function getUpgradeMultiplier(id,tier) {
 }
 
 function buyWarUpg(id) {
-  const warUpgCosts = [1,1,2,1,2,5,10,15,20,30,30,60,120]
   if (!player.warningUpgrades.includes(id)) {
-    var warnCost = warUpgCosts[id-1]
-    if (player.warnings.gte(warnCost)) {
-      player.warnings=player.warnings.sub(warnCost)
+    if (player.warnings.gte(costs.warUpgs[id-1])) {
+      player.warnings=player.warnings.sub(costs.warUpgs[id-1])
       player.warningUpgrades.push(id)
       if (id>5&&id<11) player.warnUpgsGenerationLastTick[id]=player.playtime
+    }
+  }
+}
+
+function buyPieceSizeUpgrade(id) {
+  if (!player.errorExpansion.pieceSize>1) {
+    if (player.warnings.gte(costs.pieceSize)) {
+      player.warnings=player.warnings.sub(costs.pieceSize)
+      player.errorExpansion.pieceSize=Math.max(player.errorExpansion.pieceSize-1,0)
+	  updateCosts()
     }
   }
 }
@@ -1076,6 +1088,9 @@ function load(savefile,firstTime=true) {
 		if (savefile.warningUpgrades.includes(9)) savefile.warnUpgsGenerationLastTick[9]=savefile.playtime
 		if (savefile.warningUpgrades.includes(10)) savefile.warnUpgsGenerationLastTick[10]=savefile.playtime
 	  }
+	  if (savefile.build<23) {
+		savefile.errorExpansion={pieceSize:100,expansions:0,upgrades:[]}
+	  }
     }
     savefile.version = player.version
     savefile.build = player.build
@@ -1356,9 +1371,8 @@ function tryFix(e,manual=false) {
 
 function buyDTU(id) {
   if (haveDU(id)) return;
-  DTUcosts = [1e50,1e30,1e40,1e35,1e40,1e40,1e75,1e40,1e50,1e45,1e50,1e50,1e60,1e55,1e60,1e60,1e75,1e65,1e100,1e70]
-  if (player.errors.gte(DTUcosts[id-1])&&player.dtChallCompleted[Math.floor((id-1)/2)]!=undefined) {
-    player.errors = player.errors.sub(DTUcosts[id-1])
+  if (player.errors.gte(costs.DTU[id-1])&&player.dtChallCompleted[Math.floor((id-1)/2)]!=undefined) {
+    player.errors = player.errors.sub(costs.DTU[id-1])
     player.dtUpgrades.push(id)
   }
 }

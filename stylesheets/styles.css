@@ -52,7 +52,7 @@ button:hover {
 	font-size:14px;
 	font-family:'Montserrat';
 }
-#warUpg {
+.warUpg {
 	text-align:center;
 	font-size:14px;
 	background-color:black;
@@ -61,7 +61,7 @@ button:hover {
 	width:150px;
 	border-radius:20px;
 }
-#warUpg:hover{
+.warUpg:hover{
 	text-align:center;
 	font-size:14px;
 	background-color:lightgray;

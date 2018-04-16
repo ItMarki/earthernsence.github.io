@@ -149,37 +149,36 @@
   <div id='warTabbuttons'><button onclick='switchWarTab("warUpgTab")'>Warning Upgrades</button><button onclick='switchWarTab("errorExpansionTab")'>Error Expansion</button></div>
 	<div id='warUpgTab' style='display:inline'>
 	<h1 id="warningHeader"> Warning Upgrades </h1>
-	<table align=center><tr><td><button class='warUpg1' onClick='buyWarUpg(1)' id="warUpg">Production boost over total time. <br>Cost: 1 W.</br><br> Currently <text id="w1Multi">X</text>x.</button></td></tr></table>
-	<table align=center><tr><td><button class='warUpg2' onClick='buyWarUpg(2)' id="warUpg">Production boost based on how many warning upgrades you have. (warUpg*2) <br>Cost: 1 W.</br><br> Currently <text id="w2Multi">X</text>x.</button></td></tr></table>
-	<table align=center><tr><td><button class='warUpg3' onClick='buyWarUpg(3)' id="warUpg">Each set of 10 computers (of any tier) gives a 2x multiplier. <br>Cost: 2 W</button></td></tr></table></br>
-	<table align=center><tr><td><button class='warUpg4' onClick='buyWarUpg(4)' id="warUpg">Warn stat gives a multiplier to all computers. (warn*2). <br>Currently <text id="w4Multi">X</text>x.</br><br>Cost: 1 W</button></td></tr></table></br>
-	<table align=center><tr><td><button class='warUpg5' onClick='buyWarUpg(5)' id="warUpg">Production boost for unspent warnings. (warnings^2). <br>Currently <text id="w5Multi">X</text>x.</br><br>Cost: 2 W</button></td></tr></table></br>
-	<table align=center><tr><td><button class='warUpg6' onClick='buyWarUpg(6)' id="warUpg">Begin the generation of TI Computers (1 per 2 seconds)<br>Cost: 5 W</button></td></tr></br></table>
-	<table align=center><tr><td><button class='warUpg7' onClick='buyWarUpg(7)' id="warUpg">Begin the generation of TII Computers (1 per 4 seconds)<br>Cost: 10 W</button></td></tr></br></table>
-	<table align=center><tr><td><button class='warUpg8' onClick='buyWarUpg(8)' id="warUpg">Begin the generation of TIII Computers (1 per 8 seconds)<br>Cost: 15 W</button</td></tr></br></table>
-	<table align=center><tr><td><button class='warUpg9' onClick='buyWarUpg(9)' id="warUpg">Begin the generation of TIV Computers (1 per 16 seconds)<br>Cost: 20 W</button></td></tr></br></table>
-	<table align=center><tr><td><button class='warUpg10' onClick='buyWarUpg(10)' id="warUpg">Begin the generation of Warnings based on your fastest warn. (fastest warn time * 1000)<br>Cost: 30 W</button></td></tr></br></table>
-	<table align=center><tr><td><button class='warUpg11' onClick='buyWarUpg(11)' id="warUpg">You start with IP3.<br>Cost: 30 W</td></tr></br></button></table>
-	<table align=center><tr><td><button class='warUpg12' onClick='buyWarUpg(12)' id="warUpg">You start with IP6.<br>Cost: 60 W</td></tr></br></button></table>
-	<table align=center><tr><td><button class='warUpg13' onClick='buyWarUpg(13)' id="warUpg">You start with a Network.<br>Cost: 120 W</td></tr></br></button></table>
+	<table align=center><tr><td><button id='warUpg1' onClick='buyWarUpg(1)' class="warUpg">Production boost over total time. <br>Cost: 1 W.</br><br> Currently <text id="w1Multi">X</text>x.</button></td>
+	<td><button id='warUpg2' onClick='buyWarUpg(2)' class="warUpg">Production boost based on how many warning upgrades you have. (warUpg*2) <br>Cost: 1 W.</br><br> Currently <text id="w2Multi">X</text>x.</button></td>
+	<td><button id='warUpg3' onClick='buyWarUpg(3)' class="warUpg">Each set of 10 computers (of any tier) gives a 2x multiplier. <br>Cost: 2 W</button></td>
+	<td><button id='warUpg4' onClick='buyWarUpg(4)' class="warUpg">Warn stat gives a multiplier to all computers. (warn*2). <br>Currently <text id="w4Multi">X</text>x.</br><br>Cost: 1 W</button></td></tr>
+	<tr><td><button id='warUpg5' onClick='buyWarUpg(5)' class="warUpg">Production boost for unspent warnings. (warnings^2). <br>Currently <text id="w5Multi">X</text>x.</br><br>Cost: 2 W</button></td>
+	<td><button id='warUpg6' onClick='buyWarUpg(6)' class="warUpg">Begin the generation of TI Computers (1 per 2 seconds)<br>Cost: 5 W</button></td>
+	<td><button id='warUpg7' onClick='buyWarUpg(7)' class="warUpg">Begin the generation of TII Computers (1 per 4 seconds)<br>Cost: 10 W</button></td>
+	<td><button id='warUpg8' onClick='buyWarUpg(8)' class="warUpg">Begin the generation of TIII Computers (1 per 8 seconds)<br>Cost: 15 W</button></td></tr>
+	<tr><td><button id='warUpg9' onClick='buyWarUpg(9)' class="warUpg">Begin the generation of TIV Computers (1 per 16 seconds)<br>Cost: 20 W</button></td>
+	<td><button id='warUpg10' onClick='buyWarUpg(10)' class="warUpg">Begin the generation of Warnings based on your fastest warn. (fastest warn time * 1000)<br>Cost: 30 W</button></td>
+	<td><button id='warUpg11' onClick='buyWarUpg(11)' class="warUpg">You start with IP3.<br>Cost: 30 W</button></td>
+	<td><button id='warUpg12' onClick='buyWarUpg(12)' class="warUpg">You start with IP6.<br>Cost: 60 W</button></td></tr>
+	<tr><td colspan=4><button id='warUpg13' onClick='buyWarUpg(13)' class="warUpg">You start with a Network.<br>Cost: 120 W</button></td></tr></table>
 </div>	
 <div id='errorExpansionTab' style='display:none'>
 	<h1 id="warningHeader">Error Expansion</h1>
 	<div id="EEExplanation" style='font-size:10px'>Error Expansion is a duplicative production boost. Depending on how many pieces you have, you gain a production boost.<br>Whenever you gain a 1/1 piece size, you can reset your Expansion to start a new one and gain a large production boost.<br>When you reach certain amounts of Expansions, you can buy upgrades to make getting Expansions easier and buffing them.</div>
-	<button id="pieces">There are 100 pieces.<br>Buy to reduce the amount of pieces by 1.</button><br><br>
-	<button id="pieces">Reset to gain 1 Expansion.<br>You currently have 0 Expansions.</button><br><br>
-	<button id="pieces">Make galaxies 50% stronger<br>Cost: 5e11 IP</button><br>
-<table id="EEUpg" align=center><tr><td>
-	<button id="warUpg"><i>This is purchasable 5 times.</i><br>Reduce the pieces by 2 per reduce.<br>1 -> 2 -> 4 -> 6 -> 8 -> 10</button>
-	<button id="warUpg">The production boost gained from Expansion is increased.</button>
-	<button id="warUpg">Increase maximum expansions.<br> 5 -> 10</button>
-	<button id="warUpg">Gain 2 expansions per reset, but reset it resets expansions.</button><br><br>
-	<button id="warUpg"><i>This is purchasable 4 times</i><br>Improve Expansion multiplier formula.<br>(expansions^1) + 1 -> (expansions^1.25) + 1.</button>
-	<button id="warUpg"><i>This is purchasable 10 times.</i><br>Decrease the amount of pieces by 5.</button>
-	<button id="warUpg">Increase the power of production boost depending on how many Expansions you have.<br>Expansions / 10</button>
-	<button id="warUpg">Increase the power of the third white upgrade.<br>50 -> 75</button>
-	</table></tr></td>
-	<div id="EE" style='font-size:15px'>You have </div><div style='font-size:25px'>0</div><div id="EE" style='font-size:15px'> Expansions, translated to a </div><div style='font-size:20px'>1x</div><div id="EE" style='font-size:15px'> multiplier on all Computers.</div>
+	<div id='expansions'>You have <text style='font-size:20px'>0</text> (Max: 5) expansions, translated to <text style='font-size:20px'>1x</text> multiplier on all Computers.</div>
+	<div id='pieces'>You have <text style='font-size:20px'>100</text> pieces.</div>
+	<button class="pieces" id='pieceUpgrade'>Remove a single piece.<br>Cost: ??? W</button><br>
+	<button class="pieces">Reset to gain 1 Expansion.<br>Require 1 piece.</button><br>
+	<button class="pieces">Make galaxies 50% stronger<br>Cost: 5e11 IP</button>
+	<table id='EEUpgrades' align=center><tr><td><button class="warUpg"><i>This is purchasable 5 times.</i><br>Reduce the pieces by 2 per reduce.<br>1 -> 2 -> 4 -> 6 -> 8 -> 10</button></td>
+	<td><button class="warUpg">The production boost gained from Expansion is increased.</button></td>
+	<td><button class="warUpg">Increase maximum expansions.<br> 5 -> 10</button></td>
+	<td><button class="warUpg">Gain 2 expansions per reset, but reset it resets expansions.</button></td></tr>
+	<tr><td><button class="warUpg"><i>This is purchasable 4 times</i><br>Improve Expansion multiplier formula.<br>(expansions^1) + 1 -> (expansions^1.25) + 1.</button></td>
+	<td><button class="warUpg"><i>This is purchasable 10 times.</i><br>Decrease the amount of pieces by 5.</button></td>
+	<td><button class="warUpg">Increase the power of production boost depending on how many Expansions you have.<br>Expansions / 10</button></td>
+	<td><button class="warUpg">Increase the power of the third white upgrade.<br>50 -> 75</button></td></tr></table>
 </div>
 </div>
   <table class='sidebar' align=right style='position:absolute; height:100%; top:0px; right:15px; width:20%'>

@@ -21,6 +21,10 @@ button:hover {
 	border-width:2px;
 	padding:7.5px16px;
 }
+.pieces:hover {
+	background-color:white;
+	color:black;
+}
 .optionButton {
 	height:48px;
 	width:72px;

@@ -15,10 +15,10 @@
   <h1 id="logo">The Console Error Game</h1>
   <div id='bugfixes' style='display:none'>There are 0 bugfixes.</div>
   <div>You have <text id="errors">10</text> errors.</div>
-  <div>You are making <text id="eps">0</text> errors per second.</div>
-  <div id='genUpgrade' style='display:none'>Increase the boost by <text id='genIncrease'>2</text>x.<br>
+  <div>You are making <text id="eps" style='font-size:15px'>0</text> errors per second.</div>
+  <div id='genUpgrade' style='display:none'>Increase the boost by <text id='genIncrease' style='font-size:15px'>2</text><text style='font-size:15px'>x</text>.<br>
   <button id="genIncreaseCost" onclick="buyGenUpgrade()">Cost: 1000</button><button id="buyMax" onclick="maxGenUpgrade()">Buy Max</button><br>
-  Production boost: <text id='genBoost'>1</text>x</div><br>
+  Production boost: <text id='genBoost' style='font-size:15px'>1</text><text style='font-size:15px'>x</text></div><br>
   <div><button onclick='switchTab("computers")' id="tabButton">Computers</button><button onclick='switchTab("downtime")' id="tabButton">Downtime</button><button onclick='switchTab("options")' id="tabButton">Options</button><button onclick='switchTab("stats")' id="tabButton">Stats</button><button onclick='switchTab("achievements")' id="tabButton">Achievements</button><button id='warningTabButton' style='display:none' onclick='switchTab("warning")'>Warning</button><button id='theEndButton' style='display:none' onclick='switchTab("theEnd")'>The End</button></div>
   <br>
   <div id='computersTab'>

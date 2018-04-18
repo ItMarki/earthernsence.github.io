@@ -166,8 +166,8 @@
 </div>	
 
 <div id='errorExpansionTab' style='display:none'>
-	<div id='warTabbuttons'><button onclick='switchEETab("UpgAndPieces")'>Upgrades and Pieces</button><button onclick='switchEETab("AutoGen")'>Auto Generator</button></div>
-	<div id='UpgAndPieces' style='display:inline'>
+	<div id='EETabbuttons'><button onclick='switchEETab("UpgAndPiecesTab")'>Upgrades and Pieces</button><button onclick='switchEETab("AutoGenTab")'>Auto Generator</button></div>
+	<div id='UpgAndPiecesTab'>
 	<h1 id="warningHeader">Error Expansion</h1>
 	<div id="EEExplanation" style='font-size:10px'>Error Expansion is a duplicative production boost. Depending on how many pieces you have, you gain a production boost.<br>Whenever you gain a 1/1 piece size, you can reset your Expansion to start a new one and gain a large production boost.<br>When you reach certain amounts of Expansions, you can buy upgrades to make getting Expansions easier and buffing them.</div>
 	<div id='expansions'>You have <text style='font-size:20px'>0</text> (Max: 5) expansions, translated to <text style='font-size:20px'>1x</text> multiplier on all Computers.</div>
@@ -182,12 +182,13 @@
 	<tr><td><button class="warUpg"><i>This is purchasable 4 times</i><br>Improve Expansion multiplier formula.<br>(expansions^1) + 1 -> (expansions^1.25) + 1.</button></td>
 	<td><button class="warUpg"><i>This is purchasable 10 times.</i><br>Decrease the amount of pieces by 5.</button></td>
 	<td><button class="warUpg">Increase the power of production boost depending on how many Expansions you have.<br>Expansions / 10</button></td>
-		<td><button class="warUpg"><i>You can buy this ??? times.</i><br>Increase the power of the Piece Generator.<br>1 -> 5</button></td></tr><br><br>
+		<td><button class="warUpg"><i>You can buy this ??? times.</i><br>Increase the power of the Piece Generator.<br>1 -> 5</button></td></tr>
 		<tr><td colspan=4><button class="warUpg">You can now generate pieces.</button></td></tr></table>
 </div>
-<div id='AutoGen' style='display:inline'>
+<div id='AutoGenTab' style='display:none'>
 <h1 id="warningHeader">AutoGen</h1>
 	</div>
+</div>
 </div>
   <table class='sidebar' align=right style='position:absolute; height:100%; top:0px; right:15px; width:20%'>
 	  <tr><td>

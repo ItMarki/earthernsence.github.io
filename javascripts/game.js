@@ -27,7 +27,7 @@ const defaultPlayer = {
   playtime: 0, //total time spent online ingame
   time: 0, //total time displayed in stats
   version: 1.5, //very important
-  build: 23, //used for us to communicate commits, helps a lot
+  build: 23.1, //used for us to communicate commits, helps a lot
   hotfix: 1, //another way to use commits
   options: {
     hotkeys:true, //whether or not hotkeys are enabled (on by default)
@@ -44,7 +44,8 @@ statsTab='statisticsTab'
 oldStatsTab=statsTab
 wartab='warUpgTab'
 oldwartab=wartab
-EEtab='UpgAndPieces'
+EEtab='UpgAndPiecesTab'
+oldEEtab='UpgAndPiecesTab'
 percentage=0
 realPercentage=0
 const story = ['','','','','']
@@ -243,7 +244,7 @@ function switchStatsTab(tabid) {
 }
 
 function switchEETab(tabid) {
-  EETab=tabid
+  EEtab=tabid
 }
 
 function changeMults() {
@@ -694,6 +695,11 @@ function gameTick() {
     hideElement(oldStatsTab)
     showElement(statsTab)
     oldStatsTab=statsTab
+  }
+  if (EEtab!=oldEEtab) {
+    hideElement(oldEEtab)
+    showElement(EEtab)
+    oldEEtab=EEtab
   }
   if (player.downtimeChallenge==11) {
 	  hideElement('upgradeComputers')
@@ -1385,9 +1391,3 @@ function buyDTU(id) {
 function haveDU(id) {
   return player.dtUpgrades.includes(id) && player.downtimeChallenge == 0
 }
-
-//Insert all time based shits down here
-setTimeout(function() { warUpg6ready = true},2000)
-setTimeout(function() { warUpg7ready = true},4000)
-setTimeout(function() { warUpg8ready = true},8000)
-setTimeout(function() { warUpg9ready = true},16000)

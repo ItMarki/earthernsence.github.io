@@ -172,7 +172,8 @@
 	<div id="EEExplanation" style='font-size:10px'>Error Expansion is a duplicative production boost. Depending on how many pieces you have, you gain a production boost.<br>Whenever you gain a 1/1 piece size, you can reset your Expansion to start a new one and gain a large production boost.<br>When you reach certain amounts of Expansions, you can buy upgrades to make getting Expansions easier and buffing them.</div>
 	<div id='expansions'>You have <text style='font-size:20px'>0</text> (Max: 5) expansions, translated to <text style='font-size:20px'>1x</text> multiplier on all Computers.</div>
 	<div id='pieces'>You have <text style='font-size:20px'>100</text> pieces.</div>
-	<button class="pieces" id='pieceUpgrade'>Remove a single piece.<br>Cost: ??? W</button><br>
+		<div id='autogenLevel'>AutoGen Level: 1</div>
+<button class="pieces" id='pieceUpgrade'>Remove a single piece.<br>Cost: ??? W</button><br>
 	<button class="pieces">Reset to gain 1 Expansion.<br>Require 1 piece.</button><br>
 	<button class="pieces">Turn AutoGen on.<br>Currently 1.00/???</button>
 	<table id='EEUpgrades' align=center><tr><td><button class="warUpg"><i>This is purchasable 5 times.</i><br>Reduce the pieces by 2 per reduce.<br>1 -> 2 -> 4 -> 6 -> 8 -> 10</button></td>
@@ -187,6 +188,11 @@
 </div>
 <div id='AutoGenTab' style='display:none'>
 <h1 id="warningHeader">AutoGen</h1>
+<div id='expansions'>You have <text style='font-size:20px'>0</text> (Max: 5) expansions, translated to <text style='font-size:20px'>1x</text> multiplier on all Computers.</div>
+	<div id='autogenLevel'>AutoGen Level: 1</div>	
+<button class="pieces" id='interval'>Upgrade AutoGen interval.<br>Currently 1s.<br>Cost: <b>5 W</b>.</button><br><br>
+	<button class="pieces" id='power'>Upgrade power of gained expansions from AutoGen based on expansions.<br>Currently 1.00x.<br>Cost: <b>10 W</b>.</button><br><br>
+	<button class="pieces" id='upg'>Upgrade AutoGen to Level 2.</button>
 	</div>
 </div>
 </div>

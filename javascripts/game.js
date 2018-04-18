@@ -44,6 +44,7 @@ statsTab='statisticsTab'
 oldStatsTab=statsTab
 wartab='warUpgTab'
 oldwartab=wartab
+EEtab='UpgAndPieces'
 percentage=0
 realPercentage=0
 const story = ['','','','','']
@@ -239,6 +240,10 @@ function switchWarTab(tabid) {
 
 function switchStatsTab(tabid) {
   statsTab=tabid
+}
+
+function switchEETab(tabid) {
+  EETab=tabid
 }
 
 function changeMults() {

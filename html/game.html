@@ -183,7 +183,7 @@
 	<tr><td><button class="warUpg"><i>This is purchasable 4 times</i><br>Improve Expansion multiplier formula.<br>(expansions^1) + 1 -> (expansions^1.25) + 1.</button></td>
 	<td><button class="warUpg"><i>This is purchasable 10 times.</i><br>Decrease the amount of pieces by 5.</button></td>
 	<td><button class="warUpg">Increase the power of production boost depending on how many Expansions you have.<br>Expansions / 10</button></td>
-		<td><button class="warUpg"><i>You can buy this ??? times.</i><br>Increase the power of the Piece Generator.<br>1 -> 5</button></td></tr>
+		<td><button class="warUpg"><i>You can buy this ??? times.</i><br>Increase the power of the AutoGen.<br>1 -> 5</button></td></tr>
 		<tr><td colspan=4><button class="warUpg">You can now generate pieces.</button></td></tr></table>
 </div>
 <div id='AutoGenTab' style='display:none'>
@@ -192,7 +192,8 @@
 	<div id='autogenLevel'>AutoGen Level: 1</div>	
 <button class="pieces" id='interval'>Upgrade AutoGen interval.<br>Currently 1s.<br>Cost: <b>5 W</b>.</button><br><br>
 	<button class="pieces" id='power'>Upgrade power of gained expansions from AutoGen based on expansions.<br>Currently 1.00x.<br>Cost: <b>10 W</b>.</button><br><br>
-	<button class="pieces" id='upg'>Upgrade AutoGen to Level 2.</button>
+	<button class="pieces" id='upg'>Upgrade AutoGen to Level 2.<br>Currently 1.<br>Cost: <b>25 W</b>.<br>The costs goes up by 25 W per upgrade to autogen level.</button>
+<div id="EEExplanation">When you upgrade your AutoGen, it resets all other upgrades (interval, power of expansions, power of AutoGen, and max expansions) but increases your AutoGen's level. It also resets those upgrades' costs.<br>The buffs given are: 1 extra max expansions, +1x on expansion multiplier (i.e. if multiplier frome expansions was 1.00x, then the multi would be 2.00x), 1 interval upgrade, 1 interval upgrade upgrade (increases how much interval is taken away per upgrade).</div>
 	</div>
 </div>
 </div>

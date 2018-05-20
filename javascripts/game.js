@@ -247,23 +247,6 @@ function switchEETab(tabid) {
   EEtab=tabid
 }
 
-function changeMults() {
-  if (player.buyMult == 1) {
-    player.buyMult = 5;
-  } else if (player.buyMult == 5) {
-    player.buyMult = 10;
-  } else if (player.buyMult == 10) {
-    player.buyMult = 25;
-  } else if (player.buyMult == 25) {
-    player.buyMult = 50;
-  } else if (player.buyMult == 50) {
-    player.buyMult = 100;
-  } else if (player.buyMult == 100) {
-    player.buyMult = 1;
-  }
-  document.getElementById('buyMult').innerHTML=player.buyMult+'x'
-}
-
 function newStory(story) {
   if (player.story>=story) return;
   player.story=story
@@ -482,16 +465,6 @@ function getMultTier(tier) {  let ret = new Decimal.pow(((player.downtimeChallen
   ret = ret.mul(Decimal.pow(2+Math.floor(player.compAmount[8]/5)*0.5,player.prestiges[1]))
   if (player.prestiges[0]>=tier) ret = ret.mul(haveDU(7)?3:player.upgrades.includes(14)?2.5:2)
   if (player.prestiges[0]>9&&tier==9) ret = ret.mul(Decimal.pow(player.upgrades.includes(14)?2.5:2,player.prestiges[0]-9))
-  if (player.upgrades.includes(1)) ret = ret.mul(2)
-  if (player.upgrades.includes(2)) ret = ret.mul(5)
-  if (player.upgrades.includes(3)) ret = ret.mul(10)
-  if (player.upgrades.includes(15)) ret = ret.mul(5)
-  if (player.upgrades.includes(17)) ret = ret.mul(75)
-  if (player.upgrades.includes(18)) ret = ret.mul(750)
-  if (player.upgrades.includes(19)) ret = ret.mul(7500)
-  if (player.upgrades.includes(20)) ret = ret.mul(75000)
-  if (player.upgrades.includes(21)) ret = ret.mul(750000)
-  if (player.upgrades.includes(23)) ret = ret.mul(750000)
   if (player.upgrades.includes(4)&&tier==1) ret = ret.mul(Math.pow(1.15,Math.sqrt(player.compAmount[0])))
   if (player.upgrades.includes(5)&&tier==2) ret = ret.mul(Math.pow(1.15,Math.sqrt(player.compAmount[1])))
   if (player.upgrades.includes(6)&&tier==3) ret = ret.mul(Math.pow(1.15,Math.sqrt(player.compAmount[2])))
@@ -533,33 +506,25 @@ function getEPS() {
 function checkIfAffordable(id) {
   if (player.upgrades.includes(id)) return false
   switch (id) {
-    case 1: if (player.errors.lt(1e4)) {return false}; return true
-    case 2: if (player.errors.lt(1e10)) {return false}; return true
-    case 3: if (player.errors.lt(1e20)) {return false}; return true
-    case 4: if (player.errors.lt(1e35)||player.compAmount[0]<100) {return false}; return true
-    case 5: if (player.errors.lt(1e40)||player.compAmount[1]<100) {return false}; return true
-    case 6: if (player.errors.lt(1e50)||player.compAmount[2]<100) {return false}; return true
-    case 7: if (player.errors.lt(1e65)||player.compAmount[3]<100) {return false}; return true
-    case 8: if (player.errors.lt(1e75)||player.compAmount[4]<100) {return false}; return true
-    case 9: if (player.errors.lt(1e85)||player.compAmount[5]<100) {return false}; return true
-    case 10: if (player.errors.lt(1e100)||player.compAmount[6]<100) {return false}; return true
-    case 11: if (player.errors.lt(1e115)||player.compAmount[7]<100) {return false}; return true
-    case 12: if (player.errors.lt(1e125)||player.compAmount[8]<100) {return false}; return true
-    case 13: if (player.errors.lt(1e140)) return false
+    case 1: if (player.errors.lt(1e35)||player.compAmount[0]<100) {return false}; return true
+    case 2: if (player.errors.lt(1e40)||player.compAmount[1]<100) {return false}; return true
+    case 3: if (player.errors.lt(1e50)||player.compAmount[2]<100) {return false}; return true
+    case 4: if (player.errors.lt(1e65)||player.compAmount[3]<100) {return false}; return true
+    case 5: if (player.errors.lt(1e75)||player.compAmount[4]<100) {return false}; return true
+    case 6: if (player.errors.lt(1e85)||player.compAmount[5]<100) {return false}; return true
+    case 7: if (player.errors.lt(1e100)||player.compAmount[6]<100) {return false}; return true
+    case 8: if (player.errors.lt(1e115)||player.compAmount[7]<100) {return false}; return true
+    case 9: if (player.errors.lt(1e125)||player.compAmount[8]<100) {return false}; return true
+    case 10: if (player.errors.lt(1e140)) return false
              for (check=4;check<13;check++) {
                if (!player.upgrades.includes(check)||player.compAmount[check-4]<110) return false
              }
              return true
-    case 14: if (player.prestiges[0]<9) {return false}; return true
-    case 15: if (player.prestiges[1]<5) {return false}; return true
-    case 16: if (player.prestiges[1]<7) {return false}; return true
-    case 17: if (player.errors.lt(1e30)) {return false}; return true
-    case 18: if (player.errors.lt(1e35)) {return false}; return true
-    case 19: if (player.errors.lt(1e40)) {return false}; return true
-    case 20: if (player.errors.lt(1e50)) {return false}; return true
-    case 21: if (player.errors.lt(1e65)) {return false}; return true
-    case 22: if (player.prestiges[2]<1||player.errors.lt(1e3)) {return false}; return true
-    case 23: if (player.errors.lt(1e75)) {return false}; return true
+    case 11: if (player.prestiges[0]<9) {return false}; return true
+    case 12: if (player.prestiges[1]<5) {return false}; return true
+    case 13: if (player.prestiges[1]<7) {return false}; return true
+    case 14: if (player.errors.lt(1e30)) {return false}; return true
+    case 25: if (player.prestiges[2]<1||player.errors.lt(1e3)) {return false}; return true
 }
   return false
 }
@@ -567,14 +532,6 @@ function checkIfAffordable(id) {
 function buyUpg(id) {
   if (!checkIfAffordable(id)) return
   switch (id) {
-    case 1: player.errors=player.errors.sub(1e4); break
-    case 2: player.errors=player.errors.sub(1e10); break
-    case 3: player.errors=player.errors.sub(1e20); break
-    case 4: player.errors=player.errors.sub(1e35); break
-    case 5: player.errors=player.errors.sub(1e40); break
-    case 6: player.errors=player.errors.sub(1e50); break
-    case 7: player.errors=player.errors.sub(1e65); break
-    case 8: player.errors=player.errors.sub(1e75); break
     case 9: player.errors=player.errors.sub(1e85); break
     case 10: player.errors=player.errors.sub(1e100); break
     case 11: player.errors=player.errors.sub(1e115); break

@@ -103,6 +103,10 @@ function exitChall() {
   if (!player.downtimeChallenge>0) return;
   prestige(3,-1)
 }
+function achievementTooltip() {
+	 var firstAchievement = document.getElementById("First Blood Error");
+  firstAchievement.setAttribute('tooltip', "Get your first Tier 1 computer.");
+}
 
 var notationArray = ["Standard","Scientific","Engineering","Logarithm","Letters","Mixed"]
 

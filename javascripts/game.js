@@ -625,7 +625,7 @@ function gameTick() {
   if (haveDU(19) && Math.random() <= 0.01) ePS *= 100
   var errorstobugfixesRatio=new Decimal(0)
   if (player.time>0) {
-    s=((new Date().getTime()-player.time)/1000)*gameSpeed*(player.downtimeChallenge == 8?0.1:1) // number of seconds since last tick
+    s=((new Date().getTime()-player.time)/1000)*(player.options.debug?gameSpeed:1)*(player.downtimeChallenge == 8?0.1:1) // number of seconds since last tick
     var addAmount=ePS.mul(s).min(Decimal.sub(Number.MAX_VALUE,player.errors))
     player.errors = player.errors.add(addAmount);
     player.totalErrors = player.totalErrors.add(addAmount);

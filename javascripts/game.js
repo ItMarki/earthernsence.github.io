@@ -49,6 +49,7 @@ oldEEtab='UpgAndPiecesTab'
 percentage=0
 realPercentage=0
 gameSpeed = 1
+inputing = true
 const story = ['','','','','']
 const TIER_NAMES = ['first','second','third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 'ninth']; // can add more if more gens/story elements, cuz that uses this too
 const ROMAN_NUMERALS=[]
@@ -1205,14 +1206,14 @@ function updateStory() {
     }
 }
 window.addEventListener('keydown', function(event) {
-    if (document.hasFocus()) return;
+    if (inputing) return;
     if (event.keyCode == 17) controlDown = true;
     if (event.keyCode == 16) shiftDown = true;
 }, false);
 
 
 window.addEventListener('keydown', function(event) {
-  if (!player.options.hotkeys || document.hasFocus()) return;
+  if (!player.options.hotkeys || inputing) return;
     const tmp = event.keyCode;
     switch (tmp) {
         case 49: // 1
@@ -1410,6 +1411,7 @@ function haveDU(id) {
 }
 
 function changeSpeed() {
+  inputing = false
   speedin = document.getElementById("gameSpeedIn")
   if (!speedin.checkValidity() || parseFloat(speedin.value) <= 0 || speedin.value == "") speedin.value = gameSpeed
   else gameSpeed = speedin.value

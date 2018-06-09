@@ -932,7 +932,7 @@ function gameTick() {
                   'T9 & all computers produces 10x as fast.<br>Cost: '+format(1e70)]
 		  for (i = 1;i <= 10;i++) {
             si = i.toString() // string i
-            if (player.dtChallCompleted[i-1]==undefined) {
+            if (player.dtChallCompleted[i-1]==undefined && !document.getElementById("showAllDU").checked) {
               hideElement('dc'+si+'upgrades')
             } else {
               showElement('dc'+si+'upgrades','block')

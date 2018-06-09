@@ -19,7 +19,16 @@
   <div id='genUpgrade' style='display:none'>Increase the boost by <text id='genIncrease' style='font-size:20px'>2</text><text style='font-size:20px'>x</text>.<br>
   <button id="genIncreaseCost" onclick="buyGenUpgrade()">Cost: 1000</button><button id="buyMax" onclick="maxGenUpgrade()">Buy Max</button><br>
   Production boost: <text id='genBoost' style='font-size:20px'>1</text><text style='font-size:20px'>x</text></div><br>
-  <div><button onclick='switchTab("computers")' id="tabButton">Computers</button><button onclick='switchTab("downtime")' id="tabButton">Downtime</button><button onclick='switchTab("options")' id="tabButton">Options</button><button onclick='switchTab("stats")' id="tabButton">Stats</button><button onclick='switchTab("achievements")' id="tabButton">Achievements</button><button id='warningTabButton' style='display:none' onclick='switchTab("warning")'>Warning</button><button id='theEndButton' style='display:none' onclick='switchTab("theEnd")'>The End</button></div>
+  <div>
+    <button onclick='switchTab("computers")' id="tabButton">Computers</button>
+    <button onclick='switchTab("downtime")' id="tabButton">Downtime</button>
+    <button onclick='switchTab("options")' id="tabButton">Options</button>
+    <button onclick='switchTab("stats")' id="tabButton">Stats</button>
+    <button onclick='switchTab("achievements")' id="tabButton">Achievements</button>
+    <button id='warningTabButton' style='display:none' onclick='switchTab("warning")'>Warning</button>
+    <button id='theEndButton' style='display:none' onclick='switchTab("theEnd")'>The End</button>
+    <button id='debugButton' style='display:none' onclick='switchTab("debug")'>Debug</button>
+  </div>
   <br>
   <div id='computersTab'>
 	  <td style='width:96px'><button id='maxAll' class='commonButton' onClick='maxGenUpgrade();maxGen();'>Max All</button></td>	  
@@ -197,6 +206,9 @@
 	</div>
 </div>
 </div>
+<div id='debugTab' style='display:none'>
+  <div style="width: 50%;margin: 0px auto;"><h1>For people that wanna make their life easier by changing game speed</h1></div>
+</div>	
   <table class='sidebar' align=right style='position:absolute; height:100%; top:0px; right:15px; width:20%'>
 	  <tr><td>
 		  <table class="storybox">

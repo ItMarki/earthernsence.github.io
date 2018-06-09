@@ -994,6 +994,9 @@ function gameTick() {
   }
   if ([3,5].includes(player.downtimeChallenge)) showElement("backward");
   else hideElement("backward")
+  
+  if (player.options.debug) showElement('debugButton','inline-block')
+  else hideElement('debugButton')
 }
 
 function save() {
@@ -1001,6 +1004,15 @@ function save() {
 }
 
 function load(savefile,firstTime=true) {
+  if (savefile == "enable debug") {
+    player.options.debug = true
+    alert("Debug enabled! have fun!")
+    return 0
+  } else if (savefile == "disable debug") {
+    player.options.debug = false
+    alert("Debug disabled! idk who will do this though")
+    return 0
+  }
   try {
     savefile=JSON.parse(atob(savefile));
     //To prevent to trying to load a save file with glitches.
@@ -1060,7 +1072,7 @@ function load(savefile,firstTime=true) {
     }
       if (savefile.build < 12) {
       savefile.options={hotkeys:true,
-        notation:savefile.notation}
+        notation:savefile.notation,debug:false}
       delete savefile.notation
     }
     savefile.build=0
@@ -1115,6 +1127,8 @@ function load(savefile,firstTime=true) {
   
     savefile.warnings = new Decimal(savefile.warnings)
     savefile.totalWarnings = new Decimal(savefile.totalWarnings)
+    
+    if (savefile.options.debug == null) savefile.options.debug = false
     
     player=savefile
 	updateCosts()

@@ -285,8 +285,8 @@ function buyGen(tier,bulk=1) {
   if (player.errors.gte(costs.comp[tier]) && !(player.downtimeChallenge==3 && tier != 0 && player.compAmount[tier] >= player.compAmount[tier-1])) {
     player.errors = player.errors.sub(costs.comp[tier])
     player.compAmount[tier]+=1
-    if (player.downtimeChallenge==3 && player.compAmount[8] >= 60) completeChall();
-    if (player.downtimeChallenge==9&&player.compAmount[8]>99) completeChall();
+    if (player.downtimeChallenge==3 && player.compAmount[8] >= 55) completeChall();
+    if (player.downtimeChallenge==9 && player.compAmount[8] >= 100) completeChall();
     updateCosts()
 
     switch (tier) {
@@ -625,8 +625,8 @@ function gameTick() {
   if (haveDU(19) && Math.random() <= 0.01) ePS *= 100
   var errorstobugfixesRatio=new Decimal(0)
   if (player.time>0) {
-    s=((new Date().getTime()-player.time)/1000)*gameSpeed // number of seconds since last tick
-    var addAmount=ePS.mul(s*(player.downtimeChallenge==8?0.1:1)).min(Decimal.sub(Number.MAX_VALUE,player.errors))
+    s=((new Date().getTime()-player.time)/1000)*gameSpeed*(player.downtimeChallenge == 8?0.1:1) // number of seconds since last tick
+    var addAmount=ePS.mul(s).min(Decimal.sub(Number.MAX_VALUE,player.errors))
     player.errors = player.errors.add(addAmount);
     player.totalErrors = player.totalErrors.add(addAmount);
     player.playtime+=s

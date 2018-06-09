@@ -1205,13 +1205,14 @@ function updateStory() {
     }
 }
 window.addEventListener('keydown', function(event) {
+    if (document.hasFocus()) return;
     if (event.keyCode == 17) controlDown = true;
     if (event.keyCode == 16) shiftDown = true;
 }, false);
 
 
 window.addEventListener('keydown', function(event) {
-  if (!player.options.hotkeys) return;
+  if (!player.options.hotkeys || document.hasFocus()) return;
     const tmp = event.keyCode;
     switch (tmp) {
         case 49: // 1

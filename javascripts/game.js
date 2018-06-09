@@ -48,6 +48,7 @@ EEtab='UpgAndPiecesTab'
 oldEEtab='UpgAndPiecesTab'
 percentage=0
 realPercentage=0
+gameSpeed = 1
 const story = ['','','','','']
 const TIER_NAMES = ['first','second','third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 'ninth']; // can add more if more gens/story elements, cuz that uses this too
 const ROMAN_NUMERALS=[]
@@ -623,7 +624,7 @@ function gameTick() {
   var ePS=getEPS()
   var errorstobugfixesRatio=new Decimal(0)
   if (player.time>0) {
-    s=(new Date().getTime()-player.time)/1000 // number of seconds since last tick
+    s=((new Date().getTime()-player.time)/1000)*gameSpeed // number of seconds since last tick
     var addAmount=ePS.mul(s*(player.downtimeChallenge==8?0.1:1)).min(Decimal.sub(Number.MAX_VALUE,player.errors))
     player.errors = player.errors.add(addAmount);
     player.totalErrors = player.totalErrors.add(addAmount);
@@ -1310,6 +1311,7 @@ function gameInit() {
   costs.boost=new Decimal(1e3).times(Decimal.pow(4+Math.floor(player.boostPower/100)*2,player.boostPower))
   var tickspeed=0
   var s=0
+  document.getElementById("gameSpeedIn").addEventListener("focusout", changeSpeed)
   updated=true
   setInterval(function()
   { 
@@ -1404,4 +1406,10 @@ function buyDTU(id) {
 
 function haveDU(id) {
   return player.dtUpgrades.includes(id) && player.downtimeChallenge == 0
+}
+
+function changeSpeed() {
+  speedin = document.getElementById("gameSpeedIn")
+  if (!speedin.checkValidity() || parseFloat(speedin.value) <= 0 || speedin.value == "") speedin.value = gameSpeed
+  else gameSpeed = speedin.value
 }

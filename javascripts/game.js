@@ -717,33 +717,56 @@ function gameTick() {
 	  }
   }
   updateElement('prestige2Gen',(Math.max(player.prestiges[1]-4,0)*15+((haveDU(15)&&player.downtimeChallenge==0)?15:20))+' Tier '+ROMAN_NUMERALS[Math.min(player.prestiges[1]+4,9)])
+  if (player.prestiges[1]<5 || player.downtimeChallenge != 0) showElement('upgradereq','inline');
   if (player.downtimeChallenge != 0) {
     hideElement('upgcate1')
     updateElement('upgradereq','Upgrades are unavailable in DC')
-  } else if (player.prestiges[1]<3) {
+  } else if (player.prestiges[1]<2) {
     hideElement('upgcate1')
-    updateElement('upgradereq','Unlocks at 3 I.P. changes')
+    updateElement('upgradereq','Unlocks at 2 I.P. changes')
   } else {
     showElement('upgcate1','inline')
     updateElement('upg1button','Cost: '+format(1e4))
     updateElement('upg2button','Cost: '+format(1e10))
-    updateElement('upg3button','Cost: '+format(1e20))
-    updateElement('upg4button','Cost: 100 TI comps & '+format(1e35))
-    updateElement('upg5button','Cost: 100 TII comps & '+format(1e40))
-    updateElement('upg6button','Cost: 100 TIII comps & '+format(1e50))
-    updateElement('upg7button','Cost: 100 TIV comps & '+format(1e65))
-    updateElement('upg8button','Cost: 100 TV comps & '+format(1e75))
-    updateElement('upg9button','Cost: 100 TVI comps & '+format(1e85))
-    updateElement('upg10button','Cost: 100 TVII comps & '+format(1e100))
-    updateElement('upg11button','Cost: 100 TVIII comps & '+format(1e115))
-    updateElement('upg12button','Cost: 100 TIX comps & '+format(1e125))
-    updateElement('upg17button','Cost: '+format(1e30))
-    updateElement('upg18button','Cost: '+format(1e35))
-    updateElement('upg19button','Cost: '+format(1e40))
-    updateElement('upg20button','Cost: '+format(1e50))
-    updateElement('upg21button','Cost: '+format(1e65))
-    updateElement('upg22button','Cost: N1 & '+format(1e3))
-    updateElement('upg23button','Cost: '+format(1e75))
+    if (player.prestiges[1]<3) {
+      hideElement('upgcate2')
+      updateElement('upgradereq','Next at 3 I.P. changes')
+    } else {
+      showElement('upgcate2','inline')
+      updateElement('upg3button','Cost: '+format(1e20))
+      updateElement('upg4button','Cost: 100 TI comps & '+format(1e35))
+      updateElement('upg5button','Cost: 100 TII comps & '+format(1e40))
+      updateElement('upg6button','Cost: 100 TIII comps & '+format(1e50))
+      updateElement('upg7button','Cost: 100 TIV comps & '+format(1e65))
+      updateElement('upg8button','Cost: 100 TV comps & '+format(1e75))
+      updateElement('upg9button','Cost: 100 TVI comps & '+format(1e85))
+      updateElement('upg10button','Cost: 100 TVII comps & '+format(1e100))
+      updateElement('upg11button','Cost: 100 TVIII comps & '+format(1e115))
+      updateElement('upg12button','Cost: 100 TIX comps & '+format(1e125))
+      updateElement('upg17button','Cost: '+format(1e30))
+      updateElement('upg18button','Cost: '+format(1e35))
+      updateElement('upg19button','Cost: '+format(1e40))
+      updateElement('upg20button','Cost: '+format(1e50))
+      updateElement('upg21button','Cost: '+format(1e65))
+      updateElement('upg22button','Cost: N1 & '+format(1e3))
+      updateElement('upg23button','Cost: '+format(1e75))
+      if (player.prestiges[1]<5 || player.downtimeChallenge != 0) {
+          updateElement('upgradereq','Next at 5 I.P. changes')
+          hideElement('upgcate3')
+      } else {
+        hideElement('upgradereq')
+        showElement('upgcate3','inline')
+        for (i=14;i<17;i++) {
+          if (player.upgrades.includes(i))
+          updateClass('upg'+i+'button','boughtUpgrade')
+          else if (checkIfAffordable(i)) updateClass('upg'+i+'button','')
+          else updateClass('upg'+i+'button','cantBuy')
+        }
+        if (player.upgrades.includes(22)) updateClass('upg'+22+'button','boughtUpgrade')
+        else if (checkIfAffordable(22)) updateClass('upg'+22+'button','')
+        else updateClass('upg'+22+'button','cantBuy')
+      }
+    }
     var check=0
     for (i=4;i<13;i++) {
       if (player.upgrades.includes(i)) check++
@@ -764,25 +787,9 @@ function gameTick() {
       else if (checkIfAffordable(i)) updateClass('upg'+i+'button','')
       else updateClass('upg'+i+'button','cantBuy')
     }
-    updateElement('upgradereq','Next at 5 I.P. changes')
   }
   if (player.prestiges[1]<5) updateElement('ipChange','Gain Tier '+ROMAN_NUMERALS[player.prestiges[1]+5]+' Computer, but resets everything.');
   else updateElement('ipChange','Gain boost for computers, but resets everything.');
-  if (player.prestiges[1]<5 || player.downtimeChallenge != 0) {
-    showElement('upgradereq','inline')
-    hideElement('upgcate2')
-  } else {
-    hideElement('upgradereq')
-    showElement('upgcate2','inline')
-    for (i=14;i<17;i++) {
-      if (player.upgrades.includes(i)) updateClass('upg'+i+'button','boughtUpgrade')
-      else if (checkIfAffordable(i)) updateClass('upg'+i+'button','')
-      else updateClass('upg'+i+'button','cantBuy')
-    }
-    if (player.upgrades.includes(22)) updateClass('upg'+22+'button','boughtUpgrade')
-    else if (checkIfAffordable(22)) updateClass('upg'+22+'button','')
-    else updateClass('upg'+22+'button','cantBuy')
-  }
   if (player.prestiges[1]>=5) updateElement('prestige2Type','Internet boost');
   else updateElement('prestige2Type','I.P. Change');
   if (player.downtimeChallenge==9) {

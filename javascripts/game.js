@@ -627,9 +627,13 @@ function gameTick() {
     player.warningPlaytime+=s
     if (player.errors.gte(Number.MAX_VALUE)) prestige(4);
     if (player.downtimeChallenge==5 && ePS.gt(0) && player.bugFixerOfflineTimer == 0) {
-    	player.bugfixes=player.bugfixes.add(player.bugfixes.div(Math.max(Math.min(80-player.errors.log10(),10),3)).max(1).times(s))
-    	errorstobugfixesRatio=player.errors.div(player.bugfixes)
-    	if (errorstobugfixesRatio.lt(1)) prestige(2,-2)
+      timeLeft = s
+      do {
+        player.bugfixes=player.bugfixes.add(player.bugfixes.div(Math.max(Math.min(80-player.errors.log10(),10),3)).max(1).times(Math.min(0.01,timeLeft)))
+        errorstobugfixesRatio=player.errors.div(player.bugfixes)
+        if (errorstobugfixesRatio.lt(1)) prestige(2,-2)
+        timeLeft -= 0.01
+      } while (timeLeft > 0)
     }
     for (i in player.warnUpgsGenerationLastTick) {
 		i=parseInt(i)
@@ -947,7 +951,7 @@ function gameTick() {
           }
 	  }
   }
-  if ([3,5].includes(player.downtimeChallenge)) showElement("backward");
+  if ([3,5,7].includes(player.downtimeChallenge)) showElement("backward");
   else hideElement("backward")
   
   if (player.options.debug) showElement('debugButton','inline-block')
@@ -1185,38 +1189,47 @@ window.addEventListener('keydown', function(event) {
     const tmp = event.keyCode;
     switch (tmp) {
         case 49: // 1
+        case 97:
           buyGen(0);
         break;
         
         case 50: // 2
+        case 98:
           buyGen(1);
         break;
         
         case 51: // 3
+        case 99:
           buyGen(2);
         break;
         
         case 52: // 4
+        case 100:
           buyGen(3);
         break;
         
         case 53: // 5
+        case 101:
           buyGen(4);
         break;
         
         case 54: // 6
+        case 102:
           buyGen(5);
         break;
         
         case 55: // 7
+        case 103:
           buyGen(6);
         break;
         
         case 56: // 8
+        case 104:
           buyGen(7);
         break;
         
         case 57: // 9
+        case 105:
           buyGen(8);
         break;
         

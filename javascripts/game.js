@@ -277,7 +277,7 @@ function newStory(story) {
 function updateCosts() {
   var baseCosts=[10,100,1e3,1e4,1e6,1e8,1e10,1e13,1e16]
   for (i=0;i<9;i++) {
-    costs.comp[i]=Decimal.times(baseCosts[i],Decimal.pow(costMult[i],player.compAmount[i]+((i<4&&haveDU(3)&&player.downtimeChallenge==0)?-1:0)))
+    costs.comp[i]=Decimal.times(baseCosts[i],Decimal.pow(costMult[i],player.compAmount[i]))
   }
   costs.boost=new Decimal(1e3).times(Decimal.pow(4+Math.floor(player.boostPower/100)*2,player.boostPower))
   costs.pieceSize=Decimal.pow(2+player.errorExpansion.expansions*0.5,Math.floor(100/player.errorExpansion.pieceSize))
@@ -392,7 +392,6 @@ function prestige(tier,challid=0) {
   }
   
   player.errors = new Decimal(10); //current errors
-  player.compAmount=(tier<4&&haveDU(3))?[1,1,1,1,0,0,0,0]:[0,0,0,0,0,0,0,0,0]
   player.generatedCompAmount=[0,0,0,0,0,0,0,0,0]
   player.boostPower=0
   player.time=new Date().getTime()
@@ -456,6 +455,7 @@ function prestige(tier,challid=0) {
   } else if (tier>4) {
     player.prestiges[3] = 0
   }
+  player.compAmount=(tier<4&&haveDU(3))?[1,1,1,1,0,0,0,0,0]:[0,0,0,0,0,0,0,0,0]
   if (haveDU(9)) player.prestiges[1] = Math.max(player.prestiges[1],1)
   updateCosts()
 }
@@ -474,7 +474,7 @@ function completeChall() {
 
 function getMultTier(tier) {  let ret = new Decimal.pow(((player.downtimeChallenge==4&&tier>5)||player.downtimeChallenge==6)?5:10,tier-1)
   ret = ret.mul(Decimal.pow(Math.pow(1.05 + Math.max((tier-4)/100,0),tier),player.compAmount[tier-1]))
-  ret = ret.mul(Decimal.pow(Math.pow(2+(haveDU(1)?0.6:0.5)*(player.downtimeChallenge==9?0:player.prestiges[2]),(player.downtimeChallenge==1)?0.5:1),player.boostPower)) // PB
+  ret = ret.mul(Decimal.pow(Math.pow((haveDU(1)?2.1:2)+0.5*(player.downtimeChallenge==9?0:player.prestiges[2]),(player.downtimeChallenge==1)?0.5:1),player.boostPower)) // PB
   ret = ret.mul(Decimal.pow(2+Math.floor(player.compAmount[8]/5)*0.5,player.prestiges[1]))
   if (player.prestiges[0]>=tier) ret = ret.mul(haveDU(7)?3:player.upgrades.includes(14)?2.5:2) // UC
   if (player.prestiges[0]>9&&tier==9) ret = ret.mul(Decimal.pow(haveDU(7)?3:2,player.prestiges[0]-9)) // IB
@@ -671,9 +671,9 @@ function gameTick() {
   }
   if (player.compAmount.slice(2,9).reduce((a, b) => a + b, 0) > 0||player.boostPower>0) {
     showElement('genUpgrade','block');
-    updateElement('genIncrease',Math.pow(2+(haveDU(1)?0.6:0.5)*(player.downtimeChallenge==9?0:player.prestiges[2]),(player.downtimeChallenge==1)?0.5:1).toPrecision(2));
+    updateElement('genIncrease',Math.pow((haveDU(1))?2.1:2+0.5*(player.downtimeChallenge==9?0:player.prestiges[2]),(player.downtimeChallenge==1)?0.5:1).toPrecision(2));
     updateElement('genIncreaseCost','Cost: ' + format(costs.boost));
-    updateElement('genBoost',format(Decimal.pow(Math.pow(2+(haveDU(1)?0.6:0.5)*player.prestiges[2],(player.downtimeChallenge==1)?0.5:1),player.boostPower),1,0,false));
+    updateElement('genBoost',format(Decimal.pow(Math.pow((haveDU(1))?2.1:2+0.5*player.prestiges[2],(player.downtimeChallenge==1)?0.5:1),player.boostPower),1,0,false));
     if (player.errors.lt(costs.boost)) updateClass('genIncreaseCost','cantBuy')
     else updateClass('genIncreaseCost','')
   } else {
@@ -944,7 +944,7 @@ function gameTick() {
               showElement('dc'+si+'upgrades','block')
               for (i2 = i*2-1;i2 <= i*2;i2++) {
                 si2 = i2.toString()
-                updateClass('du'+si2,haveDU(i)?'greenDTbutton':'normDTbutton')
+                updateClass('du'+si2,haveDU(i2)?'greenDTbutton':'normDTbutton')
                 updateElement('du'+si2,discs[si2])
               }
             }
@@ -958,15 +958,15 @@ function gameTick() {
   else hideElement('debugButton')
   
   //insert all dc targets here from now on
-  if (player.downtimeChallenge == 1  && player.prestiges[0] == 4)    completeChall();
-  if (player.downtimeChallenge == 2  && player.prestiges[0] == 8)    completeChall();
+  if (player.downtimeChallenge == 1  && player.prestiges[0] >= 4)    completeChall();
+  if (player.downtimeChallenge == 2  && player.prestiges[0] >= 8)    completeChall();
   if (player.downtimeChallenge == 3  && player.compAmount[8] >= 55)  completeChall();
   if (player.downtimeChallenge == 4  && player.compAmount[8] >= 60)  completeChall();
-  if (player.downtimeChallenge == 5  && player.prestiges[1] == 8)    completeChall();
-  if (player.downtimeChallenge == 7  && player.prestiges[0] == 9)    completeChall();
-  if (player.downtimeChallenge == 8  && player.prestiges[1] == 5)    completeChall();
-  if (player.downtimeChallenge == 9  && player.compAmount[8] >= 100) completeChall();
-  if (player.downtimeChallenge == 11 && player.prestiges[2] == 2)    completeChall();
+  if (player.downtimeChallenge == 5  && player.prestiges[1] >= 8)    completeChall();
+  if (player.downtimeChallenge == 7  && player.prestiges[0] >= 9)    completeChall();
+  if (player.downtimeChallenge == 8  && player.presitges[0] >= 5)    completeChall();
+  if (player.downtimeChallenge == 9  && player.prestiges[1] >= 7) completeChall();
+  if (player.downtimeChallenge == 11 && player.prestiges[2] >= 2)    completeChall();
 }
 
 function save() {
@@ -1388,7 +1388,7 @@ function buyDTU(id) {
 }
 
 function haveDU(id) {
-  return player.dtUpgrades.includes(id) && player.downtimeChallenge == 0
+  return player.dtUpgrades.includes(id) && [0,9].includes(player.downtimeChallenge)
 }
 
 function changeSpeed() {

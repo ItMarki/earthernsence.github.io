@@ -285,8 +285,6 @@ function buyGen(tier,bulk=1) {
   if (player.errors.gte(costs.comp[tier]) && !(player.downtimeChallenge==3 && tier != 0 && player.compAmount[tier] >= player.compAmount[tier-1])) {
     player.errors = player.errors.sub(costs.comp[tier])
     player.compAmount[tier]+=1
-    if (player.downtimeChallenge==3 && player.compAmount[8] >= 55) completeChall();
-    if (player.downtimeChallenge==9 && player.compAmount[8] >= 100) completeChall();
     updateCosts()
 
     switch (tier) {
@@ -306,8 +304,6 @@ function maxGen() {
       if (player.downtimeChallenge==3 && i != 0) bulk = Math.min(bulk,player.compAmount[i-1] - player.compAmount[i])
       player.errors=player.errors.sub(Decimal.pow(costMult[i],bulk).sub(1).div(costMult[i]-1).times(costs.comp[i]))
       player.compAmount[i]+=bulk
-      if (player.downtimeChallenge==3 && player.compAmount[8] >= 55) completeChall();
-      if (player.downtimeChallenge==9&&player.compAmount[8]>99) completeChall();
       updateCosts()
 
       switch (i) {
@@ -456,15 +452,6 @@ function prestige(tier,challid=0) {
   }
   if (haveDU(9)) player.prestiges[1] = Math.max(player.prestiges[1],1)
   updateCosts()
-  
-  // Insert DT targets here
-  if (player.downtimeChallenge == 1 && player.prestiges[0]==4) completeChall();
-  if (player.downtimeChallenge == 2 && player.prestiges[0]==8) completeChall();
-  if (player.downtimeChallenge == 4 && player.prestiges[1]==10) completeChall();
-  if (player.downtimeChallenge == 5 && player.prestiges[1]==8) completeChall();
-  if (player.downtimeChallenge == 7 && player.prestiges[0]==9) completeChall();
-  if (player.downtimeChallenge == 8 && player.prestiges[1]==5) completeChall();
-  if (player.downtimeChallenge == 11 && player.prestiges[2]==2) completeChall();
 }
 
 function completeChall() {
@@ -950,6 +937,17 @@ function gameTick() {
   
   if (player.options.debug) showElement('debugButton','inline-block')
   else hideElement('debugButton')
+  
+  //insert all dc targets here from now on
+  if (player.downtimeChallenge == 1  && player.prestiges[0] == 4)    completeChall();
+  if (player.downtimeChallenge == 2  && player.prestiges[0] == 8)    completeChall();
+  if (player.downtimeChallenge == 3  && player.compAmount[8] >= 55)  completeChall();
+  if (player.downtimeChallenge == 4  && player.compAmount[8] >= 60)  completeChall();
+  if (player.downtimeChallenge == 5  && player.prestiges[1] == 8)    completeChall();
+  if (player.downtimeChallenge == 7  && player.prestiges[0] == 9)    completeChall();
+  if (player.downtimeChallenge == 8  && player.prestiges[1] == 5)    completeChall();
+  if (player.downtimeChallenge == 9  && player.compAmount[8] >= 100) completeChall();
+  if (player.downtimeChallenge == 11 && player.prestiges[2] == 2)    completeChall();
 }
 
 function save() {

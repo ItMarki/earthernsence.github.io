@@ -27,12 +27,14 @@ const defaultPlayer = {
   playtime: 0, //total time spent online ingame
   time: 0, //total time displayed in stats
   version: 1.5, //very important
-  build: 23.1, //used for us to communicate commits, helps a lot
+  build: 23.2, //used for us to communicate commits, helps a lot
   hotfix: 1, //another way to use commits
   options: {
     hotkeys:true, //whether or not hotkeys are enabled (on by default)
     notation:0 //notation setting, see options
-  }
+  },
+  canStopBugFixer: true,
+  bugFixerOfflineTimer: 0
 }
 Object.freeze(defaultPlayer) //I will want to die if defaultPlayer gets edited by game again...
 player = defaultPlayer
@@ -413,6 +415,10 @@ function prestige(tier,challid=0) {
   } else {
     player.prestiges[0] = 0
   }
+  if (tier > 1 || challid == -2) {
+    player.canStopBugFixer = true
+    player.bugFixerOfflineTimer = 0
+  }
   if (tier==2) {
     player.prestiges[1] += (challid == -2?(player.prestiges[1]>0?-1:0):1)
     switch (player.prestiges[1]) {
@@ -613,13 +619,14 @@ function gameTick() {
   var errorstobugfixesRatio=new Decimal(0)
   if (player.time>0) {
     s=((new Date().getTime()-player.time)/1000)*(player.options.debug?gameSpeed:1)*(player.downtimeChallenge == 8?0.1:1) // number of seconds since last tick
+    player.bugFixerOfflineTimer = Math.max(player.bugFixerOfflineTimer-s,0)
     var addAmount=ePS.mul(s).min(Decimal.sub(Number.MAX_VALUE,player.errors))
     player.errors = player.errors.add(addAmount);
     player.totalErrors = player.totalErrors.add(addAmount);
     player.playtime+=s
     player.warningPlaytime+=s
     if (player.errors.gte(Number.MAX_VALUE)) prestige(4);
-    if (player.downtimeChallenge==5 && ePS.gt(0)) {
+    if (player.downtimeChallenge==5 && ePS.gt(0) && player.bugFixerOfflineTimer == 0) {
     	player.bugfixes=player.bugfixes.add(player.bugfixes.div(Math.max(Math.min(80-player.errors.log10(),10),3)).max(1).times(s))
     	errorstobugfixesRatio=player.errors.div(player.bugfixes)
     	if (errorstobugfixesRatio.lt(1)) prestige(2,-2)
@@ -645,12 +652,15 @@ function gameTick() {
 	  showElement('bugfixes','block')
 	  var hurryUp=false
 	  if (player.errors.gt(1e70)) hurryUp=errorstobugfixesRatio.lt(1e10)
-	  if (hurryUp) {
-		  updateElement('bugfixes','<b>There are '+format(player.bugfixes,1,0,false)+' bugfixes. (He\'s catching up! HURRY!)</b>')
-		  updateClass('bugfixes','hurryUp')
+      if (player.bugFixerOfflineTimer > 0) {
+        updateElement('bugfixes','<b>There are '+format(player.bugfixes,1,0,false)+' bugfixes. (Stopped for '+player.bugFixerOfflineTimer.toFixed(1)+' seconds)</b>')
+        updateClass('bugfixes','hurryUp')
+      } else if (hurryUp) {
+		updateElement('bugfixes','<b>There are '+format(player.bugfixes,1,0,false)+' bugfixes. (He\'s catching up! HURRY!)</b>')
+		updateClass('bugfixes','hurryUp')
 	  } else {
-		  updateElement('bugfixes','There are '+format(player.bugfixes,1,0,false)+' bugfixes.')
-		  updateClass('bugfixes','bugfixes')
+		updateElement('bugfixes','There are '+format(player.bugfixes,1,0,false)+' bugfixes.')
+		updateClass('bugfixes','bugfixes')
 	  }
   } else {
 	  hideElement('bugfixes','block')
@@ -785,6 +795,11 @@ function gameTick() {
 	  showElement('networks','block')
 	  updateElement('prestige3Req',player.prestiges[2]*200+80)
 	  updateElement('netMulti',(5+player.prestiges[2])/2)
+  }
+  if (player.canStopBugFixer && player.downtimeChallenge == 5) {
+    showElement("stopBugFixerButton",'inline-block')
+  } else {
+    hideElement("stopBugFixerButton")
   }
   if (player.prestiges[3]>0||player.warnings.gt(0)) {
     showElement('warningTabButton','inline-block')
@@ -1065,6 +1080,10 @@ function load(savefile,firstTime=true) {
 	  if (savefile.build<23) {
 		savefile.errorExpansion={pieceSize:100,expansions:0,upgrades:[]}
 	  }
+      if (savefile.build<23.2) {
+        savefile.canStopBugFixer = true
+        savefile.bugFixerOfflineTimer = 0
+      }
     }
     savefile.version = player.version
     savefile.build = player.build
@@ -1362,10 +1381,14 @@ function haveDU(id) {
 function changeSpeed() {
   inputing = false
   speedin = document.getElementById("gameSpeedIn")
-  if (!speedin.checkValidity() || parseFloat(speedin.value) <= 0 || speedin.value == "") speedin.value = gameSpeed
+  if (!speedin.checkValidity() || parseFloat(speedin.value) < 0 || speedin.value == "") speedin.value = gameSpeed
   else gameSpeed = speedin.value
 }
 
 function debugIsOn(option) {
   return document.getElementById(option).checked && player.options.debug
+}
+
+function stopBugFixer(time) {
+  player.bugFixerOfflineTimer = time
 }

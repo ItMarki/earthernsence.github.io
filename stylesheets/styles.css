@@ -178,6 +178,11 @@ width: 100%;
 .boughtUpgrade {
 background-color:#00e500
 }
+
+.boughtUpgrade:hover {
+background-color:#00e500	
+}
+
 .cantBuy, .cantBuy:hover {
 	background-color:#424242;
 	color: white;

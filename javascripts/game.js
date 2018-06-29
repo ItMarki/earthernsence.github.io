@@ -387,7 +387,7 @@ function prestige(tier,challid=0) {
   }
   if (tier>2) {
     //Tier 3 - Networks
-    if (tier == 3 && player.upgrades.includes(15)) player.upgrades=[15];
+    if (tier == 3 && player.upgrades.includes(14)) player.upgrades=[14];
     else player.upgrades=[];
   }
   
@@ -476,30 +476,22 @@ function getMultTier(tier) {  let ret = new Decimal.pow(((player.downtimeChallen
   ret = ret.mul(Decimal.pow(Math.pow(1.05 + Math.max((tier-4)/100,0),tier),player.compAmount[tier-1]))
   ret = ret.mul(Decimal.pow(Math.pow((haveDU(1)?2.1:2)+0.5*(player.downtimeChallenge==9?0:player.prestiges[2]),(player.downtimeChallenge==1)?0.5:1),player.boostPower)) // PB
   ret = ret.mul(Decimal.pow(2+Math.floor(player.compAmount[8]/5)*0.5,player.prestiges[1]))
-  if (player.prestiges[0]>=tier) ret = ret.mul(haveDU(7)?3:player.upgrades.includes(14)?2.5:2) // UC
+  if (player.prestiges[0]>=tier) ret = ret.mul(haveDU(7)?3:player.upgrades.includes(13)?2.5:2) // UC
   if (player.prestiges[0]>9&&tier==9) ret = ret.mul(Decimal.pow(haveDU(7)?3:2,player.prestiges[0]-9)) // IB
   if (player.upgrades.includes(1)) ret = ret.mul(2)
   if (player.upgrades.includes(2)) ret = ret.mul(5)
-  if (player.upgrades.includes(3)) ret = ret.mul(10)
-  if (player.upgrades.includes(15)) ret = ret.mul(5)
-  if (player.upgrades.includes(17)) ret = ret.mul(75)
-  if (player.upgrades.includes(18)) ret = ret.mul(750)
-  if (player.upgrades.includes(19)) ret = ret.mul(7500)
-  if (player.upgrades.includes(20)) ret = ret.mul(75000)
-  if (player.upgrades.includes(21)) ret = ret.mul(750000)
-  if (player.upgrades.includes(23)) ret = ret.mul(750000)
-  if (player.upgrades.includes(4)&&tier==1) ret = ret.mul(Math.pow(1.15,Math.sqrt(player.compAmount[0])))
-  if (player.upgrades.includes(5)&&tier==2) ret = ret.mul(Math.pow(1.15,Math.sqrt(player.compAmount[1])))
-  if (player.upgrades.includes(6)&&tier==3) ret = ret.mul(Math.pow(1.15,Math.sqrt(player.compAmount[2])))
-  if (player.upgrades.includes(7)&&tier==4) ret = ret.mul(Math.pow(1.15,Math.sqrt(player.compAmount[3])))
-  if (player.upgrades.includes(8)&&tier==5) ret = ret.mul(Math.pow(1.15,Math.sqrt(player.compAmount[4])))
-  if (player.upgrades.includes(9)&&tier==6) ret = ret.mul(Math.pow(1.15,Math.sqrt(player.compAmount[5])))
-  if (player.upgrades.includes(10)&&tier==7) ret = ret.mul(Math.pow(1.15,Math.sqrt(player.compAmount[6])))
-  if (player.upgrades.includes(11)&&tier==8) ret = ret.mul(Math.pow(1.15,Math.sqrt(player.compAmount[7])))
-  if (player.upgrades.includes(12)&&tier==9) ret = ret.mul(Math.pow(1.15,Math.sqrt(player.compAmount[8])))
-  if (player.upgrades.includes(13)) ret = ret.mul(Math.pow(1.05,Math.sqrt(player.compAmount.reduce((a, b) => a + b, 0))))
-  if (player.upgrades.includes(14)&&tier<5) ret = ret.mul(10)
-  if (player.upgrades.includes(22)) ret = ret.mul(1000000)
+  if (player.upgrades.includes(3)&&tier==1) ret = ret.mul(Math.pow(1.15,Math.sqrt(player.compAmount[0])))
+  if (player.upgrades.includes(4)&&tier==2) ret = ret.mul(Math.pow(1.15,Math.sqrt(player.compAmount[1])))
+  if (player.upgrades.includes(5)&&tier==3) ret = ret.mul(Math.pow(1.15,Math.sqrt(player.compAmount[2])))
+  if (player.upgrades.includes(6)&&tier==4) ret = ret.mul(Math.pow(1.15,Math.sqrt(player.compAmount[3])))
+  if (player.upgrades.includes(7)&&tier==5) ret = ret.mul(Math.pow(1.15,Math.sqrt(player.compAmount[4])))
+  if (player.upgrades.includes(8)&&tier==6) ret = ret.mul(Math.pow(1.15,Math.sqrt(player.compAmount[5])))
+  if (player.upgrades.includes(9)&&tier==7) ret = ret.mul(Math.pow(1.15,Math.sqrt(player.compAmount[6])))
+  if (player.upgrades.includes(10)&&tier==8) ret = ret.mul(Math.pow(1.15,Math.sqrt(player.compAmount[7])))
+  if (player.upgrades.includes(11)&&tier==9) ret = ret.mul(Math.pow(1.15,Math.sqrt(player.compAmount[8])))
+  if (player.upgrades.includes(12)) ret = ret.mul(Math.pow(1.05,Math.sqrt(player.compAmount.reduce((a, b) => a + b, 0))))
+  if (player.upgrades.includes(13)&&tier<5) ret = ret.mul(10)
+  if (player.upgrades.includes(16)) ret = ret.mul(1000000)
   if (player.warningUpgrades.includes(1)) ret = ret.mul(getUpgradeMultiplier(1))
   if (player.warningUpgrades.includes(2)) ret = ret.mul(getUpgradeMultiplier(2))
   if (player.warningUpgrades.includes(3)) ret = ret.mul(getUpgradeMultiplier(3,tier))
@@ -529,31 +521,24 @@ function checkIfAffordable(id) {
   switch (id) {
     case 1: if (player.errors.lt(1e4)) {return false}; return true
     case 2: if (player.errors.lt(1e10)) {return false}; return true
-    case 3: if (player.errors.lt(1e20)) {return false}; return true
-    case 4: if (player.errors.lt(1e35)||player.compAmount[0]<100) {return false}; return true
-    case 5: if (player.errors.lt(1e40)||player.compAmount[1]<100) {return false}; return true
-    case 6: if (player.errors.lt(1e50)||player.compAmount[2]<100) {return false}; return true
-    case 7: if (player.errors.lt(1e65)||player.compAmount[3]<100) {return false}; return true
-    case 8: if (player.errors.lt(1e75)||player.compAmount[4]<100) {return false}; return true
-    case 9: if (player.errors.lt(1e85)||player.compAmount[5]<100) {return false}; return true
-    case 10: if (player.errors.lt(1e100)||player.compAmount[6]<100) {return false}; return true
-    case 11: if (player.errors.lt(1e115)||player.compAmount[7]<100) {return false}; return true
-    case 12: if (player.errors.lt(1e125)||player.compAmount[8]<100) {return false}; return true
-    case 13: if (player.errors.lt(1e140)) return false
-             for (check=4;check<13;check++) {
+    case 3: if (player.errors.lt(1e35)||player.compAmount[0]<100) {return false}; return true
+    case 4: if (player.errors.lt(1e40)||player.compAmount[1]<100) {return false}; return true
+    case 5: if (player.errors.lt(1e50)||player.compAmount[2]<100) {return false}; return true
+    case 6: if (player.errors.lt(1e65)||player.compAmount[3]<100) {return false}; return true
+    case 7: if (player.errors.lt(1e75)||player.compAmount[4]<100) {return false}; return true
+    case 8: if (player.errors.lt(1e85)||player.compAmount[5]<100) {return false}; return true
+    case 9: if (player.errors.lt(1e100)||player.compAmount[6]<100) {return false}; return true
+    case 10: if (player.errors.lt(1e115)||player.compAmount[7]<100) {return false}; return true
+    case 11: if (player.errors.lt(1e125)||player.compAmount[8]<100) {return false}; return true
+    case 12: if (player.errors.lt(1e140)) return false
+             for (check=3;check<12;check++) {
                if (!player.upgrades.includes(check)||player.compAmount[check-4]<110) return false
              }
              return true
-    case 14: if (player.prestiges[0]<9) {return false}; return true
-    case 15: if (player.prestiges[1]<5) {return false}; return true
-    case 16: if (player.prestiges[1]<7) {return false}; return true
-    case 17: if (player.errors.lt(1e30)) {return false}; return true
-    case 18: if (player.errors.lt(1e35)) {return false}; return true
-    case 19: if (player.errors.lt(1e40)) {return false}; return true
-    case 20: if (player.errors.lt(1e50)) {return false}; return true
-    case 21: if (player.errors.lt(1e65)) {return false}; return true
-    case 22: if (player.prestiges[2]<1||player.errors.lt(1e3)) {return false}; return true
-    case 23: if (player.errors.lt(1e75)) {return false}; return true
+    case 13: if (player.prestiges[0]<9) {return false}; return true
+    case 14: if (player.prestiges[1]<5) {return false}; return true
+    case 15: if (player.prestiges[1]<7) {return false}; return true
+    case 16: if (player.prestiges[2]<1||player.errors.lt(1e3)) {return false}; return true
 }
   return false
 }
@@ -708,7 +693,7 @@ function gameTick() {
 	  hideElement('upgradeComputers')
   } else {
 	  showElement('upgradeComputers','block')
-	  if (player.prestiges[0]<Math.min(player.prestiges[1]+4,player.upgrades.includes(16)?Math.max(player.prestiges[1]+4,9):9)) {
+	  if (player.prestiges[0]<Math.min(player.prestiges[1]+4,player.upgrades.includes(15)?Math.max(player.prestiges[1]+4,9):9)) {
 		updateElement('prestige1Gen',Math.max(player.prestiges[0]*10-70,10)+' Tier '+ROMAN_NUMERALS[Math.min(player.prestiges[0]+1,9)])
 		hideElement('maxout')
 		showElement('abletoprestige','inline')
@@ -734,56 +719,41 @@ function gameTick() {
       updateElement('upgradereq','Next at 3 I.P. changes')
     } else {
       showElement('upgcate2','inline')
-      updateElement('upg3button','Cost: '+format(1e20))
-      updateElement('upg4button','Cost: 100 TI comps & '+format(1e35))
-      updateElement('upg5button','Cost: 100 TII comps & '+format(1e40))
-      updateElement('upg6button','Cost: 100 TIII comps & '+format(1e50))
-      updateElement('upg7button','Cost: 100 TIV comps & '+format(1e65))
-      updateElement('upg8button','Cost: 100 TV comps & '+format(1e75))
-      updateElement('upg9button','Cost: 100 TVI comps & '+format(1e85))
-      updateElement('upg10button','Cost: 100 TVII comps & '+format(1e100))
-      updateElement('upg11button','Cost: 100 TVIII comps & '+format(1e115))
-      updateElement('upg12button','Cost: 100 TIX comps & '+format(1e125))
-      updateElement('upg17button','Cost: '+format(1e30))
-      updateElement('upg18button','Cost: '+format(1e35))
-      updateElement('upg19button','Cost: '+format(1e40))
-      updateElement('upg20button','Cost: '+format(1e50))
-      updateElement('upg21button','Cost: '+format(1e65))
-      updateElement('upg22button','Cost: N1 & '+format(1e3))
-      updateElement('upg23button','Cost: '+format(1e75))
+      updateElement('upg3button','Cost: 100 TI comps & '+format(1e35))
+      updateElement('upg4button','Cost: 100 TII comps & '+format(1e40))
+      updateElement('upg5button','Cost: 100 TIII comps & '+format(1e50))
+      updateElement('upg6button','Cost: 100 TIV comps & '+format(1e65))
+      updateElement('upg7button','Cost: 100 TV comps & '+format(1e75))
+      updateElement('upg8button','Cost: 100 TVI comps & '+format(1e85))
+      updateElement('upg9button','Cost: 100 TVII comps & '+format(1e100))
+      updateElement('upg10button','Cost: 100 TVIII comps & '+format(1e115))
+      updateElement('upg11button','Cost: 100 TIX comps & '+format(1e125))
+      updateElement('upg16button','Cost: N1 & '+format(1e3))
       if (player.prestiges[1]<5 && !debugIsOn("showAllUpg")) {
           updateElement('upgradereq','Next at 5 I.P. changes')
           hideElement('upgcate3')
       } else {
         hideElement('upgradereq')
         showElement('upgcate3','inline')
-        for (i=14;i<17;i++) {
+        for (i=13;i<17;i++) {
           if (player.upgrades.includes(i))
           updateClass('upg'+i+'button','boughtUpgrade')
           else if (checkIfAffordable(i)) updateClass('upg'+i+'button','')
           else updateClass('upg'+i+'button','cantBuy')
         }
-        if (player.upgrades.includes(22)) updateClass('upg'+22+'button','boughtUpgrade')
-        else if (checkIfAffordable(22)) updateClass('upg'+22+'button','')
-        else updateClass('upg'+22+'button','cantBuy')
       }
     }
     var check=0
-    for (i=4;i<13;i++) {
+    for (i=3;i<12;i++) {
       if (player.upgrades.includes(i)) check++
     }
     if (check>8) {
-      showElement('upg13','inline')
-      updateElement('upg13button','Cost: 110 comps each & '+format(1e140))
+      showElement('upg12','inline')
+      updateElement('upg12button','Cost: 110 comps each & '+format(1e140))
     } else {
-      hideElement('upg13')
+      hideElement('upg12')
     }
-    for (i=1;i<14;i++) {
-      if (player.upgrades.includes(i)) updateClass('upg'+i+'button','boughtUpgrade')
-      else if (checkIfAffordable(i)) updateClass('upg'+i+'button','')
-      else updateClass('upg'+i+'button','cantBuy')
-    }
-    for (i=17;i<=23;i++) {
+    for (i=1;i<13;i++) {
       if (player.upgrades.includes(i)) updateClass('upg'+i+'button','boughtUpgrade')
       else if (checkIfAffordable(i)) updateClass('upg'+i+'button','')
       else updateClass('upg'+i+'button','cantBuy')

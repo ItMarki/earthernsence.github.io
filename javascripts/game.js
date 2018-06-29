@@ -8,7 +8,7 @@ const defaultPlayer = {
   boostPower:0, //prodBoost
   prestiges: [0,0,0,0], //amount of prestiges where [X,0,0] is X UCs, [0,X,0] is X I.P. changes/internet boosts and [0,0,X] is X networks, and [0,0,0,X] is warnings.
   story: -1, //amount of story.
-  upgrades: [], //see lines 261-274
+  upgrades: {}, //see lines 261-274
   downtimeChallenge: 0,
   dtUpgrades: [],
   dtChallCompleted: {},
@@ -27,7 +27,7 @@ const defaultPlayer = {
   playtime: 0, //total time spent online ingame
   time: 0, //total time displayed in stats
   version: 1.5, //very important
-  build: 23.2, //used for us to communicate commits, helps a lot
+  build: 24, //used for us to communicate commits, helps a lot
   hotfix: 1, //another way to use commits
   options: {
     hotkeys:true, //whether or not hotkeys are enabled (on by default)
@@ -387,7 +387,7 @@ function prestige(tier,challid=0) {
   }
   if (tier>2) {
     //Tier 3 - Networks
-    if (tier == 3 && player.upgrades.includes(14)) player.upgrades=[14];
+    if (tier == 3 && haveUpg(14)) player.upgrades=[14];
     else player.upgrades=[];
   }
   
@@ -476,22 +476,22 @@ function getMultTier(tier) {  let ret = new Decimal.pow(((player.downtimeChallen
   ret = ret.mul(Decimal.pow(Math.pow(1.05 + Math.max((tier-4)/100,0),tier),player.compAmount[tier-1]))
   ret = ret.mul(Decimal.pow(Math.pow((haveDU(1)?2.1:2)+0.5*(player.downtimeChallenge==9?0:player.prestiges[2]),(player.downtimeChallenge==1)?0.5:1),player.boostPower)) // PB
   ret = ret.mul(Decimal.pow(2+Math.floor(player.compAmount[8]/5)*0.5,player.prestiges[1]))
-  if (player.prestiges[0]>=tier) ret = ret.mul(haveDU(7)?3:player.upgrades.includes(13)?2.5:2) // UC
+  if (player.prestiges[0]>=tier) ret = ret.mul(haveDU(7)?3:haveUpg(13)?2.5:2) // UC
   if (player.prestiges[0]>9&&tier==9) ret = ret.mul(Decimal.pow(haveDU(7)?3:2,player.prestiges[0]-9)) // IB
-  if (player.upgrades.includes(1)) ret = ret.mul(2)
-  if (player.upgrades.includes(2)) ret = ret.mul(5)
-  if (player.upgrades.includes(3)&&tier==1) ret = ret.mul(Math.pow(1.15,Math.sqrt(player.compAmount[0])))
-  if (player.upgrades.includes(4)&&tier==2) ret = ret.mul(Math.pow(1.15,Math.sqrt(player.compAmount[1])))
-  if (player.upgrades.includes(5)&&tier==3) ret = ret.mul(Math.pow(1.15,Math.sqrt(player.compAmount[2])))
-  if (player.upgrades.includes(6)&&tier==4) ret = ret.mul(Math.pow(1.15,Math.sqrt(player.compAmount[3])))
-  if (player.upgrades.includes(7)&&tier==5) ret = ret.mul(Math.pow(1.15,Math.sqrt(player.compAmount[4])))
-  if (player.upgrades.includes(8)&&tier==6) ret = ret.mul(Math.pow(1.15,Math.sqrt(player.compAmount[5])))
-  if (player.upgrades.includes(9)&&tier==7) ret = ret.mul(Math.pow(1.15,Math.sqrt(player.compAmount[6])))
-  if (player.upgrades.includes(10)&&tier==8) ret = ret.mul(Math.pow(1.15,Math.sqrt(player.compAmount[7])))
-  if (player.upgrades.includes(11)&&tier==9) ret = ret.mul(Math.pow(1.15,Math.sqrt(player.compAmount[8])))
-  if (player.upgrades.includes(12)) ret = ret.mul(Math.pow(1.05,Math.sqrt(player.compAmount.reduce((a, b) => a + b, 0))))
-  if (player.upgrades.includes(13)&&tier<5) ret = ret.mul(10)
-  if (player.upgrades.includes(16)) ret = ret.mul(1000000)
+  if (haveUpg(1)) ret = ret.mul(2)
+  if (haveUpg(2)) ret = ret.mul(5)
+  if (haveUpg(3)&&tier==1) ret = ret.mul(Math.pow(1.15,Math.sqrt(player.compAmount[0])))
+  if (haveUpg(4)&&tier==2) ret = ret.mul(Math.pow(1.15,Math.sqrt(player.compAmount[1])))
+  if (haveUpg(5)&&tier==3) ret = ret.mul(Math.pow(1.15,Math.sqrt(player.compAmount[2])))
+  if (haveUpg(6)&&tier==4) ret = ret.mul(Math.pow(1.15,Math.sqrt(player.compAmount[3])))
+  if (haveUpg(7)&&tier==5) ret = ret.mul(Math.pow(1.15,Math.sqrt(player.compAmount[4])))
+  if (haveUpg(8)&&tier==6) ret = ret.mul(Math.pow(1.15,Math.sqrt(player.compAmount[5])))
+  if (haveUpg(9)&&tier==7) ret = ret.mul(Math.pow(1.15,Math.sqrt(player.compAmount[6])))
+  if (haveUpg(10)&&tier==8) ret = ret.mul(Math.pow(1.15,Math.sqrt(player.compAmount[7])))
+  if (haveUpg(11)&&tier==9) ret = ret.mul(Math.pow(1.15,Math.sqrt(player.compAmount[8])))
+  if (haveUpg(12)) ret = ret.mul(Math.pow(1.05,Math.sqrt(player.compAmount.reduce((a, b) => a + b, 0))))
+  if (haveUpg(13)&&tier<5) ret = ret.mul(10)
+  if (haveUpg(16)) ret = ret.mul(1000000)
   if (player.warningUpgrades.includes(1)) ret = ret.mul(getUpgradeMultiplier(1))
   if (player.warningUpgrades.includes(2)) ret = ret.mul(getUpgradeMultiplier(2))
   if (player.warningUpgrades.includes(3)) ret = ret.mul(getUpgradeMultiplier(3,tier))
@@ -517,9 +517,9 @@ function getEPS() {
 }
 
 function checkIfAffordable(id) {
-  if (player.upgrades.includes(id)) return false
+  if (haveUpg(id) && id != 1) return false
   switch (id) {
-    case 1: if (player.errors.lt(1e4)) {return false}; return true
+    case 1: if (player.errors.lt(Decimal.pow10(Math.pow(2,2+(haveUpg(1)?player.upgrades[1]:0))))) {return false}; return true
     case 2: if (player.errors.lt(1e10)) {return false}; return true
     case 3: if (player.errors.lt(1e35)||player.compAmount[0]<100) {return false}; return true
     case 4: if (player.errors.lt(1e40)||player.compAmount[1]<100) {return false}; return true
@@ -532,7 +532,7 @@ function checkIfAffordable(id) {
     case 11: if (player.errors.lt(1e125)||player.compAmount[8]<100) {return false}; return true
     case 12: if (player.errors.lt(1e140)) return false
              for (check=3;check<12;check++) {
-               if (!player.upgrades.includes(check)||player.compAmount[check-4]<110) return false
+               if (!haveUpg(check)||player.compAmount[check-4]<110) return false
              }
              return true
     case 13: if (player.prestiges[0]<9) {return false}; return true
@@ -546,7 +546,7 @@ function checkIfAffordable(id) {
 function buyUpg(id) {
   if (!checkIfAffordable(id)) return
   switch (id) {
-    case 1: player.errors=player.errors.sub(1e4); break
+    case 1: player.errors=player.errors.sub(Decimal.pow10(Math.pow(2,2+(haveUpg(1)?player.upgrades[1]:0)))); break
     case 2: player.errors=player.errors.sub(1e10); break
     case 3: player.errors=player.errors.sub(1e20); break
     case 4: player.errors=player.errors.sub(1e35); break
@@ -566,7 +566,8 @@ function buyUpg(id) {
     case 21: player.errors=player.errors.sub(1e65); break
     case 23: player.errors=player.errors.sub(1e75); break
   }
-  player.upgrades.push(id)
+  if (haveUpg(id)) player.upgrades[id]++
+  else player.upgrades[id]=1
 }
 
 function getUpgradeMultiplier(id,tier) {
@@ -693,7 +694,7 @@ function gameTick() {
 	  hideElement('upgradeComputers')
   } else {
 	  showElement('upgradeComputers','block')
-	  if (player.prestiges[0]<Math.min(player.prestiges[1]+4,player.upgrades.includes(15)?Math.max(player.prestiges[1]+4,9):9)) {
+	  if (player.prestiges[0]<Math.min(player.prestiges[1]+4,haveUpg(15)?Math.max(player.prestiges[1]+4,9):9)) {
 		updateElement('prestige1Gen',Math.max(player.prestiges[0]*10-70,10)+' Tier '+ROMAN_NUMERALS[Math.min(player.prestiges[0]+1,9)])
 		hideElement('maxout')
 		showElement('abletoprestige','inline')
@@ -712,7 +713,7 @@ function gameTick() {
     updateElement('upgradereq','Unlocks at 2 I.P. changes')
   } else {
     showElement('upgcate1','inline')
-    updateElement('upg1button','Cost: '+format(1e4))
+    updateElement('upg1button','Cost: '+format(Decimal.pow10(Math.pow(2,2+(haveUpg(1)?player.upgrades[1]:0)))))
     updateElement('upg2button','Cost: '+format(1e10))
     if (player.prestiges[1]<3 && !debugIsOn("showAllUpg")) {
       hideElement('upgcate2')
@@ -736,7 +737,7 @@ function gameTick() {
         hideElement('upgradereq')
         showElement('upgcate3','inline')
         for (i=13;i<17;i++) {
-          if (player.upgrades.includes(i))
+          if (haveUpg(i))
           updateClass('upg'+i+'button','boughtUpgrade')
           else if (checkIfAffordable(i)) updateClass('upg'+i+'button','')
           else updateClass('upg'+i+'button','cantBuy')
@@ -745,7 +746,7 @@ function gameTick() {
     }
     var check=0
     for (i=3;i<12;i++) {
-      if (player.upgrades.includes(i)) check++
+      if (haveUpg(i)) check++
     }
     if (check>8) {
       showElement('upg12','inline')
@@ -753,8 +754,8 @@ function gameTick() {
     } else {
       hideElement('upg12')
     }
-    for (i=1;i<13;i++) {
-      if (player.upgrades.includes(i)) updateClass('upg'+i+'button','boughtUpgrade')
+    for (i=2;i<13;i++) {
+      if (haveUpg(i)) updateClass('upg'+i+'button','boughtUpgrade')
       else if (checkIfAffordable(i)) updateClass('upg'+i+'button','')
       else updateClass('upg'+i+'button','cantBuy')
     }
@@ -1058,6 +1059,10 @@ function load(savefile,firstTime=true) {
       if (savefile.build<23.2) {
         savefile.canStopBugFixer = true
         savefile.bugFixerOfflineTimer = 0
+      }
+      if (savefile.build<24) {
+        alert("Your upgrades will now be cleared due to a new update, sorry!")
+        savefile.upgrades = {}
       }
     }
     savefile.version = player.version
@@ -1375,4 +1380,8 @@ function debugIsOn(option) {
 
 function stopBugFixer(time) {
   player.bugFixerOfflineTimer = time
+}
+  
+function haveUpg(id) {
+  return player.upgrades.hasOwnProperty(id) && player.upgrades[id] > 0
 }

@@ -478,8 +478,8 @@ function getMultTier(tier) {  let ret = new Decimal.pow(((player.downtimeChallen
   ret = ret.mul(Decimal.pow(2+Math.floor(player.compAmount[8]/5)*0.5,player.prestiges[1]))
   if (player.prestiges[0]>=tier) ret = ret.mul(haveDU(7)?3:haveUpg(13)?2.5:2) // UC
   if (player.prestiges[0]>9&&tier==9) ret = ret.mul(Decimal.pow(haveDU(7)?3:2,player.prestiges[0]-9)) // IB
-  if (haveUpg(1)) ret = ret.mul(Decimal.pow(2,player.upgrades[1]))
-  if (haveUpg(2)) ret = ret.mul(5)
+  if (haveUpg(1,false)) ret = ret.mul(Decimal.pow(2,player.upgrades[1]))
+  if (haveUpg(2,false)) ret = ret.mul(Decimal.pow(2,player.upgrades[2]))
   if (haveUpg(3)&&tier==1) ret = ret.mul(Math.pow(1.15,Math.sqrt(player.compAmount[0])))
   if (haveUpg(4)&&tier==2) ret = ret.mul(Math.pow(1.15,Math.sqrt(player.compAmount[1])))
   if (haveUpg(5)&&tier==3) ret = ret.mul(Math.pow(1.15,Math.sqrt(player.compAmount[2])))
@@ -519,8 +519,8 @@ function getEPS() {
 function checkIfAffordable(id) {
   if (haveUpg(id)) return false
   switch (id) {
-    case 1: if (player.errors.lt(Decimal.pow10(Math.pow(1.5,2+(haveUpg(1)?player.upgrades[1]:0))))) {return false}; return true
-    case 2: if (player.errors.lt(1e10)) {return false}; return true
+    case 1: if (player.errors.lt(Decimal.pow10(Math.pow(1.5,2+(haveUpg(1,false)?player.upgrades[1]:0))))) {return false}; return true
+    case 2: if (player.errors.lt(Decimal.pow10(10+35*(haveUpg(2,false)?player.upgrades[2]:0)))) {return false}; return true
     case 3: if (player.errors.lt(1e35)||player.compAmount[0]<100) {return false}; return true
     case 4: if (player.errors.lt(1e40)||player.compAmount[1]<100) {return false}; return true
     case 5: if (player.errors.lt(1e50)||player.compAmount[2]<100) {return false}; return true
@@ -546,8 +546,8 @@ function checkIfAffordable(id) {
 function buyUpg(id) {
   if (!checkIfAffordable(id)) return
   switch (id) {
-    case 1: player.errors=player.errors.sub(Decimal.pow10(Math.pow(1.5,2+(haveUpg(1)?player.upgrades[1]:0)))); break
-    case 2: player.errors=player.errors.sub(1e10); break
+    case 1: player.errors=player.errors.sub(Decimal.pow10(Math.pow(1.5,2+(haveUpg(1,false)?player.upgrades[1]:0)))); break
+    case 2: player.errors=player.errors.sub(Decimal.pow10(10+35*(haveUpg(2,false)?player.upgrades[2]:0))); break
     case 3: player.errors=player.errors.sub(1e20); break
     case 4: player.errors=player.errors.sub(1e35); break
     case 5: player.errors=player.errors.sub(1e40); break
@@ -566,7 +566,7 @@ function buyUpg(id) {
     case 21: player.errors=player.errors.sub(1e65); break
     case 23: player.errors=player.errors.sub(1e75); break
   }
-  if (haveUpg(id)) player.upgrades[id]++
+  if (haveUpg(id,false)) player.upgrades[id]++
   else player.upgrades[id]=1
 }
 
@@ -713,8 +713,8 @@ function gameTick() {
     updateElement('upgradereq','Unlocks at 2 I.P. changes')
   } else {
     showElement('upgcate1','inline')
-    updateElement('upg1button','Cost: '+format(Decimal.pow10(Math.pow(1.5,2+(haveUpg(1)?player.upgrades[1]:0)))))
-    updateElement('upg2button','Cost: '+format(1e10))
+    updateElement('upg1button','Cost: '+format(Decimal.pow10(Math.pow(1.5,2+(haveUpg(1,false)?player.upgrades[1]:0)))))
+    updateElement('upg2button','Cost: '+format(Decimal.pow10(10+35*(haveUpg(2,false)?player.upgrades[2]:0))))
     if (player.prestiges[1]<3 && !debugIsOn("showAllUpg")) {
       hideElement('upgcate2')
       updateElement('upgradereq','Next at 3 I.P. changes')
@@ -928,7 +928,8 @@ function gameTick() {
   if (player.options.debug) showElement('debugButton','inline-block')
   else hideElement('debugButton')
   
-  updateElement("processDisplay",format((new Decimal(1e4)).div(Decimal.pow(2,player.upgrades[1]),1,0,false)))
+  updateElement("processDisplay",format((new Decimal(1e4)).div(Decimal.pow(2,haveUpg(1,false)?player.upgrades[1]:0),1,0,false)))
+  updateElement("coreDisplay",Math.pow(2,haveUpg(2,false)?player.upgrades[2]:false))
     
   //insert all dc targets here from now on
   if (player.downtimeChallenge == 1  && player.prestiges[0] >= 4)    completeChall();
@@ -1384,7 +1385,10 @@ function stopBugFixer(time) {
   player.bugFixerOfflineTimer = time
 }
   
-function haveUpg(id) {
-  if (id == 1) return player.upgrades[1] == 13
+function haveUpg(id,max=true) {
+  if (max) {
+    if (id == 1) return player.upgrades[1] == 13
+    if (id == 2) return player.upgrades[2] == 8
+  }
   return player.upgrades.hasOwnProperty(id) && player.upgrades[id] > 0
 }

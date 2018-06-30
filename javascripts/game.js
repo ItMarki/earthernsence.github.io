@@ -698,7 +698,7 @@ function gameTick() {
 		showElement('maxout','inline')
 	  }
   }
-  updateElement('prestige2Gen',(Math.max(player.prestiges[1]-4,0)*15+((haveDU(15)&&player.downtimeChallenge==0)?15:20))+' Tier '+ROMAN_NUMERALS[Math.min(player.prestiges[1]+4,9)])
+  updateElement('prestige2Gen',(Math.max(player.prestiges[1]-5,0)*15+((haveDU(15)&&player.downtimeChallenge==0)?15:20))+' Tier '+ROMAN_NUMERALS[Math.min(player.prestiges[1]+4,9)])
   if (player.prestiges[1]<5 || player.downtimeChallenge != 0) showElement('upgradereq','inline');
   if (player.downtimeChallenge != 0 && !debugIsOn("showAllUpg")) {
     hideElement('upgcate1')

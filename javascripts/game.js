@@ -945,7 +945,7 @@ function gameTick() {
   if (player.downtimeChallenge == 2  && player.prestiges[0] >= 8)    completeChall();
   if (player.downtimeChallenge == 3  && player.compAmount[8] >= 55)  completeChall();
   if (player.downtimeChallenge == 4  && player.compAmount[8] >= 60)  completeChall();
-  if (player.downtimeChallenge == 5  && player.prestiges[1] >= 8)    completeChall();
+  if (player.downtimeChallenge == 5  && player.prestiges[1] >= 9)    completeChall();
   if (player.downtimeChallenge == 6  && player.compAmount[8] >= 55)  completeChall();
   if (player.downtimeChallenge == 7  && player.prestiges[0] >= 9)    completeChall();
   if (player.downtimeChallenge == 8  && player.presitges[0] >= 5)    completeChall();

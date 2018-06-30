@@ -432,8 +432,8 @@ function prestige(tier,challid=0) {
     }
     if (player.prestiges[2]==1) newStory(21);
   } else if (tier>2) {
-    if (player.warningUpgrades.includes(12)) player.prestiges[1]=6
-    else if (player.warningUpgrades.includes(11)) player.prestiges[1]=3
+    if (haveWU(12)) player.prestiges[1]=6
+    else if (haveWU(11)) player.prestiges[1]=3
     else player.prestiges[1]=0
   }
   if (tier==3) {
@@ -444,7 +444,7 @@ function prestige(tier,challid=0) {
       case 1: newStory(17); break;
     }
   } else if (tier>3) {
-    player.prestiges[2] = player.warningUpgrades.includes(13)?1:0
+    player.prestiges[2] = haveWU(13)?1:0
     player.downtimeChallenge=0
   }
   if (tier==4) {
@@ -493,10 +493,10 @@ function getMultTier(tier) {  let ret = new Decimal.pow(((player.downtimeChallen
   if (haveUpg(12)) ret = ret.mul(Math.pow(1.05,Math.sqrt(player.compAmount.reduce((a, b) => a + b, 0))))
   if (haveUpg(14)) ret = ret.mul(5)
   if (haveUpg(16)) ret = ret.mul(1000000)
-  if (player.warningUpgrades.includes(1)) ret = ret.mul(getUpgradeMultiplier(1))
-  if (player.warningUpgrades.includes(2)) ret = ret.mul(getUpgradeMultiplier(2))
-  if (player.warningUpgrades.includes(3)) ret = ret.mul(getUpgradeMultiplier(3,tier))
-  if (player.warningUpgrades.includes(4)) ret = ret.mul(getUpgradeMultiplier(4))
+  if (haveWU(1)) ret = ret.mul(getUpgradeMultiplier(1))
+  if (haveWU(2)) ret = ret.mul(getUpgradeMultiplier(2))
+  if (haveWU(3)) ret = ret.mul(getUpgradeMultiplier(3,tier))
+  if (haveWU(4)) ret = ret.mul(getUpgradeMultiplier(4))
   // Insert DT stuffs here
   if (haveDU(Math.ceil(tier/2)*2)) ret = ret.mul(2)
   if (haveDU(Math.ceil(tier/2)*2+10)) ret = ret.mul(10)
@@ -575,7 +575,7 @@ function getUpgradeMultiplier(id,tier) {
 }
 
 function buyWarUpg(id) {
-  if (!player.warningUpgrades.includes(id)) {
+  if (!haveWU(id)) {
     if (player.warnings.gte(costs.warUpgs[id-1])) {
       player.warnings=player.warnings.sub(costs.warUpgs[id-1])
       player.warningUpgrades.push(id)
@@ -805,6 +805,15 @@ function gameTick() {
     updateElement("w2Multi",getUpgradeMultiplier(2).toFixed(2))
     updateElement("w4Multi",getUpgradeMultiplier(4).toFixed(2))
     updateElement("w5Multi",getUpgradeMultiplier(5).toFixed(2))
+    if (wartab == "warUpgTab") {
+      for (i=1;i<14;i++) {
+        if (haveWU(i)) {
+          updateClass("warUpg"+i.toString(),"warUpg boughtUpgrade")
+        } else {
+          updateClass("warUpg"+i.toString(),"warUpg")
+        }
+      }
+    }
   }
   if (tab=='stats') {
 	if (player.prestiges[3]>0||player.warnings.gt(0)) {
@@ -1382,4 +1391,8 @@ function haveUpg(id,max=true) {
     if (id == 2) return player.upgrades[2] == 8
   }
   return player.upgrades.hasOwnProperty(id) && player.upgrades[id] > 0
+}
+      
+function haveWU(id) {
+  return player.warningUpgrades.includes(id)
 }

@@ -176,11 +176,11 @@ width: 100%;
 }
 
 .boughtUpgrade {
-background-color:#00e500
+background-color:#006400
 }
 
 .boughtUpgrade:hover {
-background-color:#00e500	
+background-color:#006400
 }
 
 .cantBuy, .cantBuy:hover {

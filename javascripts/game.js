@@ -366,6 +366,7 @@ function prestige(tier,challid=0) {
     updateStory()
     warnUpgsGenerationDuration[10]=Number.MAX_VALUE
     save()
+    location.reload()
   }
   if (tier>3) {
     //Tier 4 - Warnings
@@ -387,8 +388,8 @@ function prestige(tier,challid=0) {
   }
   if (tier>2) {
     //Tier 3 - Networks
-    if (tier == 3 && haveUpg(14)) player.upgrades=[14];
-    else player.upgrades=[];
+    if (tier == 3 && haveUpg(14)) player.upgrades={14: 1};
+    else player.upgrades={};
   }
   
   player.errors = new Decimal(10); //current errors
@@ -548,23 +549,17 @@ function buyUpg(id) {
   switch (id) {
     case 1: player.errors=player.errors.sub(Decimal.pow10(Math.pow(1.5,2+(haveUpg(1,false)?player.upgrades[1]:0)))); break
     case 2: player.errors=player.errors.sub(Decimal.pow10(10+35*(haveUpg(2,false)?player.upgrades[2]:0))); break
-    case 3: player.errors=player.errors.sub(1e20); break
-    case 4: player.errors=player.errors.sub(1e35); break
-    case 5: player.errors=player.errors.sub(1e40); break
-    case 6: player.errors=player.errors.sub(1e50); break
-    case 7: player.errors=player.errors.sub(1e65); break
-    case 8: player.errors=player.errors.sub(1e75); break
-    case 9: player.errors=player.errors.sub(1e85); break
-    case 10: player.errors=player.errors.sub(1e100); break
-    case 11: player.errors=player.errors.sub(1e115); break
-    case 12: player.errors=player.errors.sub(1e125); break
-    case 13: player.errors=player.errors.sub(1e140); break
-    case 17: player.errors=player.errors.sub(1e30); break
-    case 18: player.errors=player.errors.sub(1e35); break
-    case 19: player.errors=player.errors.sub(1e40); break
-    case 20: player.errors=player.errors.sub(1e50); break
-    case 21: player.errors=player.errors.sub(1e65); break
-    case 23: player.errors=player.errors.sub(1e75); break
+    case 3: player.errors=player.errors.sub(1e35); break
+    case 4: player.errors=player.errors.sub(1e40); break
+    case 5: player.errors=player.errors.sub(1e50); break
+    case 6: player.errors=player.errors.sub(1e65); break
+    case 7: player.errors=player.errors.sub(1e75); break
+    case 8: player.errors=player.errors.sub(1e85); break
+    case 9: player.errors=player.errors.sub(1e100); break
+    case 10: player.errors=player.errors.sub(1e115); break
+    case 11: player.errors=player.errors.sub(1e125); break
+    case 12: player.errors=player.errors.sub(1e140); break
+    case 16: player.errors=player.errors.sub(1e3); break
   }
   if (haveUpg(id,false)) player.upgrades[id]++
   else player.upgrades[id]=1

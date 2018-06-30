@@ -305,6 +305,7 @@ function maxGen() {
       var bulk=Math.max(Math.floor(player.errors.div(costs.comp[i]).times(costMult[i]-1).add(1).log10()/Math.log10(costMult[i])),0)
       if (player.downtimeChallenge==3 && i != 0) bulk = Math.min(bulk,player.compAmount[i-1] - player.compAmount[i])
       if (player.downtimeChallenge==4) bulk = Math.min(bulk,100-player.compAmount.reduce((a, b) => a + b, 0))
+      if (bulk <= 0) continue;
       player.errors=player.errors.sub(Decimal.pow(costMult[i],bulk).sub(1).div(costMult[i]-1).times(costs.comp[i]))
       player.compAmount[i]+=bulk
       updateCosts()

@@ -320,7 +320,7 @@ function maxGen() {
 }
 
 function buyGenUpgrade() {
-  if (player.errors.gte(costs.boost)) {
+  if (player.errors.gte(costs.boost) && PBunlocked()) {
     player.errors=player.errors.sub(costs.boost)
     player.boostPower+=1
     if (player.downtimeChallenge==7) {
@@ -333,7 +333,7 @@ function buyGenUpgrade() {
 }
 
 function maxGenUpgrade() {
-  while (player.errors.gte(costs.boost)) {
+  while (player.errors.gte(costs.boost) && PBunlocked()) {
     player.errors=player.errors.sub(costs.boost);
     player.boostPower+=1;
     if (player.downtimeChallenge==7) {
@@ -650,7 +650,7 @@ function gameTick() {
   } else {
 	  hideElement('bugfixes','block')
   }
-  if (player.compAmount.slice(2,9).reduce((a, b) => a + b, 0) > 0||player.boostPower>0) {
+  if (player.compAmount.slice(2,9).reduce((a, b) => a + b, 0) > 0) {
     showElement('genUpgrade','block');
     updateElement('genIncrease',Math.pow(((haveDU(1))?2.1:2)+0.5*(player.downtimeChallenge==9?0:player.prestiges[2]),(player.downtimeChallenge==1)?0.5:1).toPrecision(2));
     updateElement('genIncreaseCost','Cost: ' + format(costs.boost));
@@ -1395,4 +1395,8 @@ function haveUpg(id,max=true) {
       
 function haveWU(id) {
   return player.warningUpgrades.includes(id)
+}
+  
+function PBunlocked() {
+  return player.compAmount.slice(2,9).reduce((a, b) => a + b, 0) > 0
 }

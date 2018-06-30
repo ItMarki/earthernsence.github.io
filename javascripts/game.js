@@ -478,7 +478,7 @@ function getMultTier(tier) {  let ret = new Decimal.pow(((player.downtimeChallen
   ret = ret.mul(Decimal.pow(2+Math.floor(player.compAmount[8]/5)*0.5,player.prestiges[1]))
   if (player.prestiges[0]>=tier) ret = ret.mul(haveDU(7)?3:haveUpg(13)?2.5:2) // UC
   if (player.prestiges[0]>9&&tier==9) ret = ret.mul(Decimal.pow(haveDU(7)?3:2,player.prestiges[0]-9)) // IB
-  if (haveUpg(1)) ret = ret.mul(2)
+  if (haveUpg(1)) ret = ret.mul(Decimal.pow(2,player.upgrades[1]))
   if (haveUpg(2)) ret = ret.mul(5)
   if (haveUpg(3)&&tier==1) ret = ret.mul(Math.pow(1.15,Math.sqrt(player.compAmount[0])))
   if (haveUpg(4)&&tier==2) ret = ret.mul(Math.pow(1.15,Math.sqrt(player.compAmount[1])))
@@ -754,8 +754,8 @@ function gameTick() {
     } else {
       hideElement('upg12')
     }
-    for (i=2;i<13;i++) {
-      if (haveUpg(i)) updateClass('upg'+i+'button','boughtUpgrade')
+    for (i=1;i<13;i++) {
+      if (haveUpg(i) && i != 1) updateClass('upg'+i+'button','boughtUpgrade')
       else if (checkIfAffordable(i)) updateClass('upg'+i+'button','')
       else updateClass('upg'+i+'button','cantBuy')
     }
@@ -928,6 +928,8 @@ function gameTick() {
   if (player.options.debug) showElement('debugButton','inline-block')
   else hideElement('debugButton')
   
+  updateElement("processDisplay",format((new Decimal(1e4)).div(Decimal.pow(2,player.upgrades[1]))))
+    
   //insert all dc targets here from now on
   if (player.downtimeChallenge == 1  && player.prestiges[0] >= 4)    completeChall();
   if (player.downtimeChallenge == 2  && player.prestiges[0] >= 8)    completeChall();

@@ -348,7 +348,7 @@ function maxGenUpgrade() {
 function prestige(tier,challid=0) {
   if (challid==0) {
     if ((player.compAmount[Math.min(player.prestiges[0],8)]<Math.max(player.prestiges[0]*10-70,10)||player.downtimeChallenge==11) && tier == 1) return;
-    else if (player.compAmount[Math.min(player.prestiges[1]+3,8)]<((haveDU(15)&&player.downtimeChallenge==0)?15:20)*Math.max(player.prestiges[1]-5,1) && tier == 2) return;
+    else if (player.compAmount[Math.min(player.prestiges[1]+3,8)]<((haveDU(15)&&player.downtimeChallenge==0)?15:20)+15*Math.max(player.prestiges[1]-5,1) && tier == 2) return;
     else if ((player.compAmount[8]<player.prestiges[2]*250+50||(player.downtimeChallenge==9&&challid==0)) && tier == 3) return;
     else if (player.errors.lt(Number.MAX_VALUE) && tier == 4) return;
     else if (tier == Infinity && !confirm('Are you really sure to reset? You will lose everything you have!')) return;

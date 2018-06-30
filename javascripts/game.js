@@ -1395,7 +1395,7 @@ function stopBugFixer(time) {
 function haveUpg(id,max=true) {
   if (max) {
     if (id == 1) return player.upgrades[1] == 13
-    if (id == 2) return player.upgrades[2] == 8
+    if (id == 2) return player.upgrades[2] == 9
   }
   return player.upgrades.hasOwnProperty(id) && player.upgrades[id] > 0
 }

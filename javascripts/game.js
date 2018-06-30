@@ -738,7 +738,7 @@ function gameTick() {
       } else {
         hideElement('upgradereq')
         showElement('upgcate3','inline')
-        for (i=13;i<17;i++) {
+        for (i=13;i<16;i++) {
           if (haveUpg(i))
           updateClass('upg'+i+'button','boughtUpgrade')
           else if (checkIfAffordable(i)) updateClass('upg'+i+'button','')

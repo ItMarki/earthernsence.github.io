@@ -304,7 +304,7 @@ function maxGen() {
     if (player.errors.gte(costs.comp[i]) && !(player.downtimeChallenge==3 && i != 0 && player.compAmount[i] >= player.compAmount[i-1])) {
       var bulk=Math.max(Math.floor(player.errors.div(costs.comp[i]).times(costMult[i]-1).add(1).log10()/Math.log10(costMult[i])),0)
       if (player.downtimeChallenge==3 && i != 0) bulk = Math.min(bulk,player.compAmount[i-1] - player.compAmount[i])
-      if (player.downtimeChallenge==4) bulk = Math.min(bulk,100-player.compAmount.reduce((a, b) => a + b, 0))
+      if (player.downtimeChallenge==4) bulk = Math.min(bulk,50-player.compAmount.reduce((a, b) => a + b, 0))
       if (bulk <= 0) continue;
       player.errors=player.errors.sub(Decimal.pow(costMult[i],bulk).sub(1).div(costMult[i]-1).times(costs.comp[i]))
       player.compAmount[i]+=bulk
@@ -939,16 +939,16 @@ function gameTick() {
   updateElement("coreDisplay",Math.pow(2,haveUpg(2,false)?player.upgrades[2]:false))
     
   //insert all dc targets here from now on
- /* if (player.downtimeChallenge == 1  && player.prestiges[0] >= 4)    completeChall(); //Checked
+  if (player.downtimeChallenge == 1  && player.prestiges[0] >= 4)    completeChall();
   if (player.downtimeChallenge == 2  && player.prestiges[0] >= 8)    completeChall();
-  if (player.downtimeChallenge == 3  && player.compAmount[8] >= 60)  completeChall(); //Checked
-  if (player.downtimeChallenge == 4  && player.compAmount[8] >= 60)  completeChall();
-  if (player.downtimeChallenge == 5  && player.errors.gte(1e110))    completeChall(); //Clearly OK
-  if (player.downtimeChallenge == 6  && player.compAmount[8] >= 55)  completeChall();
+  if (player.downtimeChallenge == 3  && player.compAmount[8] >= 60)  completeChall();
+  if (player.downtimeChallenge == 4  && player.compAmount[8] >= 45)  completeChall();
+  if (player.downtimeChallenge == 5  && player.errors.gte(1e110))    completeChall();
+  if (player.downtimeChallenge == 6  && player.prestiges[1] >= 9)    completeChall();
   if (player.downtimeChallenge == 7  && player.prestiges[0] >= 9)    completeChall();
   if (player.downtimeChallenge == 8  && player.prestiges[0] >= 5)    completeChall();
-  if (player.downtimeChallenge == 9  && player.prestiges[1] >= 7)    completeChall();
-  if (player.downtimeChallenge == 11 && player.prestiges[2] >= 2)    completeChall(); */
+  if (player.downtimeChallenge == 9  && player.prestiges[1] >= 8)    completeChall();
+  if (player.downtimeChallenge == 11 && player.prestiges[2] >= 2)    completeChall();
 }
 
 function save() {
@@ -1409,5 +1409,5 @@ function PBunlocked() {
 }
 
 function canBuyGen(tier) {
-  return player.errors.gte(costs.comp[tier-1]) && !(player.downtimeChallenge==3 && tier != 0 && player.compAmount[tier] >= player.compAmount[tier-1]) && !(player.downtimeChallenge == 4 && player.compAmount.reduce((a, b) => a + b, 0) >= 100)
+  return player.errors.gte(costs.comp[tier-1]) && !(player.downtimeChallenge==3 && tier != 1 && player.compAmount[tier-1] >= player.compAmount[tier-2]) && !(player.downtimeChallenge == 4 && player.compAmount.reduce((a, b) => a + b, 0) >= 50)
 }

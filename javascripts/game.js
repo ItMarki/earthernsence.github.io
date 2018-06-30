@@ -544,7 +544,6 @@ function checkIfAffordable(id) {
     case 13: if (player.prestiges[0]<9) {return false}; return true
     case 14: if (player.prestiges[1]<5) {return false}; return true
     case 15: if (player.prestiges[1]<7) {return false}; return true
-    case 16: if (player.prestiges[2]<1||player.errors.lt(1e3)) {return false}; return true
 }
   return false
 }
@@ -564,7 +563,6 @@ function buyUpg(id) {
     case 10: player.errors=player.errors.sub(1e115); break
     case 11: player.errors=player.errors.sub(1e125); break
     case 12: player.errors=player.errors.sub(1e140); break
-    case 16: player.errors=player.errors.sub(1e3); break
   }
   if (haveUpg(id,false)) player.upgrades[id]++
   else player.upgrades[id]=1
@@ -734,7 +732,6 @@ function gameTick() {
       updateElement('upg9button','Cost: 100 TVII comps & '+format(1e100))
       updateElement('upg10button','Cost: 100 TVIII comps & '+format(1e115))
       updateElement('upg11button','Cost: 100 TIX comps & '+format(1e125))
-      updateElement('upg16button','Cost: N1 & '+format(1e3))
       if (player.prestiges[1]<5 && !debugIsOn("showAllUpg")) {
           updateElement('upgradereq','Next at 5 I.P. changes')
           hideElement('upgcate3')

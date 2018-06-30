@@ -284,7 +284,7 @@ function updateCosts() {
 }
 
 function buyGen(tier,bulk=1) {
-  if (player.errors.gte(costs.comp[tier]) && !(player.downtimeChallenge==3 && tier != 0 && player.compAmount[tier] >= player.compAmount[tier-1])) {
+  if (canBuyGen(tier+1)) {
     player.errors = player.errors.sub(costs.comp[tier])
     player.compAmount[tier]+=1
     updateCosts()
@@ -304,6 +304,7 @@ function maxGen() {
     if (player.errors.gte(costs.comp[i]) && !(player.downtimeChallenge==3 && i != 0 && player.compAmount[i] >= player.compAmount[i-1])) {
       var bulk=Math.max(Math.floor(player.errors.div(costs.comp[i]).times(costMult[i]-1).add(1).log10()/Math.log10(costMult[i])),0)
       if (player.downtimeChallenge==3 && i != 0) bulk = Math.min(bulk,player.compAmount[i-1] - player.compAmount[i])
+      if (player.downtimeChallenge==4) bulk = Math.min(bulk,100-player.compAmount.reduce((a, b) => a + b, 0))
       player.errors=player.errors.sub(Decimal.pow(costMult[i],bulk).sub(1).div(costMult[i]-1).times(costs.comp[i]))
       player.compAmount[i]+=bulk
       updateCosts()
@@ -477,7 +478,7 @@ function completeChall() {
   player.bugfixes = 0
 }
 
-function getMultTier(tier) {  let ret = new Decimal.pow(((player.downtimeChallenge==4&&tier>5)||player.downtimeChallenge==6)?5:10,tier-1)
+function getMultTier(tier) {  let ret = new Decimal.pow(10,tier-1)
   ret = ret.mul(Decimal.pow(Math.pow(1.05 + Math.max((tier-4)/100,0),tier),player.compAmount[tier-1]))
   ret = ret.mul(Decimal.pow(Math.pow((haveDU(1)?2.1:2)+0.5*(player.downtimeChallenge==9?0:player.prestiges[2]),(player.downtimeChallenge==1)?0.5:1),player.boostPower)) // PB
   ret = ret.mul(Decimal.pow(2+Math.floor(player.compAmount[8]/5)*0.5,player.prestiges[1]))
@@ -795,7 +796,7 @@ function gameTick() {
     for (let i=0;i<Math.min(player.prestiges[1]+4,9);i++) {
       updateElement("cop"+(i+1)+"mult",(player.compAmount[i]+player.generatedCompAmount[i])==0?'':'('+format(getMultTier(i+1).times(player.compAmount[i]+player.generatedCompAmount[i]))+'/s)')
       updateElement("cop"+(i+1),"Cost: " + format(costs.comp[i]) + " (" + player.compAmount[i] + (player.generatedCompAmount[i]==0?'':' + '+player.generatedCompAmount[i]) + ")")
-      if (player.errors.lt(costs.comp[i]) || (player.downtimeChallenge==3 && i != 0 && player.compAmount[i] >= player.compAmount[i-1])) updateClass("cop"+(i+1),'cantBuy')
+      if (!canBuyGen(i+1)) updateClass("cop"+(i+1),'cantBuy')
       else {
           updateClass("cop"+(i+1),'')
       }
@@ -930,7 +931,7 @@ function gameTick() {
           }
 	  }
   }
-  if ([3,5,7].includes(player.downtimeChallenge)) showElement("backward");
+  if ([3,4,5,7].includes(player.downtimeChallenge)) showElement("backward");
   else hideElement("backward")
   
   if (player.options.debug) showElement('debugButton','inline-block')
@@ -940,11 +941,11 @@ function gameTick() {
   updateElement("coreDisplay",Math.pow(2,haveUpg(2,false)?player.upgrades[2]:false))
     
   //insert all dc targets here from now on
- /* if (player.downtimeChallenge == 1  && player.prestiges[0] >= 4)    completeChall();
+ /* if (player.downtimeChallenge == 1  && player.prestiges[0] >= 4)    completeChall(); //Checked
   if (player.downtimeChallenge == 2  && player.prestiges[0] >= 8)    completeChall();
-  if (player.downtimeChallenge == 3  && player.compAmount[8] >= 55)  completeChall(); //Checked
+  if (player.downtimeChallenge == 3  && player.compAmount[8] >= 60)  completeChall(); //Checked
   if (player.downtimeChallenge == 4  && player.compAmount[8] >= 60)  completeChall();
-  if (player.downtimeChallenge == 5  && player.prestiges[1] >= 11)    completeChall(); //Clearly OK
+  if (player.downtimeChallenge == 5  && player.errors.gte(1e110))    completeChall(); //Clearly OK
   if (player.downtimeChallenge == 6  && player.compAmount[8] >= 55)  completeChall();
   if (player.downtimeChallenge == 7  && player.prestiges[0] >= 9)    completeChall();
   if (player.downtimeChallenge == 8  && player.prestiges[0] >= 5)    completeChall();
@@ -1407,4 +1408,8 @@ function haveWU(id) {
   
 function PBunlocked() {
   return player.compAmount.slice(2,9).reduce((a, b) => a + b, 0) > 0
+}
+
+function canBuyGen(tier) {
+  return player.errors.gte(costs.comp[tier-1]) && !(player.downtimeChallenge==3 && tier != 0 && player.compAmount[tier] >= player.compAmount[tier-1]) && !(player.downtimeChallenge == 4 && player.compAmount.reduce((a, b) => a + b, 0) >= 100)
 }

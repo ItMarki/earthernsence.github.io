@@ -50,9 +50,9 @@
 	    <table id="d" align=center style=''><tr><td>
           <button id="dt1" class='normDTbutton' onclick='prestige(3,1)'>2 PB upgrades have the same effect as 1 normally does.<br>Goal: UC4.</button>
           <button id="dt2" class='normDTbutton' onclick='prestige(3,2)'>T5 and higher are useless.<br>Goal: UC8.</button>
-		  <button id="dt3" class='normDTbutton' onclick='prestige(3,3)'>Your production is divided by 1 + 0.2*x when you have x computers. And your computer amount must be descending order.<br>Goal: 55 T9.</button>
-		  <button id="dt4" class='normDTbutton' onclick='prestige(3,4)'>Higher tier computers are nerfed.<br>Goal: 60 T9.</button>
-		    <button id="dt5" class='normDTbutton' onclick='prestige(3,5)' style='font-size:10px'>There is another "player" playing along side you. They generate "Bugfixes." If the amount of bugfixes exceeds your amount of errors, you lose an I.P. Change.<br>Goal: IB6.</button><br><br>
+		  <button id="dt3" class='normDTbutton' onclick='prestige(3,3)'>Your production is divided by 1 + 0.2*x when you have x computers. And your computer amount must be descending order.<br>Goal: 60 T9.</button>
+		  <button id="dt4" class='normDTbutton' onclick='prestige(3,4)'>You can only have 100 computers<br>Goal: 60 T9.</button>
+		    <button id="dt5" class='normDTbutton' onclick='prestige(3,5)' style='font-size:10px'>There is another "player" playing along side you. They generate "Bugfixes." If the amount of bugfixes exceeds your amount of errors, you lose an I.P. Change.<br>Goal: e110 errors.</button><br><br>
 <button id="dt6" class='normDTbutton' onclick='prestige(3,6)'>All computers are nerfed.<br>Goal: 60 T9</button>
 		    <button id="dt7" class='normDTbutton' onclick='prestige(3,7)'>If you buy production boost, you lose 1 of every computer, down to 0.<br>Goal: UC9.</button>
 		    <button id="dt8" class='normDTbutton' onclick='prestige(3,8)'>All game functions are 10x slower.<br>Goal: IP5.</button>
@@ -261,7 +261,7 @@
     <div><b id='prestige2Type'>I.P. Change</b>: Requires <text id='prestige2Gen'>20 Tier IV</text> Computers <button id="ipChange" onClick='prestige(2)'>Gain Tier V Computer, but resets everything.</button></div>
     <div id="networks"><b>Network</b>: Requires <text id='prestige3Req'>80</text> Tier IX Computers <button id="network" onclick='prestige(3)'>Reset everything, but gain a Production Boost upgrade (x<text id='netMulti'>2.5</text>)</button></div>
     <div id="backward" style='display:none'><b>Backward Prestige</b>: <button onclick='prestige(1,-2)'>Lose your U.Cs, but also revert mistakes you did in the run.</button></div>
-    <div id="stopBugFixerButton" style='display:none'><b>Interrupt bug fixer</b>: <button onclick='stopBugFixer(180);player.canStopBugFixer = false'>Stop bug fixer for 3 minutes, you can use it again when you IP/IB/backward prestige.</button></div>
+    <div id="stopBugFixerButton" style='display:none'><b>Interrupt bug fixer</b>: <button onclick='stopBugFixer(30);player.canStopBugFixer = false'>Stop bug fixer for half minute, you can use it again when you IP/IB/backward prestige.</button></div>
   </td></tr></tbody>
   </table>
 	<div style='background-color: #999999; position: fixed; bottom: 0; width: 100%; color: #191919; z-index: -1'>| <a href="https://discord.gg/23JnYTY" target="_newtab">Discord</a> | <a href="howto.html" target="_newtab">How to Play CEG</a> | <a href="../index.html" target="_newtab"> Back to Main Menu </a>| <a href="changelog.html" target="_newtab">Changelog</a> |</div> 

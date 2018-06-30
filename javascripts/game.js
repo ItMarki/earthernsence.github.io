@@ -496,7 +496,6 @@ function getMultTier(tier) {  let ret = new Decimal.pow(((player.downtimeChallen
   if (haveUpg(11)&&tier==9) ret = ret.mul(Math.pow(1.15,Math.sqrt(player.compAmount[8])))
   if (haveUpg(12)) ret = ret.mul(Math.pow(1.05,Math.sqrt(player.compAmount.reduce((a, b) => a + b, 0))))
   if (haveUpg(14)) ret = ret.mul(5)
-  if (haveUpg(16)) ret = ret.mul(1000000)
   if (haveWU(1)) ret = ret.mul(getUpgradeMultiplier(1))
   if (haveWU(2)) ret = ret.mul(getUpgradeMultiplier(2))
   if (haveWU(3)) ret = ret.mul(getUpgradeMultiplier(3,tier))

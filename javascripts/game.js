@@ -517,9 +517,9 @@ function getEPS() {
 }
 
 function checkIfAffordable(id) {
-  if (haveUpg(id) && id != 1) return false
+  if (haveUpg(id)) return false
   switch (id) {
-    case 1: if (player.errors.lt(Decimal.pow10(Math.pow(2,2+(haveUpg(1)?player.upgrades[1]:0))))) {return false}; return true
+    case 1: if (player.errors.lt(Decimal.pow10(Math.pow(1.5,2+(haveUpg(1)?player.upgrades[1]:0))))) {return false}; return true
     case 2: if (player.errors.lt(1e10)) {return false}; return true
     case 3: if (player.errors.lt(1e35)||player.compAmount[0]<100) {return false}; return true
     case 4: if (player.errors.lt(1e40)||player.compAmount[1]<100) {return false}; return true
@@ -546,7 +546,7 @@ function checkIfAffordable(id) {
 function buyUpg(id) {
   if (!checkIfAffordable(id)) return
   switch (id) {
-    case 1: player.errors=player.errors.sub(Decimal.pow10(Math.pow(2,2+(haveUpg(1)?player.upgrades[1]:0)))); break
+    case 1: player.errors=player.errors.sub(Decimal.pow10(Math.pow(1.5,2+(haveUpg(1)?player.upgrades[1]:0)))); break
     case 2: player.errors=player.errors.sub(1e10); break
     case 3: player.errors=player.errors.sub(1e20); break
     case 4: player.errors=player.errors.sub(1e35); break
@@ -713,7 +713,7 @@ function gameTick() {
     updateElement('upgradereq','Unlocks at 2 I.P. changes')
   } else {
     showElement('upgcate1','inline')
-    updateElement('upg1button','Cost: '+format(Decimal.pow10(Math.pow(2,2+(haveUpg(1)?player.upgrades[1]:0)))))
+    updateElement('upg1button','Cost: '+format(Decimal.pow10(Math.pow(1.5,2+(haveUpg(1)?player.upgrades[1]:0)))))
     updateElement('upg2button','Cost: '+format(1e10))
     if (player.prestiges[1]<3 && !debugIsOn("showAllUpg")) {
       hideElement('upgcate2')
@@ -755,7 +755,7 @@ function gameTick() {
       hideElement('upg12')
     }
     for (i=1;i<13;i++) {
-      if (haveUpg(i) && i != 1) updateClass('upg'+i+'button','boughtUpgrade')
+      if (haveUpg(i)) updateClass('upg'+i+'button','boughtUpgrade')
       else if (checkIfAffordable(i)) updateClass('upg'+i+'button','')
       else updateClass('upg'+i+'button','cantBuy')
     }
@@ -928,7 +928,7 @@ function gameTick() {
   if (player.options.debug) showElement('debugButton','inline-block')
   else hideElement('debugButton')
   
-  updateElement("processDisplay",format((new Decimal(1e4)).div(Decimal.pow(2,player.upgrades[1]))))
+  updateElement("processDisplay",format((new Decimal(1e4)).div(Decimal.pow(2,player.upgrades[1]),1,0,false)))
     
   //insert all dc targets here from now on
   if (player.downtimeChallenge == 1  && player.prestiges[0] >= 4)    completeChall();
@@ -1385,5 +1385,6 @@ function stopBugFixer(time) {
 }
   
 function haveUpg(id) {
+  if (id == 1) return player.upgrades[1] == 13
   return player.upgrades.hasOwnProperty(id) && player.upgrades[id] > 0
 }

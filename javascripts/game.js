@@ -652,7 +652,7 @@ function gameTick() {
   }
   if (player.compAmount.slice(2,9).reduce((a, b) => a + b, 0) > 0||player.boostPower>0) {
     showElement('genUpgrade','block');
-    updateElement('genIncrease',Math.pow((haveDU(1))?2.1:2+0.5*(player.downtimeChallenge==9?0:player.prestiges[2]),(player.downtimeChallenge==1)?0.5:1).toPrecision(2));
+    updateElement('genIncrease',Math.pow(((haveDU(1))?2.1:2)+0.5*(player.downtimeChallenge==9?0:player.prestiges[2]),(player.downtimeChallenge==1)?0.5:1).toPrecision(2));
     updateElement('genIncreaseCost','Cost: ' + format(costs.boost));
     updateElement('genBoost',format(Decimal.pow(Math.pow((haveDU(1))?2.1:2+0.5*player.prestiges[2],(player.downtimeChallenge==1)?0.5:1),player.boostPower),1,0,false));
     if (player.errors.lt(costs.boost)) updateClass('genIncreaseCost','cantBuy')

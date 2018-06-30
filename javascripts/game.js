@@ -351,7 +351,7 @@ function prestige(tier,challid=0) {
     else if (tier == 2) {
       if (player.prestiges[1]<=5) {
         if (player.compAmount[player.prestiges[1]+3] < (haveDU(15)?15:20)) return;
-      } else if (player.compAmount[8] < 15*(player.prestiges[1]-5)+(haveDU(15)?20:15)) return;
+      } else if (player.compAmount[8] < 15*(player.prestiges[1]-5)+(haveDU(15)?15:20)) return;
     }
     else if ((player.compAmount[8]<player.prestiges[2]*250+50||(player.downtimeChallenge==9&&challid==0)) && tier == 3) return;
     else if (player.errors.lt(Number.MAX_VALUE) && tier == 4) return;
@@ -945,7 +945,7 @@ function gameTick() {
   if (player.downtimeChallenge == 2  && player.prestiges[0] >= 8)    completeChall();
   if (player.downtimeChallenge == 3  && player.compAmount[8] >= 55)  completeChall();
   if (player.downtimeChallenge == 4  && player.compAmount[8] >= 60)  completeChall();
-  if (player.downtimeChallenge == 5  && player.prestiges[1] >= 9)    completeChall();
+  if (player.downtimeChallenge == 5  && player.prestiges[1] >= 11)    completeChall();
   if (player.downtimeChallenge == 6  && player.compAmount[8] >= 55)  completeChall();
   if (player.downtimeChallenge == 7  && player.prestiges[0] >= 9)    completeChall();
   if (player.downtimeChallenge == 8  && player.presitges[0] >= 5)    completeChall();

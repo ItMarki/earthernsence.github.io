@@ -348,7 +348,10 @@ function maxGenUpgrade() {
 function prestige(tier,challid=0) {
   if (challid==0) {
     if ((player.compAmount[Math.min(player.prestiges[0],8)]<Math.max(player.prestiges[0]*10-70,10)||player.downtimeChallenge==11) && tier == 1) return;
-    else if (player.compAmount[Math.min(player.prestiges[1]+3,8)]<((haveDU(15)&&player.downtimeChallenge==0)?15:20)+15*Math.max(player.prestiges[1]-5,1) && tier == 2) return;
+    else if (tier == 2) {
+      if (player.prestiges[1]<=5 && player.compAmount[Math.min(player.prestiges[1]+3)] < haveDU(15)?15:20) return;
+      else if (player.compAmount[8] < 15*(player.prestiges[1]-5)+(haveDU(15)?20:15)) return;
+    }
     else if ((player.compAmount[8]<player.prestiges[2]*250+50||(player.downtimeChallenge==9&&challid==0)) && tier == 3) return;
     else if (player.errors.lt(Number.MAX_VALUE) && tier == 4) return;
     else if (tier == Infinity && !confirm('Are you really sure to reset? You will lose everything you have!')) return;
@@ -697,6 +700,11 @@ function gameTick() {
 		hideElement('abletoprestige')
 		showElement('maxout','inline')
 	  }
+  }
+  if (player.prestiges[1]<=5 && player.compAmount[Math.min(player.prestiges[1]+3)] < haveDU(15)?15:20) {
+    updateElement('prestige2Gen', (haveDU(15)?15:20).toString() + ' Tier ' + ROMAN_NUMERALS[player.prestiges[1]+4])
+  } else {
+    updateElement('prestige2Gen', 15*(player.prestiges[1]-5)+(haveDU(15)?20:15) +' Tier IX')
   }
   updateElement('prestige2Gen',(Math.max(player.prestiges[1]-5,0)*15+((haveDU(15)&&player.downtimeChallenge==0)?15:20))+' Tier '+ROMAN_NUMERALS[Math.min(player.prestiges[1]+4,9)])
   if (player.prestiges[1]<5 || player.downtimeChallenge != 0) showElement('upgradereq','inline');

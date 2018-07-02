@@ -9,6 +9,7 @@
 <script type="text/javascript" src="../javascripts/game.js"> </script>
 	<title>CEG</title>
 	<link rel="icon" type="image/png" href="../images/ceg.png"></link>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 </head>
 <body style="background-color:gray;text-align:center" onload='gameInit()'>
 <div id="game" style='text-align:center'>
@@ -19,7 +20,16 @@
   <div id='genUpgrade' style='display:none'>Increase the boost by <text id='genIncrease' style='font-size:20px'>2</text><text style='font-size:20px'>x</text>.<br>
   <button id="genIncreaseCost" onclick="buyGenUpgrade()">Cost: 1000</button><button id="buyMax" onclick="maxGenUpgrade()">Buy Max</button><br>
   Production boost: <text id='genBoost' style='font-size:20px'>1</text><text style='font-size:20px'>x</text></div><br>
-  <div><button onclick='switchTab("computers")' id="tabButton">Computers</button><button onclick='switchTab("downtime")' id="tabButton">Downtime</button><button onclick='switchTab("options")' id="tabButton">Options</button><button onclick='switchTab("stats")' id="tabButton">Stats</button><button onclick='switchTab("achievements")' id="tabButton">Achievements</button><button id='warningTabButton' style='display:none' onclick='switchTab("warning")'>Warning</button><button id='theEndButton' style='display:none' onclick='switchTab("theEnd")'>The End</button></div>
+  <div>
+    <button onclick='switchTab("computers")' id="tabButton">Computers</button>
+    <button onclick='switchTab("downtime")' id="tabButton">Downtime</button>
+    <button onclick='switchTab("options")' id="tabButton">Options</button>
+    <button onclick='switchTab("stats")' id="tabButton">Stats</button>
+    <button onclick='switchTab("achievements")' id="tabButton">Achievements</button>
+    <button id='warningTabButton' style='display:none' onclick='switchTab("warning")'>Warning</button>
+    <button id='theEndButton' style='display:none' onclick='switchTab("theEnd")'>The End</button>
+    <button id='debugButton' style='display:none' onclick='switchTab("debug")'>Debug</button>
+  </div>
   <br>
   <div id='computersTab'>
 	  <td style='width:96px'><button id='maxAll' class='commonButton' onClick='maxGenUpgrade();maxGen();'>Max All</button></td>	  
@@ -38,16 +48,16 @@
         <button class='commonButton' onclick='exitChall()'>Exit Downtime</button>
 		  <div><b><i>DUs are not carried into DCs.</i></b></div>
 	    <table id="d" align=center style=''><tr><td>
-          <button id="dt1" class='normDTbutton' onclick='prestige(3,1)'>Production boost effectiveness is halved.<br>Goal: UC4.</button>
+          <button id="dt1" class='normDTbutton' onclick='prestige(3,1)'>2 PB upgrades have the same effect as 1 normally does.<br>Goal: UC4.</button>
           <button id="dt2" class='normDTbutton' onclick='prestige(3,2)'>T5 and higher are useless.<br>Goal: UC8.</button>
-		  <button id="dt3" class='normDTbutton' onclick='prestige(3,3)'>Your production is divided by 1 + 0.2*x when you have x computers. And your computer amount must be descending order.<br>Goal: 55 T9.</button>
-		  <button id="dt4" class='normDTbutton' onclick='prestige(3,4)'>Higher tier computers are nerfed.<br>Goal: IB5.</button>
-		    <button id="dt5" class='normDTbutton' onclick='prestige(3,5)' style='font-size:10px'>There is another "player" playing along side you. They generate "Bugfixes." If the amount of bugfixes exceeds your amount of errors, you lose an I.P. Change.<br>Goal: IB3.</button><br><br>
-<button id="dt6" class='normDTbutton' onclick='prestige(3,6)'>All computers are nerfed.<br>Goal: N1.</button>
+		  <button id="dt3" class='normDTbutton' onclick='prestige(3,3)'>Your production is divided by 1 + 0.2*x when you have x computers. And your computer amount must be descending order.<br>Goal: 60 T9.</button>
+		  <button id="dt4" class='normDTbutton' onclick='prestige(3,4)'>You can only have 50 computers<br>Goal: 45 T9.</button>
+		    <button id="dt5" class='normDTbutton' onclick='prestige(3,5)' style='font-size:10px'>There is another "player" playing along side you. They generate "Bugfixes." If the amount of bugfixes exceeds your amount of errors, you lose an I.P. Change.<br>Goal: e110 errors.</button><br><br>
+<button id="dt6" class='normDTbutton' onclick='prestige(3,6)'>All computers are nerfed.<br>Goal: IB4</button>
 		    <button id="dt7" class='normDTbutton' onclick='prestige(3,7)'>If you buy production boost, you lose 1 of every computer, down to 0.<br>Goal: UC9.</button>
 		    <button id="dt8" class='normDTbutton' onclick='prestige(3,8)'>All game functions are 10x slower.<br>Goal: IP5.</button>
-		    <button id="dt9" class='normDTbutton' onclick='prestige(3,9)'>Networks are useless.<br>Goal: 100 T9.</button>
-		    <button id="dt10" class='normDTbutton' style='font-size:12px'>You can sacrifice for 100x production boost upgrade but lose all your IPs. You can sacrifice once per UC and doesn't reset on UC. UCs are also nerfed.<br>Goal: UC9.</button>
+		    <button id="dt9" class='normDTbutton' onclick='prestige(3,9)'>Networks are useless, but you can use DUs.<br>Goal: IB3.</button>
+		    <button id="dt10" class='normDTbutton' style='font-size:12px'>You can sacrifice for 100x production boost upgrade but lose all your IPs. You can sacrifice once per UC and doesn't reset on UC. UCs are also nerfed.<br>Goal: (Unavailable).</button>
 		    </td></tr><tr id='postWarnDTchalls' style='display:none'><td><h3>Post-warning challenges</h3>
           <button id="dt11" class='normDTbutton' onclick='prestige(3,11)'>Upgrade computers is useless.<br>Goal: N2 (nope).</button>
           <button id="dt12" class='normDTbutton'>???<br>Goal: ???</button>
@@ -71,32 +81,32 @@
 			<button id="du6" class='normDTbutton' onclick='buyDTU(6)'></button>
 		</div><div id='dc4upgrades' style='display:none'>
 			<h3>DC4 Upgrades</h3>
-			<button id="du7" class='normDTbutton' onclick='buyDTU(7)' style='font-size:12px'></button>
+			<button id="du7" class='normDTbutton' onclick='buyDTU(7)'></button>
 			<button id="du8" class='normDTbutton' onclick='buyDTU(8)'></button>
 		</div><div id='dc5upgrades' style='display:none'>
 			<h3>DC5 Upgrades</h3>
-			<button id="du9" class='normDTbutton'></button>
-<button id="du10" class='normDTbutton'></button>
+			<button id="du9" class='normDTbutton' onclick='buyDTU(9)'></button>
+            <button id="du10" class='normDTbutton' onclick='buyDTU(10)'></button>
 		</div><div id='dc6upgrades' style='display:none'>
-		<h3>DC6 Upgrades</h3>
-		<button id="du11" class='normDTbutton'></button>
-		<button id="du12" class='normDtbutton'></button>
+            <h3>DC6 Upgrades</h3>
+            <button id="du11" class='normDTbutton' onclick='buyDTU(11)'></button>
+            <button id="du12" class='normDtbutton' onclick='buyDTU(12)'></button>
 		</div><div id='dc7upgrades' style='display:none'>
-		<h3>DC7 Upgrades</h3>
-		<button id="du13" class='normDTbutton'></button>
-		<button id="du14" class='normDTbutton'></button>
+            <h3>DC7 Upgrades</h3>
+            <button id="du13" class='normDTbutton' onclick='buyDTU(13)'></button>
+            <button id="du14" class='normDTbutton' onclick='buyDTU(14)'></button>
 		</div><div id='dc8upgrades' style='display:none'>
-		<h3>DC8 Upgrades</h3>
-		<button id="du15" class='normDTbutton'>Reduce I.P. Change cost to 15.<br>Cost: 1e60.</button>
-		<button id="du16" class='normDTbutton'>T5 & T6 computers produces 10x as fast.<br>Cost: 1e60.</button>
+            <h3>DC8 Upgrades</h3>
+            <button id="du15" class='normDTbutton' onclick='buyDTU(15)'></button>
+            <button id="du16" class='normDTbutton' onclick='buyDTU(16)'></button>
 		</div><div id='dc9upgrades' style='display:none'>
-		<h3>DC9 Upgrades</h3>
-		<button id="du17" class='normDTbutton'>Reduce network cost down to 90 for your second one.<br>Cost: 1e75.</button>
-		<button id="du18" class='normDTbutton'>T7 & T8 Computers produces 10x as fast.<br>Cost: 1e65.</button>
+            <h3>DC9 Upgrades</h3>
+            <button id="du17" class='normDTbutton' onclick='buyDTU(17)'></button>
+            <button id="du18" class='normDTbutton' onclick='buyDTU(18)'></button>
 		</div><div id='dc10upgrades' style='display:none'>
-		<h3>DC10 Upgrades</h3>
-		<button id="du19" class='normDTbutton'>You have a 1% chance to get a 100x production boost.<br>Cost: 1e100.</button>
-		<button id="du20" class='normDTbutton'>T9 & all computers prodices 10x as fast.<br>Cost: 1e70.</button>
+            <h3>DC10 Upgrades</h3>
+            <button id="du19" class='normDTbutton' onclick='buyDTU(19)'></button>
+            <button id="du20" class='normDTbutton' onclick='buyDTU(20)'></button>
 		</div>
 		</td></tr></table>
 	</div>
@@ -110,7 +120,7 @@
       <td><button class='optionButton' onclick='tryFix("idk",true)'>Fix your save</button></td>
 	<td><button class='optionButton' onClick='prestige(Infinity)'>Reset</button></td></tr></table>
 	  <div id='exportSave' style='display:none'> Here is your export save. The dev recommends putting it in a safe spot. <input id='exportText' style='width: 480px'></input></div>
-	  <div id='hotkeyText'>P=Max production boost, U = Upgrade computers, I = I.P Changes & Internet boosts, N = Buy networks,<br>1-9 = Buy a computer with specified tier.</div>
+	  <div id='hotkeyText'>P=Max production boost, U = Upgrade computers, I = I.P Changes & Internet boosts, N = Buy networks,<br>1-9 (top-of-keyboard and keypad) = Buy a computer with specified tier.</div>
 </div>
   <div id='statsTab' style='display:none'>
 	  <div id='statsTabButtons'><button onclick='switchStatsTab("statisticsTab")'>Statistics</button><button onclick='switchStatsTab("lastWarningsTab")'>Last 5 Warnings</button></div>
@@ -158,11 +168,12 @@
 	<td><button id='warUpg7' onClick='buyWarUpg(7)' class="warUpg">Begin the generation of TII Computers (1 per 4 seconds)<br>Cost: 10 W</button></td>
 	<td><button id='warUpg8' onClick='buyWarUpg(8)' class="warUpg">Begin the generation of TIII Computers (1 per 8 seconds)<br>Cost: 15 W</button></td></tr>
 	<tr><td><button id='warUpg9' onClick='buyWarUpg(9)' class="warUpg">Begin the generation of TIV Computers (1 per 16 seconds)<br>Cost: 20 W</button></td>
-	<td><button id='warUpg10' onClick='buyWarUpg(10)' class="warUpg">Begin the generation of Warnings based on your fastest warn. (fastest warn time * 1000)<br>Cost: 30 W</button></td>
+	<td><button id='warUpg10' onClick='buyWarUpg(10)' class="warUpg">Begin the generation of Warnings based on your fastest warn. (fastest warn time * 10)<br>Cost: 30 W</button></td>
 	<td><button id='warUpg11' onClick='buyWarUpg(11)' class="warUpg">You start with IP3.<br>Cost: 30 W</button></td>
 	<td><button id='warUpg12' onClick='buyWarUpg(12)' class="warUpg">You start with IP6.<br>Cost: 60 W</button></td></tr>
 	<tr><td colspan=4><button id='warUpg13' onClick='buyWarUpg(13)' class="warUpg">You start with a Network.<br>Cost: 120 W</button></td></tr></table>
-<td><button id='warUpg14' class="warUpg">Double Warning gain.<br><u>Currently</u><br><b>1.00x</b></button></td></tr>
+<td><button id='warUpg14' class="warUpg" onclick="buyWarUpg(14)">Double Warning gain.<br><u>Currently</u><br><b><div id="warMulti" style="display:inline;">1</div>x</b><br>
+  Cost: <div id="warMultiCost" style="display:inline;">10</div> W</button></td></tr>
 </div>	
 
 <div id='errorExpansionTab' style='display:none'>
@@ -197,6 +208,12 @@
 	</div>
 </div>
 </div>
+<div id='debugTab' style='display:none'>
+  <div style="width: 50%;margin: 0px auto;"><h1>For people that wanna make their life easier by tweaking the game</h1></div>
+  <div><input id="gameSpeedIn" type="number" step="0.01" value="1" autocomplete="off"  onfocus="inputing = true" />x game speed</div>
+  <div>Force show all DUs (also make them buyable)<input id="showAllDU" type="checkbox" autocomplete="off" /></div>
+  <div>Force show all upgrades (also make them buyable)<input id="showAllUpg" type="checkbox" autocomplete="off" /></div>
+</div>	
   <table class='sidebar' align=right style='position:absolute; height:100%; top:0px; right:15px; width:20%'>
 	  <tr><td>
 		  <table class="storybox">
@@ -207,35 +224,35 @@
 	  <tr style='table-layout: fixed;'><td>
 		  <b style='font-size:32px'>Upgrades</b><br>
 		  <div id='upgcate1' style='display:none'>
-		  <b>Errors & Computers</b><br>
-		  <div><b>Smaller transistors</b>: 2x faster computers<br><button id="upg1button" onClick='buyUpg(1)'>Cost: 1e4</button></div>
-		  <div><b>Effective CPUs</b>: 5x faster computers<br><button id="upg2button" onClick='buyUpg(2)'>Cost: 1e10</button></div>
-		  <div><b>Powerful computers</b>: 10x faster computers<br><button id="upg3button" onClick='buyUpg(3)'>Cost: 1e20</button></div>
-		  <div><b>Cooling System</b>: 100x faster computers<br><button id="upg17button" onClick='buyUpg(17)'>Cost: 1e30</button></div>
-		  <div><b>Faster Graphical Card</b>: 750x faster computers<br><button id="upg18button" onclick='buyUpg(18)'>Cost: 1e35</button></div>
-		  <div><b>144hz Monitor & Faster Reboot/Startup times</b>: 7,500x faster computers<br><button id="upg19button" onclick='buyUpg(19)'>Cost: 1e40</button></div>
-		  <div><b>Included Mic & Maximum RAM</b>: 75,000x faster computers<br><button id="upg20button" onClick="buyUpg(20)">Cost: 1e50</button></div>
-		  <div><b>Quantum I</b>: 750,000x faster computers.<br><button id="upg21button" onClick="buyUpg(21)">Cost: 1e65</button></div>
-	      <div><b>Quantum II</b>: 750,000x faster computers.<br><button id="upg23button" onClick="buyUpg(23)">Cost: 1e75</button></div>
-	      <div><b>Faster computers I</b>: Production for Tier I computers increase based on the amount<br><button id="upg4button" onClick='buyUpg(4)'>Cost: 100 TI comps & 1e35</button></div>
-		  <div><b>Faster computers II</b>: Production for Tier II computers increase based on the amount<br><button id="upg5button" onClick='buyUpg(5)'>Cost: 100 TII comps & 1e40</button></div>
-		  <div><b>Faster computers III</b>: Production for Tier III computers increase based on the amount<br><button id="upg6button" onClick='buyUpg(6)'>Cost: 100 TIII comps & 1e50</button></div>
-		  <div><b>Faster computers IV</b>: Production for Tier IV computers increase based on the amount<br><button id="upg7button" onClick='buyUpg(7)'>Cost: 100 TIV comps & 1e65</button></div>
-		  <div><b>Faster computers V</b>: Production for Tier V computers increase based on the amount<br><button id="upg8button" onClick='buyUpg(8)'>Cost: 100 TV comps & 1e75</button></div>
-		  <div><b>Faster computers VI</b>: Production for Tier VI computers increase based on the amount<br><button id="upg9button" onClick='buyUpg(9)'>Cost: 100 TVI comps & 1e85</button></div>
-		  <div><b>Faster computers VII</b>: Production for Tier VII computers increase based on the amount<br><button id="upg10button" onClick='buyUpg(10)'>Cost: 100 TVII comps & 1e100</button></div>
-		  <div><b>Faster computers VIII</b>: Production for Tier VIII computers increase based on the amount<br><button id="upg11button" onClick='buyUpg(11)'>Cost: 100 TVIII comps & 1e115</button></div>
-		  <div><b>Faster computers IX</b>: Production for Tier IX computers increase based on the amount<br><button id="upg12button" onClick='buyUpg(12)'>Cost: 100 TIX comps & 1e125</button></div>
-		  <div id='upg13' style='display:none'><b>PC sharing</b>: Production for computers increase based on the total amount<br><button id="upg13button" onClick='buyUpg(13)'>Cost: 110 comps each & 1e140</button></div>
-		  </div>
-		  <div id='upgcate2' style='display:none'><br>
-		  <b>Prestiges</b><br>
-		  <div><b>Upgraded upgrades</b>: 2.5x bonus instead of 2x on UCs<br><button id="upg14button" onClick='buyUpg(14)'>Cost: UC9</button></div>
-		  <div><b>Stronger I.P encryption</b>: 5x bonus that didn't have to have an I.P. change<br><button id="upg15button" onClick='buyUpg(15)'>Cost: IP5</button></div>
-		  <div><b>Quantum upgrades</b>: Further maximum of UCs based on Internet Boosts<br><button id="upg16button" onClick='buyUpg(16)'>Cost: IB2</button></div>
-		  <div><b>Hyperquantum Upgrades</b>: Post-Network ONLY: 1,000,000x faster computers<br><button id="upg22button" onClick='buyUpg(22)'>Cost: N1 & 1e3 errors</button></div>
-		  </div><br>
-		  <div id='upgradereq'>Unlocks at 3 I.P. Changes</div>
+            <b>Errors & Computers</b><br>
+            <div><b>Smaller transistors</b>: 2x faster computers per purchase</div>
+            Current process: <div style="display:inline;" id="processDisplay">???</div> nm<br>
+            <button id="upg1button" onClick='buyUpg(1)'>Cost: 1e4</button>
+            <div><b>Multi-core CPUs</b>: 2x faster computers per purchase</div>
+            Current cores per CPU: <div style="display:inline;" id="coreDisplay">???</div> cores<br>
+            <button id="upg2button" onClick='buyUpg(2)'>Cost: 1e10</button>
+          
+            <div id='upgcate2' style='display:none'>
+              <div><b>Faster computers I</b>: Production for Tier I computers increase based on the amount<br><button id="upg3button" onClick='buyUpg(3)'>Cost: 100 TI comps & 1e35</button></div>
+              <div><b>Faster computers II</b>: Production for Tier II computers increase based on the amount<br><button id="upg4button" onClick='buyUpg(4)'>Cost: 100 TII comps & 1e40</button></div>
+              <div><b>Faster computers III</b>: Production for Tier III computers increase based on the amount<br><button id="upg5button" onClick='buyUpg(5)'>Cost: 100 TIII comps & 1e50</button></div>
+              <div><b>Faster computers IV</b>: Production for Tier IV computers increase based on the amount<br><button id="upg6button" onClick='buyUpg(6)'>Cost: 100 TIV comps & 1e65</button></div>
+              <div><b>Faster computers V</b>: Production for Tier V computers increase based on the amount<br><button id="upg7button" onClick='buyUpg(7)'>Cost: 100 TV comps & 1e75</button></div>
+              <div><b>Faster computers VI</b>: Production for Tier VI computers increase based on the amount<br><button id="upg8button" onClick='buyUpg(8)'>Cost: 100 TVI comps & 1e85</button></div>
+              <div><b>Faster computers VII</b>: Production for Tier VII computers increase based on the amount<br><button id="upg9button" onClick='buyUpg(9)'>Cost: 100 TVII comps & 1e100</button></div>
+              <div><b>Faster computers VIII</b>: Production for Tier VIII computers increase based on the amount<br><button id="upg10button" onClick='buyUpg(10)'>Cost: 100 TVIII comps & 1e115</button></div>
+              <div><b>Faster computers IX</b>: Production for Tier IX computers increase based on the amount<br><button id="upg11button" onClick='buyUpg(11)'>Cost: 100 TIX comps & 1e125</button></div>
+              <div id='upg12' style='display:none'><b>PC sharing</b>: Production for computers increase based on the total amount<br><button id="upg12button" onClick='buyUpg(12)'>Cost: 110 comps each & 1e140</button></div>
+              
+              <div id='upgcate3' style='display:none'><br>
+                <b>Prestiges</b><br>
+                <div><b>Upgraded upgrades</b>: 2.5x bonus instead of 2x on UCs<br><button id="upg13button" onClick='buyUpg(13)'>Cost: UC9</button></div>
+                <div><b>Algorithm upgrade</b>: 5x bonus that will not disappear until "that" happens<br><button id="upg14button" onClick='buyUpg(14)'>Cost: IP5</button></div>
+                <div><b>Quantum upgrades</b>: Further maximum of UCs based on Internet Boosts<br><button id="upg15button" onClick='buyUpg(15)'>Cost: IB2</button></div>
+              </div><br>
+            </div>
+          </div>
+		  <br><div id='upgradereq'>Unlocks at 2 I.P. Changes</div>
 	  </td></tr>
   </table>
   <table class='prestiges' align=left style='position:fixed; height:100%; top:0px; left:15px; width:20%'>
@@ -245,6 +262,7 @@
     <div><b id='prestige2Type'>I.P. Change</b>: Requires <text id='prestige2Gen'>20 Tier IV</text> Computers <button id="ipChange" onClick='prestige(2)'>Gain Tier V Computer, but resets everything.</button></div>
     <div id="networks"><b>Network</b>: Requires <text id='prestige3Req'>80</text> Tier IX Computers <button id="network" onclick='prestige(3)'>Reset everything, but gain a Production Boost upgrade (x<text id='netMulti'>2.5</text>)</button></div>
     <div id="backward" style='display:none'><b>Backward Prestige</b>: <button onclick='prestige(1,-2)'>Lose your U.Cs, but also revert mistakes you did in the run.</button></div>
+    <div id="stopBugFixerButton" style='display:none'><b>Interrupt bug fixer</b>: <button onclick='stopBugFixer(30);player.canStopBugFixer = false'>Stop bug fixer for half minute, you can use it again when you IP/IB/backward prestige.</button></div>
   </td></tr></tbody>
   </table>
 	<div style='background-color: #999999; position: fixed; bottom: 0; width: 100%; color: #191919; z-index: -1'>| <a href="https://discord.gg/23JnYTY" target="_newtab">Discord</a> | <a href="howto.html" target="_newtab">How to Play CEG</a> | <a href="../index.html" target="_newtab"> Back to Main Menu </a>| <a href="changelog.html" target="_newtab">Changelog</a> |</div> 

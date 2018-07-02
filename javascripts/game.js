@@ -502,6 +502,7 @@ function getMultTier(tier) {  let ret = new Decimal.pow(10,tier-1)
   if (haveWU(2)) ret = ret.mul(getUpgradeMultiplier(2))
   if (haveWU(3)) ret = ret.mul(getUpgradeMultiplier(3,tier))
   if (haveWU(4)) ret = ret.mul(getUpgradeMultiplier(4))
+  if (haveWU(5)) ret = ret.mul(getUpgradeMultiplier(5))
   // Insert DT stuffs here
   if (haveDU(Math.ceil(tier/2)*2)) ret = ret.mul(2)
   if (haveDU(Math.ceil(tier/2)*2+10)) ret = ret.mul(10)

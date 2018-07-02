@@ -382,7 +382,7 @@ function prestige(tier,challid=0) {
     if (tier==4) {
     	if (player.fastestWarning>player.warningPlaytime) {
     		player.fastestWarning=player.warningPlaytime
-    		warnUpgsGenerationDuration[10]=player.fastestWarning*1000
+    		warnUpgsGenerationDuration[10]=player.fastestWarning*10
     	}
     	if (challid==0?player.lastWarnings.unshift([player.warningPlaytime,warningGain])>5:false) {
     		player.lastWarnings.pop()
@@ -1100,7 +1100,7 @@ function load(savefile,firstTime=true) {
 		updateElement('hotkeysbtn',"Hotkeys: Disabled")
 		hideElement('hotkeyText')
 	}
-	if (player.fastestWarning<Number.MAX_VALUE) warnUpgsGenerationDuration[10]=player.fastestWarning*1000
+	if (player.fastestWarning<Number.MAX_VALUE) warnUpgsGenerationDuration[10]=player.fastestWarning*10
 	
     console.log('Game loaded!')
 	return false

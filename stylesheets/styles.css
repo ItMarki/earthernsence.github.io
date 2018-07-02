@@ -25,6 +25,18 @@ button:hover {
 	background-color:white;
 	color:black;
 }
+.lockedAchievement {
+background: #36393E;
+border: 2px solid #FFFFFF;
+width: 125px;
+height: 125px;
+border-radius: 10px;
+margin: 0px auto;
+text-align: center;
+font-family: Montserrat;
+color: black;
+font-size: 70%;
+}
 .optionButton {
 	height:48px;
 	width:95px;

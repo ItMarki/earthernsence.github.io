@@ -27,14 +27,15 @@ const defaultPlayer = {
   playtime: 0, //total time spent online ingame
   time: 0, //total time displayed in stats
   version: 1.5, //very important
-  build: 24, //used for us to communicate commits, helps a lot
+  build: 25, //used for us to communicate commits, helps a lot
   hotfix: 1, //another way to use commits
   options: {
     hotkeys:true, //whether or not hotkeys are enabled (on by default)
     notation:0 //notation setting, see options
   },
   canStopBugFixer: true,
-  bugFixerOfflineTimer: 0
+  bugFixerOfflineTimer: 0,
+  warMulti: 1
 }
 Object.freeze(defaultPlayer) //I will want to die if defaultPlayer gets edited by game again...
 player = defaultPlayer
@@ -378,7 +379,7 @@ function prestige(tier,challid=0) {
     //Tier 4 - Warnings
     player.dtChallCompleted= {}
     player.dtUpgrades = []
-    var warningGain=1
+    var warningGain=Decimal.pow(2,player.warMulti-1)
     if (tier==4) {
     	if (player.fastestWarning>player.warningPlaytime) {
     		player.fastestWarning=player.warningPlaytime
@@ -580,6 +581,13 @@ function getUpgradeMultiplier(id,tier) {
 
 function buyWarUpg(id) {
   if (!haveWU(id)) {
+    if (id == 14) {
+      if (player.warnings.gte(Decimal.pow(10,player.warMulti))) {
+        player.warnings=player.warnings.sub(Decimal.pow(10,player.warMulti))
+        player.warMulti++
+      }
+      return
+    }
     if (player.warnings.gte(costs.warUpgs[id-1])) {
       player.warnings=player.warnings.sub(costs.warUpgs[id-1])
       player.warningUpgrades.push(id)
@@ -626,7 +634,7 @@ function gameTick() {
     	if (occurrences>0) {
 			player.warnUpgsGenerationLastTick[i]+=occurrences*warnUpgsGenerationDuration[i]
 			if (i==10) {
-				player.warnings=player.warnings.add(occurrences)
+				player.warnings=player.warnings.add(Decimal.pow(2,player.warMulti-1).times(occurrences))
 			} else {
 				player.generatedCompAmount[i-6]+=occurrences
 			}
@@ -821,6 +829,8 @@ function gameTick() {
           updateClass("warUpg"+i.toString(),"warUpg")
         }
       }
+      updateElement("warMulti",format(Decimal.pow(2,player.warMulti-1)))
+      updateElement("warMultiCost",format(Decimal.pow(10,player.warMulti)))
     }
   }
   if (tab=='stats') {
@@ -1074,6 +1084,9 @@ function load(savefile,firstTime=true) {
       if (savefile.build<24) {
         alert("Your upgrades will now be cleared due to a new update, sorry!")
         savefile.upgrades = {}
+      }
+      if (savefile.build<25) {
+        savefile.warMulti = 1
       }
     }
     savefile.version = player.version

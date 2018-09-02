@@ -1127,9 +1127,7 @@ function load(savefile,firstTime=true) {
 	if (firstTime) {
 		console.log('We will load the default savefile instead now.')
 		player=defaultPlayer
-        return false
-	}
-	return true
+	} else return true
   }
   //And then safety put the save file to player!
   

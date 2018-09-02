@@ -358,9 +358,9 @@ function prestige(tier,challid=0) {
     else if (tier == 2) {
       if (player.prestiges[1]<=5) {
         if (player.compAmount[player.prestiges[1]+3] < (haveDU(15)?15:20)) return;
-      } else if (player.compAmount[8] < 15*(player.prestiges[1]-5)+(haveDU(15)?15:20)) return;
+      } else if (player.compAmount[8] < (haveDU(17)?10:15)*(player.prestiges[1]-5)+(haveDU(15)?15:20)) return;
     }
-    else if ((player.compAmount[8]<player.prestiges[2]*250+50||(player.downtimeChallenge==9&&challid==0)) && tier == 3) return;
+    else if (player.compAmount[8]<player.prestiges[2]*250+50 && tier == 3) return;
     else if (player.errors.lt(Number.MAX_VALUE) && tier == 4) return;
     else if (tier == Infinity && !confirm('Are you really sure to reset? You will lose everything you have!')) return;
   } else {
@@ -486,10 +486,10 @@ function completeChall() {
 
 function getMultTier(tier) {  let ret = new Decimal.pow(10,tier-1)
   ret = ret.mul(Decimal.pow(Math.pow(1.05 + Math.max((tier-4)/100,0),tier),player.compAmount[tier-1]))
-  ret = ret.mul(Decimal.pow(Math.pow((haveDU(1)?2.1:2)+0.5*(player.downtimeChallenge==9?0:player.prestiges[2]),(player.downtimeChallenge==1)?0.5:1),player.boostPower)) // PB
-  ret = ret.mul(Decimal.pow(2+Math.floor(player.compAmount[8]/5)*0.5,player.prestiges[1]))
+  ret = ret.mul(Decimal.pow(Math.pow((haveDU(1)?2.1:2)+0.5*player.prestiges[2],(player.downtimeChallenge==1)?0.5:1),player.boostPower)) // PB
+  if (player.downtimeChallenge != 9) ret = ret.mul(Decimal.pow(2+Math.floor(player.compAmount[8]/5)*0.5,player.prestiges[1])) // IP/IB
   if (player.prestiges[0]>=tier) ret = ret.mul(haveDU(7)?3:haveUpg(13)?2.5:2) // UC
-  if (player.prestiges[0]>9&&tier==9) ret = ret.mul(Decimal.pow(haveDU(7)?3:2,player.prestiges[0]-9)) // IB
+  if (player.prestiges[0]>9&&tier==9) ret = ret.mul(Decimal.pow(haveDU(7)?3:2,player.prestiges[0]-9)) // Even more UC
   if (haveUpg(1,false)) ret = ret.mul(Decimal.pow(2,player.upgrades[1]))
   if (haveUpg(2,false)) ret = ret.mul(Decimal.pow(2,player.upgrades[2]))
   if (haveUpg(3)&&tier==1) ret = ret.mul(Math.pow(1.15,Math.sqrt(player.compAmount[0])))
@@ -668,7 +668,7 @@ function gameTick() {
   }
   if (player.compAmount.slice(2,9).reduce((a, b) => a + b, 0) > 0) {
     showElement('genUpgrade','block');
-    updateElement('genIncrease',Math.pow(((haveDU(1))?2.1:2)+0.5*(player.downtimeChallenge==9?0:player.prestiges[2]),(player.downtimeChallenge==1)?0.5:1).toPrecision(2));
+    updateElement('genIncrease',Math.pow(((haveDU(1))?2.1:2)+0.5*player.prestiges[2],(player.downtimeChallenge==1)?0.5:1).toPrecision(2));
     updateElement('genIncreaseCost','Cost: ' + format(costs.boost));
     updateElement('genBoost',format(Decimal.pow(Math.pow((haveDU(1))?2.1:2+0.5*player.prestiges[2],(player.downtimeChallenge==1)?0.5:1),player.boostPower),1,0,false));
     if (player.errors.lt(costs.boost)) updateClass('genIncreaseCost','cantBuy')
@@ -717,7 +717,7 @@ function gameTick() {
   if (player.prestiges[1]<=5 && player.compAmount[Math.min(player.prestiges[1]+3)] < haveDU(15)?15:20) {
     updateElement('prestige2Gen', (haveDU(15)?15:20).toString() + ' Tier ' + ROMAN_NUMERALS[player.prestiges[1]+4])
   } else {
-    updateElement('prestige2Gen', 15*(player.prestiges[1]-5)+(haveDU(15)?20:15) +' Tier IX')
+    updateElement('prestige2Gen', (haveDU(17)?10:15)*(player.prestiges[1]-5)+(haveDU(15)?20:15) +' Tier IX')
   }
   updateElement('prestige2Gen',(Math.max(player.prestiges[1]-5,0)*15+((haveDU(15)&&player.downtimeChallenge==0)?15:20))+' Tier '+ROMAN_NUMERALS[Math.min(player.prestiges[1]+4,9)])
   if (player.prestiges[1]<5 || player.downtimeChallenge != 0) showElement('upgradereq','inline');
@@ -925,7 +925,7 @@ function gameTick() {
                   'T3 & T4 Computers produces 10x as fast.<br>Cost: '+format(1e55),
                   'Reduce first I.P. Change cost to 15.<br>Cost: '+format(1e60), // 15th
                   'T5 & T6 Computers produces 10x as fast.<br>Cost: '+format(1e60),
-                  'Removed due to OP.<br>Cost: 1e75.<br>Cost: '+format(1e75),
+                  'IB boost prize scales 5 less.<br>Cost: '+format(1e75),
                   'T7 & T8 Computers produces 10x as fast.<br>Cost: '+format(1e65),
                   'You have a 1% chance to get a 100x production boost.<br>Cost: '+format(1e100),
                   'T9 computers produces 10x as fast.<br>Cost: '+format(1e70)]
@@ -1391,7 +1391,7 @@ function buyDTU(id) {
 }
 
 function haveDU(id) {
-  return player.dtUpgrades.includes(id) && [0,9].includes(player.downtimeChallenge)
+  return player.dtUpgrades.includes(id) && [0].includes(player.downtimeChallenge)
 }
 
 function changeSpeed() {

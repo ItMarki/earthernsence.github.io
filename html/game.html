@@ -29,18 +29,18 @@ font-size: 14px;
     <link rel="stylesheet" type="text/css" href="../stylesheets/styles.css" />
 	<script type="text/javascript" src="../javascripts/break_infinity.min.js"> </script>
 	<script type="text/javascript" src="../javascripts/game.js"> </script>
-	<title>CEG: The One and Only Console Error Game</title>
+	<title>CEG: 唯一一個操作錯誤遊戲</title>
 	<link rel="icon" type="image/png" href="../images/ceg.png"</link>
 </head>
 <body style="text-align:center" onload='gameInit()'>
 <div id="game" style='text-align:center'>
-  <h1 id="logo">The Console Error Game</h1>
-  <div>You have <text id="errors">x</text> errors.</div>
-  <div>You are making <text id="eps">x</text> errors per second.</div>
-  <div id='genUpgrade'>Increase the boost by <text id='genIncrease'>2</text>x.<br>
-  <button id="genIncreaseCost" onclick="buyGenUpgrade()">Cost: 1000</button><button id="buyMax" onclick="maxGenUpgrade()">Buy Max</button><br>
-  Production boost: <text id='genBoost'>1</text>x</div><br>
-  <div><button onclick='switchTab("computers")'>Computers</button><button onclick='switchTab("options")'>Options</button><button onclick='switchTab("stats")'>Stats</button><button onclick='switchTab("achievements")'>Achievements</button><button id='theEndButton' style='display:none' onclick='switchTab("theEnd")'>The End</button><!--<button onclick='switchTab("warning")'>Warning</button>--></div><!--I added the warning tab for later.-->
+  <h1 id="logo">操作錯誤遊戲</h1>
+  <div>你擁有<text id="errors">x</text>錯誤。</div>
+  <div>你每秒正在生產<text id="eps">x</text>錯誤。</div>
+  <div id='genUpgrade'>將加成增加<text id='genIncrease'>2</text>倍。<br>
+  <button id="genIncreaseCost" onclick="buyGenUpgrade()">成本: 1000</button><button id="buyMax" onclick="maxGenUpgrade()">全部最大</button><br>
+  生產力加成: <text id='genBoost'>1</text>倍</div><br>
+  <div><button onclick='switchTab("computers")'>電腦</button><button onclick='switchTab("options")'>選項</button><button onclick='switchTab("stats")'>統計</button><button onclick='switchTab("achievements")'>成就</button><button id='theEndButton' style='display:none' onclick='switchTab("theEnd")'>終結</button><!--<button onclick='switchTab("warning")'>Warning</button>--></div><!--I added the warning tab for later.-->
   <br>
   <div id='computersTab'>
 	  <td style='width:96px'><button id='maxAll' class='commonButton' onClick='maxGenUpgrade();maxGen();'>Max All</button></td>	  

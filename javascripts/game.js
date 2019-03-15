@@ -487,12 +487,12 @@ function gameTick() {
   }
   if (player.prestiges[1]<5) {
 	  updateElement('ipChange','獲得第'+ROMAN_NUMERALS[player.prestiges[1]+5]+'級電腦，但重置全部。')
-	  updateElement('prestige2Type','I.P. Change')
+	  updateElement('prestige2Type','IP改變')
 	  showElement('upgradereq','inline')
 	  hideElement('upgcate2')
   } else {
 	  updateElement('ipChange','獲得電腦的加成，但重置全部。')
-	  updateElement('prestige2Type','Internet boost')
+	  updateElement('prestige2Type','網絡加成')
 	  hideElement('upgradereq')
 	  showElement('upgcate2','inline')
 	  for (i=14;i<17;i++) {

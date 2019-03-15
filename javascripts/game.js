@@ -636,9 +636,9 @@ function load(savefile) {
       updateCosts()
 	  updateStory()
 	  updateElement("notationID",notationArray[player.options.notation])
-	  console.log('Game loaded!')
+	  console.log('遊戲已導入！')
   } catch (e) {
-	  console.log('Your save failed to load:\n'+e)
+	  console.log('你的存檔的導入失敗:\n'+e)
   }
 }
 
@@ -649,10 +649,10 @@ function exportSave() {
 }
 
 function importSave() {
-	var input=prompt('Copy and paste in your exported file and press enter.')
+	var input=prompt('複製和貼上你到處的存檔，然後按Enter。')
 	if (load(input)) {
 		if (input!=null) {
-			alert('Your save was invalid or caused a game-breaking bug. :(')
+			alert('你的存檔無效，或者導致了破壞遊戲的錯誤。 :(')
 		}
 	}
 }

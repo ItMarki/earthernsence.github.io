@@ -483,15 +483,15 @@ function gameTick() {
 		  else if (checkIfAffordable(i)) updateClass('upg'+i+'button','')
 		  else updateClass('upg'+i+'button','cantBuy')
 	  }
-	  updateElement('upgradereq','Next at 5 I.P. changes')
+	  updateElement('upgradereq','下一個在5IP改變')
   }
   if (player.prestiges[1]<5) {
-	  updateElement('ipChange','Gain Tier '+ROMAN_NUMERALS[player.prestiges[1]+5]+' Computer, but resets everything.')
+	  updateElement('ipChange','獲得第'+ROMAN_NUMERALS[player.prestiges[1]+5]+'級電腦，但重置全部。')
 	  updateElement('prestige2Type','I.P. Change')
 	  showElement('upgradereq','inline')
 	  hideElement('upgcate2')
   } else {
-	  updateElement('ipChange','Gain boost for computers, but resets everything.')
+	  updateElement('ipChange','獲得電腦的加成，但重置全部。')
 	  updateElement('prestige2Type','Internet boost')
 	  hideElement('upgradereq')
 	  showElement('upgcate2','inline')

@@ -419,7 +419,7 @@ function gameTick() {
   if (player.compAmount[2]>0) {
 	  showElement('genUpgrade','block');
 	  updateElement('genIncrease',(4+player.prestiges[2])/2);
-	  updateElement('genIncreaseCost','Cost: ' + format(costs.boost));
+	  updateElement('genIncreaseCost','成本: ' + format(costs.boost));
 	  updateElement('genBoost',format(Decimal.pow(2+0.5*player.prestiges[2],player.boostPower)));
 	  if (player.errors.lt(costs.boost)) updateClass('genIncreaseCost','cantBuy')
 	  else updateClass('genIncreaseCost','')

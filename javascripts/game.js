@@ -511,7 +511,7 @@ function gameTick() {
   updateElement('netMulti',(5+player.prestiges[2])/2)
   if (tab=='computers') {
 	  for (let i=0;i<Math.min(player.prestiges[1]+4,9);i++) {
-		  updateElement("cop"+(i+1),"Cost: " + format(costs.comp[i]) + " (" + player.compAmount[i] + ")")
+		  updateElement("cop"+(i+1),"成本: " + format(costs.comp[i]) + " (" + player.compAmount[i] + ")")
 		  if (player.errors.lt(costs.comp[i])) updateClass("cop"+(i+1),'cantBuy')
 		  else updateClass("cop"+(i+1),'')
 	  }
@@ -524,27 +524,27 @@ function gameTick() {
 	  }
   }
   if (tab=='stats') {
-	  updateElement('statsTotal','You have gained a total of '+format(player.totalErrors)+' errors.')
-	  updateElement('statsPlaytime','You have played for '+formatTime(player.playtime)+'.')
+	  updateElement('statsTotal','你總共獲得'+format(player.totalErrors)+'錯誤。')
+	  updateElement('statsPlaytime','你總共遊玩了'+formatTime(player.playtime)+'。')
 	  if (player.prestiges[0]>0) {
 		  showElement('statsPrestige1','block')
-		  updateElement('statsPrestige1','You upgraded your computers, '+format(player.prestiges[0],0,1)+' times.')
+		  updateElement('statsPrestige1','你升級你的電腦'+format(player.prestiges[0],0,1)+'次。')
 	  } else {
 		  hideElement('statsPrestige1')
 	  }
 	  if (player.prestiges[1]>0) {
 		  showElement('statsPrestige2','block')
 		  if (player.prestiges[1]<6) {
-			  updateElement('statsPrestige2','You have '+player.prestiges[1]+' new computers.')
+			  updateElement('statsPrestige2','你擁有'+player.prestiges[1]+'新電腦。.')
 		  } else {
-			  updateElement('statsPrestige2','You have 5 new computers and boosted your computers '+format(player.prestiges[1]-5,0,1)+' times.')
+			  updateElement('statsPrestige2','你擁有5新的電腦，而加強你的電腦'+format(player.prestiges[1]-5,0,1)+'次。')
 		  }
 	  } else {
 		  hideElement('statsPrestige2')
 	  }
 	  if (player.prestiges[2]>0) {
 		  showElement('statsPrestige3','block')
-		  updateElement('statsPrestige3','You have '+format(player.prestiges[2],0,1)+' networks.')
+		  updateElement('statsPrestige3','你擁有'+format(player.prestiges[2],0,1)+'網絡。')
 	  } else {
 		  hideElement('statsPrestige3')
 	  }

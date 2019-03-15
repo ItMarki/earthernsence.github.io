@@ -432,14 +432,14 @@ function gameTick() {
 	  oldtab=tab
   }
   if (player.prestiges[0]<Math.min(player.prestiges[1]+4,player.upgrades.includes(16)?Math.max(player.prestiges[1]+4,9):9)) {
-	  updateElement('prestige1Gen',Math.max(player.prestiges[0]*10-70,10)+' Tier '+ROMAN_NUMERALS[Math.min(player.prestiges[0]+1,9)])
+	  updateElement('prestige1Gen',Math.max(player.prestiges[0]*10-70,10)+'第'+ROMAN_NUMERALS[Math.min(player.prestiges[0]+1,9)]+'級')
 	  hideElement('maxout')
 	  showElement('abletoprestige','inline')
   } else {
 	  hideElement('abletoprestige')
 	  showElement('maxout','inline')
   }
-  updateElement('prestige2Gen',format(Math.max(player.prestiges[1]*15-40,20),0,1)+' Tier '+ROMAN_NUMERALS[Math.min(player.prestiges[1]+4,9)])
+  updateElement('prestige2Gen',format(Math.max(player.prestiges[1]*15-40,20),0,1)+'第'+ROMAN_NUMERALS[Math.min(player.prestiges[1]+4,9)]+'級')
   if (player.prestiges[1]<3) {
 	  hideElement('upgcate1')
 	  updateElement('upgradereq','Unlocks at 3 I.P. changes')

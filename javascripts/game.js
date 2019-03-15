@@ -661,7 +661,7 @@ function setupRoman() {
 	var thousands = ['','M','MM','MMM']
 	var hundreds = ['','C','CC','CCC','CD','D','DC','DCC','DCCC','CM']
 	var tens = ['','X','XX','XXX','XL','L','LX','LXX','LXXX','XC']
-	var ones = ['','I','II','III','IV','V','VI','VII','VIII','IX']
+	var ones = ['','一','二','三','四','五','六','七','八','九']
 	
 	for (i=0;i<4;i++) {
 		for (j=0;j<10;j++) {

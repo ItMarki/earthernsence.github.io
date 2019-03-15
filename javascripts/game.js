@@ -442,7 +442,7 @@ function gameTick() {
   updateElement('prestige2Gen',format(Math.max(player.prestiges[1]*15-40,20),0,1)+'第'+ROMAN_NUMERALS[Math.min(player.prestiges[1]+4,9)]+'級')
   if (player.prestiges[1]<3) {
 	  hideElement('upgcate1')
-	  updateElement('upgradereq','Unlocks at 3 I.P. changes')
+	  updateElement('upgradereq','在第三個IP改變解鎖')
   } else {
 	  showElement('upgcate1','inline')
 	  updateElement('upg1button','成本: '+format(1e4))
